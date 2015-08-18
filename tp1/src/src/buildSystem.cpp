@@ -1,11 +1,12 @@
 #include <iostream>
 #include <math.h>
-
 #include "eqsys.h"
+
+#define INNER_TEMP 1500
 
 using namespace std;
 
-void insertValue(Matrix<double>& A, Matrix<double>& b, int j, int k, double r_i, double r_e, int m, int n, double t_e);
+void insertValue(Matrix<double>& A, Matrix<double>& b, int j, int k, double r_i, double r_e, int n, int m, double t_e);
 
 int main() {
 
@@ -21,16 +22,24 @@ int main() {
 
 	// build system: Ax = b
 	Matrix<double> A((m-1)*(n+1),(m-1)*(n+1));
-	Matrix<double> b((m-1)*(n+1));
+	Matrix<double> b((m-1)*(n+1), 1);
+
+	cout << "dim(A) = " << (m-1)*(n+1) << endl;
 
 	/* each temperature has 1 laplacian, and depends on 4 temperatures.
 	 * i'm looking for t_j,k in the valid range.
 	 */ 
 	for (int k = 0; k <= n; k++) {
 		for (int j = 1; j < m; j++) { // avoid borders
-			insertValue(A,b,j,k,r_i,r_e,m,n,t_e);
+			insertValue(A,b,j,k,r_i,r_e,n,m,t_e);
 		}
 	}
+
+	cout << "Matrix A" << endl;
+	A.printMatrix();
+
+	cout << "Matrix B" << endl;
+	b.printMatrix();
 
 	return 0;
 }
@@ -46,29 +55,28 @@ int main() {
  *     | ...... |
  *     | tm-1,n |
  */
-void insertValue(Matrix<double>& A, Matrix<double>& b, int j, int k, double r_i, double r_e, int m, int n, double t_e) {
+void insertValue(Matrix<double>& A, Matrix<double>& b, int j, int k, double r_i, double r_e, int n, int m, double t_e) {
 
 	double dO = 2*M_PI / n;
 	double dR = (r_e - r_i) / k;
-	int r = (j-1) * (n+1);
+	int r = k * (m - 1) + (j - 1);
 	double r_j = r_i + j*dR;
 
-	A(r,k*m + (j-1))     = - (2/pow(dR, 2)) + (1/(r_j*dR)) - (2/pow(r_j, 2)*pow(dO, 2)); // t_j,k
+	cout << "j: " << j << " k: " << k << " r: " << r << " col: " << k*(m - 1) + (j-1) << " (n: " << n << " m: " << m << ")" << endl;
 
-	A(r,k*m + (j-1) + 1) = (1/pow(dR, 2)); // t_j+1,k
+	A(r,r)     = - (2/pow(dR, 2)) + (1/(r_j*dR)) - (2/pow(r_j, 2)*pow(dO, 2)); // t_j,k
 
-	A(r,((k-1) % (n+1)) * m + (j-1)) = (1/(pow(r_j, 2)*pow(dO, 2))); // t_j,k-1, border case! k < 0
+	A(r,r + 1) = (1/pow(dR, 2)); // t_j+1,k
 
-	if (k == 1) { // inner circle
-		A(r,(j-1)*n + j - 1) = (1/pow(dR, 2)) + 1 / (r_j * dR); // t_j-1,k
-		b(r) -= 1/pow(dR,2) * 1500;
+	A(r,(r - (m-1)) % (m-1)*(n+1)) = (1/(pow(r_j, 2)*pow(dO, 2))); // t_j,k-1, border case! k < 0
 
-	} else if (k == m) { // outer circle
-		A(r,(j-1)*n + j - 1) = (1/pow(dR, 2)) + 1 / (r_j * dR); // t_j-1,k
-		b(r) -= 1/pow(dR,2) * t_e;
-
+	// t_j-1,k
+	if (j == 1) { // inner circle
+		b(r) = INNER_TEMP * (1/pow(dR,2) + 1/(r_e*dR));
+	} else if (j == m) { // outer circle
+		b(r) = t_e * (1/pow(dR,2) + 1/(r_e*dR));
 	} else {
-		A(r,(j-1)*n + j - 1) = 1 / (r_j * dR); // t_j-1,k
+		A(r,r - 1) = (1 / pow(r_j, 2)) + (1 / (r_j * dR));
 	}
 
 }
