@@ -1,13 +1,20 @@
 #include <iostream>
+#include <math.h>
 
 using namespace std;
 
-void insertValue(double* A, double* b, int j, int k, double r_i, double r_e, int m, int n);
+void insertValue(double* A, double* b, int j, int k, double r_i, double r_e, int m, int n, double t_e);
 
 int main() {
 
+	// granularity
 	int n = 3; // O0 < 0_k < ... < 0_n
 	int m = 3; // r0 < r_j < ... < r_m 
+
+	// system parameters
+	double r_i = 10;
+
+	double r_e = 20;
 	double t_e = 1000;
 
 	// build system: Ax = b
@@ -17,12 +24,13 @@ int main() {
 	/* each temperature has 1 laplacian, and depends on at least 3 temperatures.
 	 * i'm looking for t_j,k in the valid range.
 	 */ 
-	for(int k = 0; k <= n; k++) {
+	for (int k = 0; k <= n; k++) {
 		for (int j = 1; j < m; j++) { // avoid borders
-			insertValue(A,b,j,k,r_i,r_e,m,n, t_e);
+			insertValue(A,b,j,k,r_i,r_e,m,n,t_e);
 		}
 	}
 
+	return 0;
 }
 
 /* t_j,k
@@ -60,7 +68,5 @@ void insertValue(double* A, double* b, int j, int k, double r_i, double r_e, int
 	} else {
 		A[r][(j-1)*n + j - 1] = 1 / (r_j * dR); // t_j-1,k
 	}
-
-
 
 }
