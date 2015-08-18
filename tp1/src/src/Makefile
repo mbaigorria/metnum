@@ -1,23 +1,23 @@
-# compiler
+# Compilador que será utilizado
 CC=g++
 
-# compilation flags
+# flags de compilación
 CFLAGS=-g -Wall -std=c++11
 
-# linker flags
+# flags de linkeo
 LDFLAGS=
 
-# -L comp flag
-INCDIR=../
+# Agrear acá los directorios a incluir en la compilación
+INCDIR=../../../../../Modulos-CPP
 
-# .cpp files to compile
-SOURCES=buildSystem.cpp
+# Agregar acá los archivos .cpp a compilar
+SOURCES=main.cpp
 
-# objects that will be generated from .cpp files
+# Objetos que serán generados (no tocar)
 OBJECTS=$(SOURCES:.cpp=.o)
 
-# executable name
-EXECUTABLE=sys
+# Nombre del ejecutable a generar
+EXECUTABLE=main
 
 all: $(SOURCES) $(EXECUTABLE)
 	
@@ -28,4 +28,4 @@ clean:
 	rm -rf $(EXECUTABLE) $(OBJECTS)
 
 .cpp.o:
-	$(CC) -L$(INCDIR) $(CFLAGS) $< -c -o $@
+	$(CC) -I$(INCDIR) $(CFLAGS) $< -c -o $@
