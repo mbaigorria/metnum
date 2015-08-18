@@ -35,9 +35,9 @@ EquationSystemLU<T>::EquationSystemLU(const Matrix<T>& inicial)
     int i, j, k, l, m;
     
     // Armar la matriz lower con la diagonal en uno
-    lower = Matrix<T>(upper.filas(), upper.columnas());
-    for(i = 0; i < lower.filas(); i++){
-        for(j = 0; j < lower.columnas(); j++) {
+    lower = Matrix<T>(upper.rows(), upper.columns());
+    for(i = 0; i < lower.rows(); i++){
+        for(j = 0; j < lower.columns(); j++) {
             if(i == j) {
                 lower(i,j) = 1;
             } else {
@@ -46,26 +46,26 @@ EquationSystemLU<T>::EquationSystemLU(const Matrix<T>& inicial)
         }
     }
     
-    for(i = 0; i < upper.columnas(); i++) {
-        for(j = i + 1; j < upper.filas(); j++) {
+    for(i = 0; i < upper.columns(); i++) {
+        for(j = i + 1; j < upper.rows(); j++) {
             if(upper(i, i) == 0) {
                 // Hay que buscar la proxima fila sin cero
-                for(k = i + 1; k < upper.filas(); k++) {
+                for(k = i + 1; k < upper.rows(); k++) {
                     if(upper(k, i) != 0) {
                         break;
                     }
                 }
                 
-                if(k == upper.filas()) { // No hay filas para permutar
+                if(k == upper.rows()) { // No hay filas para permutar
                     abort();
                 } else {
                     if(!isPermutated){
                         // Generamos la matriz de permutacion con uno en la diagonal
                         isPermutated = true;
-                        permutation = Matrix<T>(upper.filas(), upper.columnas());
+                        permutation = Matrix<T>(upper.rows(), upper.columns());
                         
-                        for(l = 0; l < permutation.filas(); l++) {
-                            for(m = 0; m < permutation.columnas(); m++) {
+                        for(l = 0; l < permutation.rows(); l++) {
+                            for(m = 0; m < permutation.columns(); m++) {
                                 if(l == m) {
                                     permutation(l,m) = 1;
                                 } else {
@@ -75,7 +75,7 @@ EquationSystemLU<T>::EquationSystemLU(const Matrix<T>& inicial)
                         }
                     }
                     // Permutamos las filas
-                    for(l = 0; l < permutation.columnas(); l++) {
+                    for(l = 0; l < permutation.columns(); l++) {
                         if(l == k) {
                             permutation(i, l) = 1;
                         } else {
@@ -97,36 +97,18 @@ EquationSystemLU<T>::EquationSystemLU(const Matrix<T>& inicial)
             lower(j, i) = coef;
 
             // Colocamos cero en la columna bajo la diagonal
-            for(k = i; k < upper.columnas(); k++) {
+            for(k = i; k < upper.columns(); k++) {
                 upper(j, k) = upper(j, k) - coef * upper(i, k);
             }
         }
     }
     // COSAS PARA TESTEAR NOMAS, IGNORAR
-    for(i = 0; i < upper.filas(); i++) {
-        for(j = 0; j < upper.columnas(); j++) {
-            cout << upper(i,j) << " ";
-        }
-        cout << endl;
-    }
-    cout << endl;
     
-    for(i = 0; i < lower.filas(); i++) {
-        for(j = 0; j < lower.columnas(); j++) {
-            cout << lower(i,j) << " ";
-        }
-        cout << endl;
-    }
-    cout << endl;
-    
+    upper.printMatrix();
+    lower.printMatrix();
+
     lower *= upper;
-    
-    for(i = 0; i < lower.filas(); i++) {
-        for(j = 0; j < lower.columnas(); j++) {
-            cout << lower(i,j) << " ";
-        }
-        cout << endl;
-    }
+    lower.printMatrix();
 }
 
 template<class T>

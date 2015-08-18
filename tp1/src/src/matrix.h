@@ -21,7 +21,8 @@ template<class T>
 class Matrix {
     public:
         Matrix();
-        Matrix(int filas, int col);
+        Matrix(int rows); // Columnas impllicitas (col = 1)
+        Matrix(int rows, int col);
         Matrix(const Matrix<T>& other);
         ~Matrix();
         
@@ -38,37 +39,48 @@ class Matrix {
         
         T& operator()(int a, int b);
         const T& operator()(const int a, const int b) const;
-        int filas();
-        int columnas();
+        T& operator()(int a);
+        const T& operator()(const int a) const;
+        
+        int rows();
+        int columns();
+        void printMatrix();
         
     private:
-        vector<vector<T> > datos;
-        int cantF;
-        int cantC;
+        vector<vector<T> > _values;
+        int _rows;
+        int _columns;
         
 };
 
 template<class T>
 Matrix<T>::Matrix()
-    : cantF(1), cantC(1)
+    : _values(1), _rows(1), _columns(1)
 {
-    datos.resize(1);
-    datos[0].resize(1);
+    _values[0].resize(1);
 }
 
 template<class T>
-Matrix<T>::Matrix(int filas, int col)
-    : cantF(filas), cantC(col)
+Matrix<T>::Matrix(int rows)
+    : _values(rows), _rows(rows), _columns(1)
 {
-    datos.resize(filas);
-    for(int i = 0; i < filas; i++) {
-        datos[i].resize(col);
+    for(int i = 0; i < rows; i++) {
+        _values[0].resize(1);
+    }
+}
+
+template<class T>
+Matrix<T>::Matrix(int rows, int col)
+    : _values(rows), _rows(rows), _columns(col)
+{
+    for(int i = 0; i < rows; i++) {
+        _values[i].resize(col);
     }
 }
 
 template<class T>
 Matrix<T>::Matrix(const Matrix<T>& other)
-    : datos(other.datos), cantF(other.cantF), cantC(other.cantC)
+    : _values(other._values), _rows(other._rows), _columns(other._columns)
 {}
 
 template<class T>
@@ -79,20 +91,20 @@ Matrix<T>& Matrix<T>::operator=(const Matrix<T>& other) {
   if (&other == this)
     return *this;
 
-  int nCantF = other.cantF;
-  int nCantC = other.cantC;
+  int new_rows = other._rows;
+  int new_columns = other._columns;
   
-  cantF = other.cantF;
-  cantC = other.cantC;
+  _rows = new_rows;
+  _columns = new_columns;
 
-  datos.resize(nCantF);
-  for (int i = 0; i < nCantF; i++) {
-      datos[i].resize(nCantC);
+  _values.resize(new_rows);
+  for (int i = 0; i < new_columns; i++) {
+      _values[i].resize(new_columns);
   }
 
-  for(int i = 0; i < nCantF; i++) {
-    for(int j = 0; j < nCantC; j++) {
-      datos[i][j] = other(i, j);
+  for(int i = 0; i < new_rows; i++) {
+    for(int j = 0; j < new_columns; j++) {
+      _values[i][j] = other(i, j);
     }
   }
   
@@ -102,115 +114,136 @@ Matrix<T>& Matrix<T>::operator=(const Matrix<T>& other) {
 template<class T>
 Matrix<T> Matrix<T>::operator*(const Matrix<T>& other) {
     // ASUME QUE LAS DIMENSIONES DAN
-    Matrix<T> resultado(cantF, other.cantC);
+    Matrix<T> result(_rows, other._columns);
     
-    int dimInterna = cantC; // Tambien podria ser other.cantF
+    int innerDim = _columns; // Tambien podria ser other._rows
     
-    for(int i = 0; i < resultado.cantF; i++) {
-        for(int j = 0; j < resultado.cantC; j++) {
-            resultado(i,j) = 0;
-            for(int k = 0; k < dimInterna; k++) {
-                resultado(i,j) += datos[i][k] * other(k,j);
+    for(int i = 0; i < result._rows; i++) {
+        for(int j = 0; j < result._columns; j++) {
+            result(i,j) = 0;
+            for(int k = 0; k < innerDim; k++) {
+                result(i,j) += _values[i][k] * other(k,j);
             }
         }
     }
     
-    return resultado;
+    return result;
 }
 
 template<class T>
 Matrix<T>& Matrix<T>::operator*=(const Matrix<T>& other) {
-    Matrix<T> resultado = (*this) * other;
-    (*this) = resultado;
+    Matrix<T> result = (*this) * other;
+    (*this) = result;
     return (*this);
 }
 
 template<class T>
 Matrix<T> Matrix<T>::operator+(const Matrix<T>& other) {
     // ASUME QUE LAS DIMENSIONES DAN
-    Matrix<T> resultado(cantF, other.cantC);
+    Matrix<T> result(_rows, other._columns);
     
-    for(int i = 0; i < resultado.cantF; i++) {
-        for(int j = 0; j < resultado.cantC; j++) {
-            resultado(i,j) = datos[i][j] + other(i,j);
+    for(int i = 0; i < result._rows; i++) {
+        for(int j = 0; j < result._columns; j++) {
+            result(i,j) = _values[i][j] + other(i,j);
         }
     }
     
-    return resultado;
+    return result;
 }
 
 template<class T>
 Matrix<T>& Matrix<T>::operator+=(const Matrix<T>& other) {
-    Matrix<T> resultado = (*this) + other;
-    (*this) = resultado;
+    Matrix<T> result = (*this) + other;
+    (*this) = result;
     return (*this);
 }
 
 template<class T>
 Matrix<T> Matrix<T>::operator-(const Matrix<T>& other) {
     // ASUME QUE LAS DIMENSIONES DAN
-    Matrix<T> resultado(cantF, other.cantC);
+    Matrix<T> result(_rows, other._columns);
     
-    for(int i = 0; i < resultado.cantF; i++) {
-        for(int j = 0; j < resultado.cantC; j++) {
-            resultado(i,j) = datos[i][j] - other(i,j);
+    for(int i = 0; i < result._rows; i++) {
+        for(int j = 0; j < result._columns; j++) {
+            result(i,j) = _values[i][j] - other(i,j);
         }
     }
     
-    return resultado;
+    return result;
 }
 
 template<class T>
 Matrix<T>& Matrix<T>::operator-=(const Matrix<T>& other) {
-    Matrix<T> resultado = (*this) - other;
-    (*this) = resultado;
+    Matrix<T> result = (*this) - other;
+    (*this) = result;
     return (*this);
 }
 
 template<class T>
 Matrix<T> Matrix<T>::operator*(const T& scalar) {
-    Matrix<T> resultado(cantF, cantC);
+    Matrix<T> result(_rows, _columns);
     
-    for(int i = 0; i < resultado.cantF; i++) {
-        for(int j = 0; j < resultado.cantC; j++) {
-            resultado(i,j) = datos[i][j] * scalar;
+    for(int i = 0; i < result._rows; i++) {
+        for(int j = 0; j < result._columns; j++) {
+            result(i,j) = _values[i][j] * scalar;
         }
     }
     
-    return resultado;
+    return result;
 }
 
 template<class T>
 Matrix<T> Matrix<T>::operator/(const T& scalar) {
-    Matrix<T> resultado(cantF, cantC);
+    Matrix<T> result(_rows, _columns);
     
-    for(int i = 0; i < resultado.cantF; i++) {
-        for(int j = 0; j < resultado.cantC; j++) {
-            resultado(i,j) = datos[i][j] / scalar;
+    for(int i = 0; i < result._rows; i++) {
+        for(int j = 0; j < result._columns; j++) {
+            result(i,j) = _values[i][j] / scalar;
         }
     }
     
-    return resultado;
+    return result;
 }
 
 template<class T>
 T& Matrix<T>::operator ()(int a, int b) {
-    return datos[a][b];
+    return _values[a][b];
 }
 
 template<class T>
 const T& Matrix<T>::operator ()(const int a, const int b) const {
-    return datos[a][b];
+    return _values[a][b];
 }
 
 template<class T>
-int Matrix<T>::filas() {
-    return cantF;
+T& Matrix<T>::operator ()(int a) {
+    return _values[a][0];
 }
 
 template<class T>
-int Matrix<T>::columnas() {
-    return cantC;
+const T& Matrix<T>::operator ()(const int a) const {
+    return _values[a][0];
+}
+
+template<class T>
+int Matrix<T>::rows() {
+    return _rows;
+}
+
+template<class T>
+int Matrix<T>::columns() {
+    return _columns;
+}
+
+template<class T>
+void Matrix<T>::printMatrix() {
+    for(int i = 0; i < _rows; i++) {;
+        for(int j = 0; j < _columns; j++) {
+            cout << _values[i][j] << " ";
+        }
+        cout << endl;
+    }
+    cout << endl;
 }
 
 #endif	/* MATRIX_H */
