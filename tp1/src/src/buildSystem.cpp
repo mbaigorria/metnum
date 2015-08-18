@@ -24,8 +24,6 @@ int main() {
 	Matrix<double> A((m-1)*(n+1),(m-1)*(n+1));
 	Matrix<double> b((m-1)*(n+1), 1);
 
-	cout << "dim(A) = " << (m-1)*(n+1) << endl;
-
 	/* each temperature has 1 laplacian, and depends on 4 temperatures.
 	 * i'm looking for t_j,k in the valid range.
 	 */ 
@@ -38,7 +36,7 @@ int main() {
 	cout << "Matrix A" << endl;
 	A.printMatrix();
 
-	cout << "Matrix B" << endl;
+	cout << "Matrix b" << endl;
 	b.printMatrix();
 
 	return 0;
@@ -58,11 +56,10 @@ int main() {
 void insertValue(Matrix<double>& A, Matrix<double>& b, int j, int k, double r_i, double r_e, int n, int m, double t_e) {
 
 	double dO = 2*M_PI / n;
-	double dR = (r_e - r_i) / k;
+	double dR = (r_e - r_i) / m;
+
 	int r = k * (m - 1) + (j - 1);
 	double r_j = r_i + j*dR;
-
-	cout << "j: " << j << " k: " << k << " r: " << r << " col: " << k*(m - 1) + (j-1) << " (n: " << n << " m: " << m << ")" << endl;
 
 	A(r,r)     = - (2/pow(dR, 2)) + (1/(r_j*dR)) - (2/pow(r_j, 2)*pow(dO, 2)); // t_j,k
 
