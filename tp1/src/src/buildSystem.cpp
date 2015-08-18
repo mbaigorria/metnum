@@ -46,7 +46,7 @@ int main() {
  */
 void insertValue(double* A, double* b, int j, int k, double r_i, double r_e, int m, int n, double t_e) {
 
-	double dO = 360 / n;
+	double dO = M_PI / n;
 	double dR = (r_e - r_i) / k;
 	int r = (j-1) * (n+1);
 	double r_j = r_i + j*dR;
