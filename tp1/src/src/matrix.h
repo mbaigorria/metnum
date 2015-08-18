@@ -65,7 +65,7 @@ Matrix<T>::Matrix(int rows)
     : _values(rows), _rows(rows), _columns(1)
 {
     for(int i = 0; i < rows; i++) {
-        _values[0].resize(1);
+        _values[i].resize(1);
     }
 }
 
