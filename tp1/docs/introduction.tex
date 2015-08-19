@@ -74,12 +74,12 @@ De esta manera, terminamos con un sistema de $(m-1)*(n+1)$ ecuaciones lineales, 
 Para formular el sistema lineal, en primer lugar debemos despejar cada una de las variables $t_{j,k}$ de la aproximación discreta del laplaciano:
 
 \begin{equation}\label{calor}
-\frac{t_{j-1,k}-2t_{jk}+t_{j+1,k}}{(\Delta r)^2}
+\frac{t_{j-1,k}-2t_{j,k}+t_{j+1,k}}{(\Delta r)^2}
 + \frac{1}{r_j}
 \frac{t_{j,k}-t_{j-1,k}}{\Delta r}
 +
 \frac{1}{r_j^2}
-\frac{t_{j,k-1}-2t_{jk}+t_{j,k+1}}{(\Delta \theta)^2} = 0
+\frac{t_{j,k-1}-2t_{j,k}+t_{j,k+1}}{(\Delta \theta)^2} = 0
 \end{equation}
 
 Reescribiendo:
@@ -91,15 +91,15 @@ Reescribiendo:
 Donde:
 
 \begin{equation}
-\alpha_{j,k} = \frac{-2}{(\Delta r)^2} + \frac{1}{r_j \times \Delta r} + \frac{-2}{r_j^2 \times \Delta \theta^2}
+\alpha_{j,k} = \frac{-2}{(\Delta r)^2} + \frac{1}{r_j \times \Delta r} + \frac{-2}{r_j^2 \times (\Delta \theta)^2}
 \end{equation}
 
 \begin{equation}
-\alpha_{j,k+1} = \frac{1}{r_j^2 \times \Delta \theta^2}
+\alpha_{j,k+1} = \frac{1}{r_j^2 \times (\Delta \theta)^2}
 \end{equation}
 
 \begin{equation}
-\alpha_{j,k-1} = \frac{1}{r_j^2 \times \Delta \theta^2}
+\alpha_{j,k-1} = \frac{1}{r_j^2 \times (\Delta \theta)^2}
 \end{equation}
 
 \begin{equation}

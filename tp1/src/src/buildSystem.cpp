@@ -11,18 +11,18 @@ void insertValue(Matrix<double>& A, Matrix<double>& b, int j, int k, double r_i,
 int main() {
 
 	// granularity
-	int n = 2; // O0 < 0_k < ... < 0_n
+	int n = 3; // O0 < 0_k < ... < 0_n
 	int m = 3; // r0 < r_j < ... < r_m 
 
 	// system parameters
 	double r_i = 1;
 
-	double r_e = 3;
+	double r_e = 5;
 	double t_e = 10;
 
 	// build system: Ax = b
 	Matrix<double> A((m-1)*(n+1),(m-1)*(n+1));
-	Matrix<double> b((m-1)*(n+1), 1);
+	Matrix<double> b((m-1)*(n+1));
 
 	/* each temperature has 1 laplacian, and depends on 4 temperatures.
 	 * i'm looking for t_j,k in the valid range.
@@ -75,7 +75,7 @@ void insertValue(Matrix<double>& A, Matrix<double>& b, int j, int k, double r_i,
 
 	// t_j-1,k
 	if (j == 1) { // inner circle
-		b(r) -= INNER_TEMP * (1/pow(dR, 2) + 1/(r_e * dR));
+		b(r) -= INNER_TEMP * (1/pow(dR, 2) - 1/(r_j * dR));
 	} else {
 		A(r,r - 1) += 1/pow(dR, 2) - 1/(r_j * dR);
 	}
