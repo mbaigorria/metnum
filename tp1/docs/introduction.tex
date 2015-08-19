@@ -85,7 +85,7 @@ Para formular el sistema lineal, en primer lugar debemos despejar cada una de la
 Reescribiendo:
 
 \begin{equation}
-\alpha_{j,k} \times t_{j,k} + \alpha_{j-1,k} \times t_{j-1,k} + \alpha_{j+1,k} \times t_{j+1,k} + \alpha_{j,k+1} \times t_{j,k+1} + \alpha_{j,k} \times t_{j,k-1} = 0
+\alpha_{j,k} \times t_{j,k} + \alpha_{j-1,k} \times t_{j-1,k} + \alpha_{j+1,k} \times t_{j+1,k} + \alpha_{j,k+1} \times t_{j,k+1} + \alpha_{j,k-1} \times t_{j,k-1} = 0
 \end{equation}
 
 Donde:
@@ -95,23 +95,19 @@ Donde:
 \end{equation}
 
 \begin{equation}
-\alpha_{j-1,k} = \frac{-2}{(\Delta r)^2} - \frac{1}{r_j \times \Delta r}
-\end{equation}
-
-\begin{equation}
-\alpha_{j+1,k} = \frac{-2}{(\Delta r)^2}
-\end{equation}
-
-\begin{equation}
-\alpha_{j+1,k} = \frac{-2}{(\Delta r)^2}
-\end{equation}
-
-\begin{equation}
 \alpha_{j,k+1} = \frac{-2}{r_j^2 \times \Delta \theta^2}
 \end{equation}
 
 \begin{equation}
 \alpha_{j,k-1} = \frac{1}{r_j^2 \times \Delta \theta^2}
+\end{equation}
+
+\begin{equation}
+\alpha_{j+1,k} = \frac{-2}{(\Delta r)^2}
+\end{equation}
+
+\begin{equation}
+\alpha_{j-1,k} = \frac{-2}{(\Delta r)^2} - \frac{1}{r_j \times \Delta r}
 \end{equation}
 
 \subsection{Isoterma}
