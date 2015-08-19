@@ -43,8 +43,8 @@ int main() {
 }
 
 /* t_j,k
- * j: radius
- * k: angle
+ * r0 < r_j < ... < r_m 
+ * O0 < 0_k < ... < 0_n
  * b = | t1,0   | rows with fixed angle first.
  *     | ...... |
  *     | tm-1,0 |
@@ -65,21 +65,23 @@ void insertValue(Matrix<double>& A, Matrix<double>& b, int j, int k, double r_i,
 	A(r,r)     = - (2/pow(dR, 2)) + (1/(r_j*dR)) - (2/pow(r_j, 2)*pow(dO, 2));
 
 	// t_j,k+1, border case! k > n, angle = 0
-	A(r, (j-1)) = - (2/pow(r_j, 2)*pow(dO, 2));
+	A(r, r + (j-1) ) = - (2/pow(r_j, 2)*pow(dO, 2));
 
 	// t_j,k-1, border case! k < 0 
 	A(r,(r - (m-1)) % (m-1)*(n+1)) = (1/(pow(r_j, 2)*pow(dO, 2)));
 
-	// t_j+1,k
-	A(r,r + 1) = (-2/pow(dR, 2));
-
 	// t_j-1,k
 	if (j == 1) { // inner circle
 		b(r) = INNER_TEMP * ((2/pow(dR, 2)) + (1 / (r_e * dR)));
-	} else if (j == m) { // outer circle
-		b(r) = t_e * ((2/pow(dR, 2)) + (1 / (r_e * dR)));
 	} else {
 		A(r,r - 1) = - (2/pow(dR, 2)) - (1 / (r_j * dR));
+	}
+	
+	// t_j+1,k
+	if (j+1 == m) { // outer circle
+		b(r) = t_e * (2/pow(dR, 2));
+	} else {
+		A(r,r + 1) = (-2/pow(dR, 2));
 	}
 
 }
