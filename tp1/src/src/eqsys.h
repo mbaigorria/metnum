@@ -18,7 +18,7 @@ class EquationSystemLU {
     public:
         EquationSystemLU(const Matrix<T>& inicial);
         
-        //vector<T> solve(const vector<T>& values);
+        Matrix<T> solve(Matrix<T>& b_values);
         
     private:
         Matrix<T> lower;
@@ -102,14 +102,49 @@ EquationSystemLU<T>::EquationSystemLU(const Matrix<T>& inicial)
             }
         }
     }
-    // COSAS PARA TESTEAR NOMAS, IGNORAR
-    
-    upper.printMatrix();
-    lower.printMatrix();
-
-    lower *= upper;
-    lower.printMatrix();
 }
+
+template<class T>
+Matrix<T> EquationSystemLU<T>::solve(Matrix<T>& b_values) {
+
+    Matrix<T> temp_values = Matrix<T>(b_values);
+    Matrix<T> y_values = Matrix<T>(b_values.rows());
+    Matrix<T> x_values = Matrix<T>(b_values.rows());
+
+    for(int i = 0; i < temp_values.rows(); i++) {
+        for (int j = 0; j < i; j++) {
+            temp_values(i) -= y_values(j) * lower(i,j);
+        }
+        if(i == 0) {
+            y_values(0) = temp_values(0) / lower(0,0); // Calculo aparte el primer valor
+        } else {
+            y_values(i) = temp_values(i) / lower(i,i);
+        }
+    }
+
+    temp_values = y_values;
+    for(int i = temp_values.rows() - 1; i >= 0; i--) {
+        for (int j = temp_values.rows() - 1; j > i; j--) {
+            temp_values(i) -= x_values(j) * upper(i,j);
+        }
+        if(i == x_values.rows() - 1) {
+            x_values(x_values.rows() - 1) = temp_values(temp_values.rows() - 1) / upper(upper.rows() - 1, upper.columns() - 1);
+        } else {
+            x_values(i) = temp_values(i) / upper(i,i);
+        }
+    }
+
+    //x_values.printMatrix();
+
+    if(isPermutated) {
+        x_values = permutation * x_values;
+    }
+
+    return x_values;
+
+}
+
+
 
 template<class T>
 class EquationSystem{
@@ -119,7 +154,7 @@ class EquationSystem{
         vector<T> solve(const vector<T>& values);
         
     private:
-        Matrix<T> matriz;
+        Matrix<T> matrix;
 };
 
 #endif	/* EQSYS_H */
