@@ -32,19 +32,10 @@ EquationSystemLU<T>::EquationSystemLU(const Matrix<T>& inicial)
     : upper(inicial), isPermutated(false)
 {
     int coef;
-    int i, j, k, l, m;
+    int i, j, k, l;
     
-    // Armar la matriz lower con la diagonal en uno
-    lower = Matrix<T>(upper.rows(), upper.columns());
-    for(i = 0; i < lower.rows(); i++){
-        for(j = 0; j < lower.columns(); j++) {
-            if(i == j) {
-                lower(i,j) = 1;
-            } else {
-                lower(i,j) = 0;
-            }
-        }
-    }
+    // Armar la matriz lower
+    lower = Matrix<T>(upper.rows(), upper.columns(), 0);
     
     for(i = 0; i < upper.columns(); i++) {
         for(j = i + 1; j < upper.rows(); j++) {
@@ -62,16 +53,10 @@ EquationSystemLU<T>::EquationSystemLU(const Matrix<T>& inicial)
                     if(!isPermutated){
                         // Generamos la matriz de permutacion con uno en la diagonal
                         isPermutated = true;
-                        permutation = Matrix<T>(upper.rows(), upper.columns());
+                        permutation = Matrix<T>(upper.rows(), upper.columns(), 0);
                         
                         for(l = 0; l < permutation.rows(); l++) {
-                            for(m = 0; m < permutation.columns(); m++) {
-                                if(l == m) {
-                                    permutation(l,m) = 1;
-                                } else {
-                                    permutation(l,m) = 0;
-                                }
-                            }
+                            permutation(l,l) = 1;
                         }
                     }
                     // Permutamos las filas
@@ -87,8 +72,9 @@ EquationSystemLU<T>::EquationSystemLU(const Matrix<T>& inicial)
                             permutation(k, l) = 0;
                         }                        
                     }
-                    // Hacemos el producto para efectivamente permutar upper
+                    // Hacemos el producto para efectivamente permutar
                     upper = permutation * upper;
+                    lower = permutation * lower;
                 }
             }
             
@@ -102,6 +88,10 @@ EquationSystemLU<T>::EquationSystemLU(const Matrix<T>& inicial)
             }
         }
     }
+    // Agrego la diagonal de unos a lower
+    for(i = 0; i < lower.rows(); i++){
+        lower(i,i) = 1;
+    }
 }
 
 template<class T>
@@ -111,6 +101,10 @@ Matrix<T> EquationSystemLU<T>::solve(Matrix<T>& b_values) {
     Matrix<T> y_values = Matrix<T>(b_values.rows());
     Matrix<T> x_values = Matrix<T>(b_values.rows());
 
+    if(isPermutated) {
+        temp_values = permutation * temp_values;
+    }
+    
     for(int i = 0; i < temp_values.rows(); i++) {
         for (int j = 0; j < i; j++) {
             temp_values(i) -= y_values(j) * lower(i,j);
@@ -134,11 +128,9 @@ Matrix<T> EquationSystemLU<T>::solve(Matrix<T>& b_values) {
         }
     }
 
-    //x_values.printMatrix();
-
-    if(isPermutated) {
-        x_values = permutation * x_values;
-    }
+    //if(isPermutated) {
+    //    x_values = permutation * x_values;
+    //}
 
     return x_values;
 

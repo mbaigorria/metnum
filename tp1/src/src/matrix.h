@@ -23,6 +23,7 @@ class Matrix {
         Matrix();
         Matrix(int rows); // Columnas impllicitas (col = 1)
         Matrix(int rows, int col);
+        Matrix(int rows, int col, const T& init);
         Matrix(const Matrix<T>& other);
         ~Matrix();
         
@@ -75,6 +76,15 @@ Matrix<T>::Matrix(int rows, int col)
 {
     for(int i = 0; i < rows; i++) {
         _values[i].resize(col);
+    }
+}
+
+template<class T>
+Matrix<T>::Matrix(int rows, int col, const T& init)
+    : _values(rows), _rows(rows), _columns(col)
+{
+    for(int i = 0; i < rows; i++) {
+        _values[i].resize(col, init);
     }
 }
 
