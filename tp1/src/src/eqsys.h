@@ -31,7 +31,7 @@ template<class T>
 EquationSystemLU<T>::EquationSystemLU(const Matrix<T>& inicial)
     : upper(inicial), isPermutated(false)
 {
-    int coef;
+    T coef;
     int i, j, k, l;
     
     // Armar la matriz lower
@@ -79,10 +79,11 @@ EquationSystemLU<T>::EquationSystemLU(const Matrix<T>& inicial)
             }
             
             // Calculamos y guardamos el coeficiente
-            coef = upper(j, i)/upper(i, i);
+            // cout << upper(j,i) << " , " << upper(i,i) << endl;
+            coef = upper(j, i) / upper(i, i);
             lower(j, i) = coef;
-
             // Colocamos cero en la columna bajo la diagonal
+            //upper(j,i) = 0;
             for(k = i; k < upper.columns(); k++) {
                 upper(j, k) = upper(j, k) - coef * upper(i, k);
             }

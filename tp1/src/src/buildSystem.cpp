@@ -11,14 +11,14 @@ void insertValue(Matrix<double>& A, Matrix<double>& b, int j, int k, double r_i,
 int main() {
 
 	// granularity
-	int n = 5; // O0 < 0_k < ... < 0_n
-	int m = 4; // r0 < r_j < ... < r_m 
+	int n = 1; // O0 < 0_k < ... < 0_n
+	int m = 2; // r0 < r_j < ... < r_m 
 
 	// system parameters
 	double r_i = 1;
 
-	double r_e = 5;
-	double t_e = 2000;
+	double r_e = 3;
+	double t_e = 100;
 
 	// build system: Ax = b
 	Matrix<double> A((m-1)*(n+1),(m-1)*(n+1),0);
@@ -46,6 +46,9 @@ int main() {
 
 	cout << "Matrix x" << endl;
 	result.printMatrix();
+
+	A *= result;
+	A.printMatrix();
 
 	return 0;
 }
