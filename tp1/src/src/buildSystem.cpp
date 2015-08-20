@@ -68,10 +68,10 @@ void insertValue(Matrix<double>& A, Matrix<double>& b, int j, int k, double r_i,
 	A(r,r) += - (2/pow(dR, 2)) + (1/(r_j*dR)) - (2/pow(r_j, 2)*pow(dO, 2));
 
 	// t_j,k+1, border case! k > n, angle = 0
-	A(r, (r + (m-1)) % (m-1)*(n+1)) += 1/(pow(r_j, 2)*pow(dO, 2));
+	A(r, ((k+1) % (n+1)) * (m-1) + (j-1)) += 1/(pow(r_j, 2)*pow(dO, 2));
 
 	// t_j,k-1, border case! k < 0 
-	A(r,(r - (m-1)) % (m-1)*(n+1))  += 1/(pow(r_j, 2)*pow(dO, 2));
+	A(r, ((k+1) % (n+1)) * (m-1) + (j-1)) += 1/(pow(r_j, 2)*pow(dO, 2));
 
 	// t_j-1,k
 	if (j == 1) { // inner circle
