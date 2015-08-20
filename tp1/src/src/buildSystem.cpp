@@ -2,7 +2,7 @@
 #include <math.h>
 #include "eqsys.h"
 
-#define INNER_TEMP 20
+#define INNER_TEMP 1500
 
 using namespace std;
 
@@ -11,18 +11,18 @@ void insertValue(Matrix<double>& A, Matrix<double>& b, int j, int k, double r_i,
 int main() {
 
 	// granularity
-	int n = 3; // O0 < 0_k < ... < 0_n
-	int m = 3; // r0 < r_j < ... < r_m 
+	int n = 5; // O0 < 0_k < ... < 0_n
+	int m = 4; // r0 < r_j < ... < r_m 
 
 	// system parameters
 	double r_i = 1;
 
 	double r_e = 5;
-	double t_e = 10;
+	double t_e = 2000;
 
 	// build system: Ax = b
-	Matrix<double> A((m-1)*(n+1),(m-1)*(n+1));
-	Matrix<double> b((m-1)*(n+1));
+	Matrix<double> A((m-1)*(n+1),(m-1)*(n+1),0);
+	Matrix<double> b((m-1)*(n+1),1,0);
 
 	/* each temperature has 1 laplacian, and depends on 4 temperatures.
 	 * i'm looking for t_j,k in the valid range.
@@ -39,6 +39,13 @@ int main() {
 
 	cout << "Matrix b" << endl;
 	b.printMatrix();
+
+	EquationSystemLU<double> e(A);
+
+	Matrix<double> result(e.solve(b));
+
+	cout << "Matrix x" << endl;
+	result.printMatrix();
 
 	return 0;
 }
