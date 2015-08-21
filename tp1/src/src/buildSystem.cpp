@@ -1,5 +1,9 @@
 #include <iostream>
 #include <math.h>
+#include <stdio.h>
+#include <fstream>
+#include <sstream>
+#include <unistd.h>
 #include "eqsys.h"
 
 #define INNER_TEMP 1500
@@ -8,47 +12,90 @@ using namespace std;
 
 void insertValue(Matrix<double>& A, Matrix<double>& b, int j, int k, double r_i, double r_e, int n, int m, double t_e);
 
-int main() {
+int main(int argc, char** argv) {
 
-	// granularity
-	int n = 1; // O0 < 0_k < ... < 0_n
-	int m = 2; // r0 < r_j < ... < r_m 
-
-	// system parameters
-	double r_i = 1;
-
-	double r_e = 3;
-	double t_e = 100;
-
-	// build system: Ax = b
-	Matrix<double> A((m-1)*(n+1),(m-1)*(n+1),0);
-	Matrix<double> b((m-1)*(n+1),1,0);
-
-	/* each temperature has 1 laplacian, and depends on 4 temperatures.
-	 * i'm looking for t_j,k in the valid range.
-	 */ 
-	for (int k = 0; k <= n; k++) {
-		for (int j = 1; j < m; j++) { // avoid borders
-			insertValue(A,b,j,k,r_i,r_e,n,m,t_e);
-		}
+	if (argc != 4) {
+		printf("Usage: %s inputFile outputFile method (0: EG, 1: LU)\n", argv[0]);
+		return 0;
 	}
 
-	cout << endl;
-	cout << "Matrix A" << endl;
-	A.printMatrix();
+	ifstream inputFile(argv[1]);
 
-	cout << "Matrix b" << endl;
-	b.printMatrix();
+	if (!inputFile.is_open()) {
+		printf("Non-existant input file.\n");
+		return 0;
+	}
 
-	EquationSystemLU<double> e(A);
+	// granularity
+	int n; // O0 < 0_k < ... < 0_n
+	int m; // r0 < r_j < ... < r_m 
 
-	Matrix<double> result(e.solve(b));
+	// system parameters
+	double r_i, r_e;
 
-	cout << "Matrix x" << endl;
-	result.printMatrix();
+	double t_i[n];
+	double t_e[n]; 
 
-	A *= result;
-	A.printMatrix();
+	double iso;
+	int ninst; // instances of the problem to solve
+
+	// load system parameters
+	string line;
+	getline(inputFile, line);
+	istringstream ss(line);
+	ss >> r_i >> r_e >> m >> n >> iso >> ninst;
+
+	cout << "r_i: " << r_i << " r_e: " << r_e << " m: " << m << " n: " << n << " iso: " << iso << " ninst: " << ninst << endl;
+
+	// load temperatures (one instance for now)
+	getline(inputFile, line);
+
+	ss.str(line);
+	ss.clear();
+
+	for (int i = 0; i < n; i++) {
+		ss >> t_i[i];
+	}
+
+	for (int i = 0; i < n; i++) {
+		ss >> t_e[i];
+	}
+
+	sleep(30);
+
+	for (int i = 0; i < n; i++) {
+		cout << t_i[i] << endl;
+	}
+
+	// // build system: Ax = b
+	// Matrix<double> A((m-1)*(n+1),(m-1)*(n+1),0);
+	// Matrix<double> b((m-1)*(n+1),1,0);
+
+	// /* each temperature has 1 laplacian, and depends on 4 temperatures.
+	//  * i'm looking for t_j,k in the valid range.
+	//  */ 
+	// for (int k = 0; k <= n; k++) {
+	// 	for (int j = 1; j < m; j++) { // avoid borders
+	// 		insertValue(A,b,j,k,r_i,r_e,n,m,t_e);
+	// 	}
+	// }
+
+	// cout << endl;
+	// cout << "Matrix A" << endl;
+	// A.printMatrix();
+
+	// cout << "Matrix b" << endl;
+	// b.printMatrix();
+
+	// EquationSystemLU<double> e(A);
+
+	// Matrix<double> result(e.solve(b));
+
+	// cout << "Matrix x" << endl;
+	// result.printMatrix();
+
+	// A *= result;
+	// A.printMatrix();
 
 	return 0;
 }
@@ -66,7 +113,7 @@ int main() {
  */
 void insertValue(Matrix<double>& A, Matrix<double>& b, int j, int k, double r_i, double r_e, int n, int m, double t_e) {
 
-	cout << "j: " << j << " k: " << k << " m: " << m << " n: " << n << endl;
+	// cout << "j: " << j << " k: " << k << " m: " << m << " n: " << n << endl;
 
 	double dO = 2*M_PI / (n+1);
 	double dR = (r_e - r_i) / m;
