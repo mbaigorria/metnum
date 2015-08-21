@@ -5,6 +5,7 @@
 #include <sstream>
 #include <stdio.h>
 #include <string.h>
+#include <new>
 #include "eqsys.h"
 
 using namespace std;
@@ -34,8 +35,8 @@ int main(int argc, char** argv) {
 	// system parameters
 	double r_i, r_e;
 
-	double t_i[30];
-	double t_e[30]; 
+	double* t_i = new double[n];
+	double* t_e = new double[n]; 
 
 	double iso;
 	int ninst; // instances of the problem to solve
@@ -88,6 +89,9 @@ int main(int argc, char** argv) {
 
 	// A *= result;
 	// A.printMatrix();
+
+	delete[] t_i;
+	delete[] t_e;
 
 	return 0;
 }
