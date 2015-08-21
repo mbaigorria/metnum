@@ -84,6 +84,7 @@ int main(int argc, char** argv) {
 
 	printf("Looking for solution!\n");
 	Matrix<double> result(e.solve(b));
+	printf("Solution found!\n");
 
 	result.printMatrix();
 
@@ -109,7 +110,7 @@ int main(int argc, char** argv) {
  */
 void insertValue(Matrix<double>& A, Matrix<double>& b, int j, int k, double r_i, double r_e, int n, int m, double* t_i, double* t_e) {
 
-	cout << "j: " << j << " k: " << k << " m: " << m << " n: " << n << endl;
+	// cout << "j: " << j << " k: " << k << " m: " << m << " n: " << n << endl;
 
 	double dO = 2*M_PI / (n+1);
 	double dR = (r_e - r_i) / m;
