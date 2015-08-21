@@ -34,8 +34,8 @@ int main(int argc, char** argv) {
 	// system parameters
 	double r_i, r_e;
 
-	double t_i[n];
-	double t_e[n]; 
+	double t_i[30];
+	double t_e[30]; 
 
 	double iso;
 	int ninst; // instances of the problem to solve
