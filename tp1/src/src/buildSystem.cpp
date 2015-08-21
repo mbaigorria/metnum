@@ -66,8 +66,8 @@ int main(int argc, char** argv) {
 	inputFile.close();
 
 	// build system: Ax = b
-	Matrix<double> A((m-1)*(n+1),(m-1)*(n+1),0);
-	Matrix<double> b((m-1)*(n+1),1,0);
+	Matrix<double> A((m-2)*(n+1),(m-2)*(n+1),0);
+	Matrix<double> b((m-2)*(n+1),1,0);
 
 	// each temperature has 1 laplacian, and depends on 4 temperatures.
 	// i'm looking for t_j,k in the valid range.
@@ -75,10 +75,12 @@ int main(int argc, char** argv) {
 	printf("Loading system!\n");
 	for (int k = 0; k <= n; k++) {
 		for (int j = 1; j < m-1; j++) { // avoid borders
-			insertValue(A,b,j,k,r_i,r_e,n,m,t_i,t_e);
+			insertValue(A,b,j,k,r_i,r_e,n,m-1,t_i,t_e);
 		}
 	}
 	printf("Finished loading system!\n");
+
+	// A.printMatrix();
 
 	EquationSystemLU<double> e(A);
 
