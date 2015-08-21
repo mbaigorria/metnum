@@ -3,14 +3,13 @@
 #include <stdio.h>
 #include <fstream>
 #include <sstream>
-#include <unistd.h>
+#include <stdio.h>
+#include <string.h>
 #include "eqsys.h"
-
-#define INNER_TEMP 1500
 
 using namespace std;
 
-void insertValue(Matrix<double>& A, Matrix<double>& b, int j, int k, double r_i, double r_e, int n, int m, double t_e);
+void insertValue(Matrix<double>& A, Matrix<double>& b, int j, int k, double r_i, double r_e, int n, int m, double* t_i, double* t_e);
 
 int main(int argc, char** argv) {
 
@@ -21,10 +20,12 @@ int main(int argc, char** argv) {
 
 	ifstream inputFile(argv[1]);
 
-	if (!inputFile.is_open()) {
+	if (inputFile.bad()) {
 		printf("Non-existant input file.\n");
 		return 0;
 	}
+
+	printf("Let's get started!\n");
 
 	// granularity
 	int n; // O0 < 0_k < ... < 0_n
@@ -42,57 +43,48 @@ int main(int argc, char** argv) {
 	// load system parameters
 	string line;
 	getline(inputFile, line);
-	istringstream ss(line);
-	ss >> r_i >> r_e >> m >> n >> iso >> ninst;
+	sscanf(line.c_str(),"%lf %lf %d %d %lf %d",&r_i,&r_e,&m,&n,&iso,&ninst);
 
 	cout << "r_i: " << r_i << " r_e: " << r_e << " m: " << m << " n: " << n << " iso: " << iso << " ninst: " << ninst << endl;
 
 	// load temperatures (one instance for now)
 	getline(inputFile, line);
 
-	ss.str(line);
-	ss.clear();
+ 	char* buffer = strtok(strdup(line.c_str()), " ");
 
-	for (int i = 0; i < n; i++) {
-		ss >> t_i[i];
+ 	for (int i = 0; i < n; ++i) {
+ 		sscanf(buffer, "%lf", &t_i[i]);
+ 		buffer = strtok(NULL, " ");
+ 	}
+
+ 	for (int i = 0; i < n; ++i) {
+ 		sscanf(buffer, "%lf", &t_e[i]);
+ 		buffer = strtok(NULL, " ");
+ 	}
+
+	inputFile.close();
+
+	// build system: Ax = b
+	Matrix<double> A((m-1)*(n+1),(m-1)*(n+1),0);
+	Matrix<double> b((m-1)*(n+1),1,0);
+
+	// each temperature has 1 laplacian, and depends on 4 temperatures.
+	// i'm looking for t_j,k in the valid range.
+	
+	printf("Loading system!\n");
+	for (int k = 0; k <= n; k++) {
+		for (int j = 1; j < m-1; j++) { // avoid borders
+			insertValue(A,b,j,k,r_i,r_e,n,m,t_i,t_e);
+		}
 	}
+	printf("Finished loading system!\n");
 
-	for (int i = 0; i < n; i++) {
-		ss >> t_e[i];
-	}
+	EquationSystemLU<double> e(A);
 
-	sleep(30);
+	printf("Looking for solution!\n");
+	Matrix<double> result(e.solve(b));
 
-	for (int i = 0; i < n; i++) {
-		cout << t_i[i] << endl;
-	}
-
-	// // build system: Ax = b
-	// Matrix<double> A((m-1)*(n+1),(m-1)*(n+1),0);
-	// Matrix<double> b((m-1)*(n+1),1,0);
-
-	// /* each temperature has 1 laplacian, and depends on 4 temperatures.
-	//  * i'm looking for t_j,k in the valid range.
-	//  */ 
-	// for (int k = 0; k <= n; k++) {
-	// 	for (int j = 1; j < m; j++) { // avoid borders
-	// 		insertValue(A,b,j,k,r_i,r_e,n,m,t_e);
-	// 	}
-	// }
-
-	// cout << endl;
-	// cout << "Matrix A" << endl;
-	// A.printMatrix();
-
-	// cout << "Matrix b" << endl;
-	// b.printMatrix();
-
-	// EquationSystemLU<double> e(A);
-
-	// Matrix<double> result(e.solve(b));
-
-	// cout << "Matrix x" << endl;
-	// result.printMatrix();
+	result.printMatrix();
 
 	// A *= result;
 	// A.printMatrix();
@@ -111,9 +103,9 @@ int main(int argc, char** argv) {
  *     | ...... |
  *     | tm-1,n |
  */
-void insertValue(Matrix<double>& A, Matrix<double>& b, int j, int k, double r_i, double r_e, int n, int m, double t_e) {
+void insertValue(Matrix<double>& A, Matrix<double>& b, int j, int k, double r_i, double r_e, int n, int m, double* t_i, double* t_e) {
 
-	// cout << "j: " << j << " k: " << k << " m: " << m << " n: " << n << endl;
+	cout << "j: " << j << " k: " << k << " m: " << m << " n: " << n << endl;
 
 	double dO = 2*M_PI / (n+1);
 	double dR = (r_e - r_i) / m;
@@ -132,14 +124,14 @@ void insertValue(Matrix<double>& A, Matrix<double>& b, int j, int k, double r_i,
 
 	// t_j-1,k
 	if (j == 1) { // inner circle
-		b(r) -= INNER_TEMP * (1/pow(dR, 2) - 1/(r_j * dR));
+		b(r) -= t_i[k] * (1/pow(dR, 2) - 1/(r_j * dR));
 	} else {
 		A(r,r - 1) += 1/pow(dR, 2) - 1/(r_j * dR);
 	}
 	
 	// t_j+1,k
 	if (j+1 == m) { // outer circle
-		b(r) -= t_e * (1/pow(dR, 2));
+		b(r) -= t_e[k] * (1/pow(dR, 2));
 	} else {
 		A(r,r + 1) += (1/pow(dR, 2));
 	}
