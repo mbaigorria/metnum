@@ -17,7 +17,7 @@ class RandomParametersGenerator(object):
 		
 	def generateRandomOutPut(self):
 		self.ninst = int(raw_input("Enter ninst value: "))
-		res = raw_input("Would you use standard inputs or maybe change with other values? \n please, press Y or n: ")
+		res = raw_input("Do you want use standard inputs or maybe change with other values? \n please, press Y or n: ")
 		if res.lower() == YES:
 			self.r_i = int(raw_input("r_i: "))
 			self.r_e = int(raw_input("r_e: "))
@@ -25,7 +25,7 @@ class RandomParametersGenerator(object):
 			self.n = int(raw_input("n: "))
 			self.iso = int(raw_input("iso: "))
 
-		res = raw_input("Would you use standard inner temp or maybe change it with other value? \n please, press Y or n: ")
+		res = raw_input("Do you want use standard inner temp or maybe change it with other value? \n please, press Y or n: ")
 		if res.lower() == YES:
 			self.innerTemp = int(raw_input("Enter new innerTemp: "))
 
@@ -45,7 +45,7 @@ class RandomParametersGenerator(object):
 		# w+ == f.truncate() pero truncate no funciona..
 		f.write(str(self.r_i) + " " + str(self.r_e) + " " + str(self.m) + " " + str(self.n) + " " + str(self.iso) + " " + str(self.ninst) + "\n")
 			
-		res = raw_input("Do you wish constant temperature in the external wall? \n please, press Y or n: ")
+		res = raw_input("Do you want constant temperature in the external wall? \n please, press Y or n: ")
 		constante = False		
 		constantTemp = random.uniform(1, self.iso)		
 		if res.lower() == YES: 
