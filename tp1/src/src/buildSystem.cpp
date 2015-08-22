@@ -43,8 +43,8 @@ int main(int argc, char** argv) {
 
 	saveResult(result, argv[2]);
 
-	delete[] t_i;
-	delete[] t_e;
+	// delete[] t_i;
+	// delete[] t_e;
 
 	return 0;
 }
