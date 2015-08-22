@@ -10,9 +10,12 @@
 
 using namespace std;
 
-void loadLaplacianSystem(Matrix<double>& A, Matrix<double>&b, double r_i, double r_e, int n, int m, double* t_i, double* t_e);
-void insertValue(Matrix<double>& A, Matrix<double>& b, int j, int k, double r_i, double r_e, int n, int m, double* t_i, double* t_e);
-void saveResult(Matrix<double>& m, char* fileName);
+void load_a(Matrix<double>& A, double r_i, double r_e, int n, int m);
+void load_b(Matrix<double>&b, double r_i, double r_e, int n, int m, double* t_i, double* t_e);
+void insert_a(Matrix<double>& A, int j, int k, double r_i, double r_e, int n, int m);
+void insert_b(Matrix<double>& b, int j, int k, double r_i, double r_e, int n, int m, double* t_i, double* t_e);
+void load_temps(ifstream& inputFile, double* t_i, double* t_e, int n);
+void save_result(Matrix<double>& m, FILE * pFile);
 int mod(int a, int b);
 
 int main(int argc, char** argv) {
@@ -54,55 +57,79 @@ int main(int argc, char** argv) {
 	double t_i[n];
 	double t_e[n];
 
-	// load temperatures (one instance for now)
-	getline(inputFile, line);
+ 	FILE * pFile = fopen(argv[2],"w");
 
- 	char* buffer = strtok(strdup(line.c_str()), " ");
-
- 	for (int i = 0; i < n; ++i) {
- 		sscanf(buffer, "%lf", &t_i[i]);
- 		buffer = strtok(NULL, " ");
- 	}
-
- 	for (int i = 0; i < n; ++i) {
- 		sscanf(buffer, "%lf", &t_e[i]);
- 		buffer = strtok(NULL, " ");
- 	}
-
-	inputFile.close();
-
-	// build system: Ax = b
+ 	// build system: Ax = b
 	Matrix<double> A(n*m,n*m,0);
 	Matrix<double> b(n*m,1,0);
 
-	loadLaplacianSystem(A,b,r_i,r_e,n,m,t_i,t_e);
+	if (solver == 0) { // Gaussian Elimination
+		load_a(A,r_i,r_e,n,m);
+		EquationSystemLU<double> e(A); //temp
+		for (int j = 0; j < ninst; ++j) { // for every instance
+			load_temps(inputFile, t_i, t_e, n);
+ 			load_b(b,r_i,r_e,n,m,t_i,t_e);
+			Matrix<double> result(e.solve(b));
+			save_result(result, pFile);
+		}
+	} else {
+		load_a(A,r_i,r_e,n,m);
+		EquationSystemLU<double> e(A); //temp
+		for (int j = 0; j < ninst; ++j) { // for every instance
+			load_temps(inputFile, t_i, t_e, n);
+ 			load_b(b,r_i,r_e,n,m,t_i,t_e);
+			Matrix<double> result(e.solve(b));
+			save_result(result, pFile);
+		}
+	}
 
-	EquationSystemLU<double> e(A);
-	Matrix<double> result(e.solve(b));
-
-	saveResult(result, argv[2]);
+	inputFile.close();
+	fclose(pFile);
 
 	return 0;
 }
 
-void saveResult(Matrix<double>& m, char* fileName) {
-	FILE * pFile = fopen(fileName,"w");
-
+void save_result(Matrix<double>& m, FILE * pFile) {
+	
 	if (pFile != NULL) {
 		for (int i = 0; i < m.rows(); i++) {
 			fprintf(pFile, "%1.6f\r", m(i));
 		}
-
-		fclose(pFile);
+		// fprintf(pFile, "\r");
 	} else {
 		cout << "Failed to open file." << endl;
 	}
 }
 
-void loadLaplacianSystem(Matrix<double>& A, Matrix<double>&b, double r_i, double r_e, int n, int m, double* t_i, double* t_e) {
+void load_temps(ifstream& inputFile, double* t_i, double* t_e, int n) {
+	string line;
+	getline(inputFile, line);
+
+	char* buffer = strtok(strdup(line.c_str()), " ");
+
+	for (int i = 0; i < n; ++i) {
+		sscanf(buffer, "%lf", &t_i[i]);
+		buffer = strtok(NULL, " ");
+	}
+
+	for (int i = 0; i < n; ++i) {
+		sscanf(buffer, "%lf", &t_e[i]);
+		buffer = strtok(NULL, " ");
+	}	
+}
+
+void load_a(Matrix<double>& A, double r_i, double r_e, int n, int m) {
 	for (int j = 0; j < m; j++) { // radius
 		for (int k = 0; k < n; k++) { // angle
-			insertValue(A,b,j,k,r_i,r_e,n,m,t_i,t_e);
+			insert_a(A,j,k,r_i,r_e,n,m);
+		}
+	}
+}
+
+void load_b(Matrix<double>&b, double r_i, double r_e, int n, int m, double* t_i, double* t_e) {
+	for (int j = 0; j < m; j++) { // radius
+		for (int k = 0; k < n; k++) { // angle
+			insert_b(b,j,k,r_i,r_e,n,m,t_i,t_e);
 		}
 	}
 }
@@ -111,6 +138,76 @@ void loadLaplacianSystem(Matrix<double>& A, Matrix<double>&b, double r_i, double
  * r0 < r_j < ... < r_m 
  * O0 < 0_k < ... < 0_n
  */
+void insert_a(Matrix<double>& A, int j, int k, double r_i, double r_e, int n, int m) {
+
+	double dO = 2*M_PI / n;
+	double dR = (r_e - r_i) / (m - 1);
+
+	int r = j * n + k;
+	double r_j = r_i + j*dR;
+
+	if (j == 0) {
+		A(r,r) = 1;
+		return;
+	} else if (j == m - 1) {
+		A(r,r) = 1;
+		return;
+	}
+
+	// t_j,k
+	A(r,r) += (-2/pow(dR, 2)) + (1/(r_j*dR)) - 2/(pow(r_j, 2)*pow(dO, 2));
+
+	// t_j,k+1, border case! k > n, angle = 0
+	A(r, j * n + mod(k+1, n)) += 1/(pow(r_j, 2)*pow(dO, 2));
+
+	// t_j,k-1, border case! k < 0 
+	A(r, j * n + mod(k-1, n)) += 1/(pow(r_j, 2)*pow(dO, 2));
+
+	// t_j-1,k
+	if (j != 1) { // inner circle
+		A(r,(j-1) * n + k) += 1/pow(dR, 2) - 1/(r_j * dR);
+	}
+	
+	// t_j+1,k
+	if (j+1 != m-1) { // outer circle
+		A(r, (j+1) * n + k) += (1/pow(dR, 2));
+	}
+
+}
+
+void insert_b(Matrix<double>& b, int j, int k, double r_i, double r_e, int n, int m, double* t_i, double* t_e) {
+
+	double dO = 2*M_PI / n;
+	double dR = (r_e - r_i) / (m - 1);
+
+	int r = j * n + k;
+	double r_j = r_i + j*dR;
+
+	bool loaded = false;
+
+	if (j == 0) {
+		b(r) = t_i[k];
+		return;
+	} else if (j == m - 1) {
+		b(r) = t_e[k];
+		return;
+	}
+
+	if (j == 1) { // inner circle
+		b(r) -= t_i[k] * (1/pow(dR, 2) - 1/(r_j * dR));
+		loaded = true;
+	}
+	
+	// t_j+1,k
+	if (j+1 == m-1) { // outer circle
+		b(r) -= t_e[k] * (1/pow(dR, 2));
+		loaded = true;
+	}
+
+	if (!loaded) b(r) = 0;
+
+}
+
 void insertValue(Matrix<double>& A, Matrix<double>& b, int j, int k, double r_i, double r_e, int n, int m, double* t_i, double* t_e) {
 
 	double dO = 2*M_PI / n;
