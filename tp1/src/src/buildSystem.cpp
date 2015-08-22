@@ -24,8 +24,8 @@ int main(int argc, char** argv) {
 
 	double r_i, r_e;
 
-	double* t_i = new double[n];
-	double* t_e = new double[n]; 
+	double* t_i;
+	double* t_e;
 
 	double iso;
 	int ninst; // instances of the problem to solve
@@ -138,6 +138,9 @@ void loadSystemParameters(double& r_i, double& r_e, int& m, int& n, double& iso,
 
 	cout << "r_i: " << r_i << " r_e: " << r_e << " m+1: " << m << " n: " << n << " iso: " << iso << " ninst: " << ninst << endl;
 	cout << "inputFile: " << argv[1] << ", outputFile: " << argv[2] << ", method: " << argv[3] << endl;
+
+	t_i = new double[n];
+	t_e = new double[n]; 
 
 	// load temperatures (one instance for now)
 	getline(inputFile, line);
