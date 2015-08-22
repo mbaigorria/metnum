@@ -93,7 +93,7 @@ void save_result(Matrix<double>& m, FILE * pFile) {
 	
 	if (pFile != NULL) {
 		for (int i = 0; i < m.rows(); i++) {
-			fprintf(pFile, "%1.6f\r", m(i));
+			fprintf(pFile, "%1.6f\r\n", m(i));
 		}
 		// fprintf(pFile, "\r");
 	} else {
