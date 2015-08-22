@@ -11,7 +11,8 @@
 #include <algorithm>
 #include <math.h>
 #include <vector>
-
+#include <stdio.h>
+ 
 using namespace std;
 
 // La matriz respeta la notacion de la catedra, es decir, el primer subindice 

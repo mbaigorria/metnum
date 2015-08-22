@@ -183,7 +183,7 @@ void insert_b(Matrix<double>& b, int j, int k, double r_i, double r_e, int n, in
 	int r = j * n + k;
 	double r_j = r_i + j*dR;
 
-	bool loaded = false;
+	b(r) = 0;
 
 	if (j == 0) {
 		b(r) = t_i[k];
@@ -195,16 +195,12 @@ void insert_b(Matrix<double>& b, int j, int k, double r_i, double r_e, int n, in
 
 	if (j == 1) { // inner circle
 		b(r) -= t_i[k] * (1/pow(dR, 2) - 1/(r_j * dR));
-		loaded = true;
 	}
 	
 	// t_j+1,k
 	if (j+1 == m-1) { // outer circle
 		b(r) -= t_e[k] * (1/pow(dR, 2));
-		loaded = true;
 	}
-
-	if (!loaded) b(r) = 0;
 
 }
 
