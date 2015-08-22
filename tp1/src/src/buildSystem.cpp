@@ -112,16 +112,13 @@ int main(int argc, char** argv) {
  */
 void insertValue(Matrix<double>& A, Matrix<double>& b, int j, int k, double r_i, double r_e, int n, int m, double* t_i, double* t_e) {
 
-	// cout << "j: " << j << " k: " << k << " m: " << m << " n: " << n << endl;
-
 	double dO = 2*M_PI / n;
 	double dR = (r_e - r_i) / (m - 1);
 
 	int r = j * n + k;
-	// int r = k * (m - 1) + (j - 1);
 	double r_j = r_i + j*dR;
 
-	cout << "j: " << j << " k: " << k << " m: " << m << " n: " << n << " r: " << r << endl;
+	// cout << "j: " << j << " k: " << k << " m: " << m << " n: " << n << " r: " << r << endl;
 
 	if (j == 0) {
 		A(r,r) = 1;
@@ -137,23 +134,23 @@ void insertValue(Matrix<double>& A, Matrix<double>& b, int j, int k, double r_i,
 	A(r,r) += - (2/pow(dR, 2)) + (1/(r_j*dR)) - (2/pow(r_j, 2)*pow(dO, 2));
 
 	// t_j,k+1, border case! k > n, angle = 0
-	A(r, ((k+1) % n) * (n-1) + j) += 1/(pow(r_j, 2)*pow(dO, 2));
+	A(r, j * n + (k+1 % n)) += 1/(pow(r_j, 2)*pow(dO, 2));
 
 	// t_j,k-1, border case! k < 0 
-	A(r, ((k-1) % n) * (n-1) + j) += 1/(pow(r_j, 2)*pow(dO, 2));
+	A(r, j * n + (k-1 % n)) += 1/(pow(r_j, 2)*pow(dO, 2));
 
 	// t_j-1,k
 	if (j == 1) { // inner circle
 		b(r) -= t_i[k] * (1/pow(dR, 2) - 1/(r_j * dR));
 	} else {
-		A(r,r - 1) += 1/pow(dR, 2) - 1/(r_j * dR);
+		A(r,(j-1) * n + k) += 1/pow(dR, 2) - 1/(r_j * dR);
 	}
 	
 	// t_j+1,k
-	if (j+1 == m) { // outer circle
+	if (j+1 == m-1) { // outer circle
 		b(r) -= t_e[k] * (1/pow(dR, 2));
 	} else {
-		A(r,r + 1) += (1/pow(dR, 2));
+		A(r, (j+1) * n + k) += (1/pow(dR, 2));
 	}
 
 }
