@@ -10,7 +10,6 @@
 
 using namespace std;
 
-void loadSystemParameters(double& r_i, double& r_e, int& m, int& n, double& iso, int& ninst, double* t_i, double* t_e, int argc, char** argv);
 void loadLaplacianSystem(Matrix<double>& A, Matrix<double>&b, double r_i, double r_e, int n, int m, double* t_i, double* t_e);
 void insertValue(Matrix<double>& A, Matrix<double>& b, int j, int k, double r_i, double r_e, int n, int m, double* t_i, double* t_e);
 void saveResult(Matrix<double>& m, char* fileName);
@@ -18,19 +17,59 @@ int mod(int a, int b);
 
 int main(int argc, char** argv) {
 
+	if (argc != 4) {
+		printf("Usage: %s inputFile outputFile method (0: EG, 1: LU)\n", argv[0]);
+		return 0;
+	}
+
+	ifstream inputFile(argv[1]);
+
+	if (!inputFile.good()) {
+		printf("Non-existant input file.\n");
+		return 0;
+	}
+
 	// granularity
 	int n; // 0 = O0 < 0_k < ... < 0_n = 2PI
 	int m; // ri = r0 < r_j < ... < r_m = re 
 
 	double r_i, r_e;
 
-	double* t_i;
-	double* t_e;
-
 	double iso;
 	int ninst; // instances of the problem to solve
 
-	loadSystemParameters(r_i,r_e,m,n,iso,ninst,t_i,t_e,argc,argv);
+	string line;
+	getline(inputFile, line);
+	sscanf(line.c_str(),"%lf %lf %d %d %lf %d",&r_i,&r_e,&m,&n,&iso,&ninst);
+
+	int solver = (int) (*argv[3] - '0');
+	if (solver != 0 && solver != 1) {
+		printf("Error: Invalid solver.\n");
+		return 0;
+	}
+
+	cout << "r_i: " << r_i << " r_e: " << r_e << " m+1: " << m << " n: " << n << " iso: " << iso << " ninst: " << ninst << endl;
+	cout << "inputFile: " << argv[1] << ", outputFile: " << argv[2] << ", method: " << argv[3] << endl;
+
+	double t_i[n];
+	double t_e[n];
+
+	// load temperatures (one instance for now)
+	getline(inputFile, line);
+
+ 	char* buffer = strtok(strdup(line.c_str()), " ");
+
+ 	for (int i = 0; i < n; ++i) {
+ 		sscanf(buffer, "%lf", &t_i[i]);
+ 		buffer = strtok(NULL, " ");
+ 	}
+
+ 	for (int i = 0; i < n; ++i) {
+ 		sscanf(buffer, "%lf", &t_e[i]);
+ 		buffer = strtok(NULL, " ");
+ 	}
+
+	inputFile.close();
 
 	// build system: Ax = b
 	Matrix<double> A(n*m,n*m,0);
@@ -42,9 +81,6 @@ int main(int argc, char** argv) {
 	Matrix<double> result(e.solve(b));
 
 	saveResult(result, argv[2]);
-
-	// delete[] t_i;
-	// delete[] t_e;
 
 	return 0;
 }
@@ -116,48 +152,6 @@ void insertValue(Matrix<double>& A, Matrix<double>& b, int j, int k, double r_i,
 		A(r, (j+1) * n + k) += (1/pow(dR, 2));
 	}
 
-}
-
-void loadSystemParameters(double& r_i, double& r_e, int& m, int& n, double& iso, int& ninst, double* t_i, double* t_e, int argc, char** argv) {
-
-	if (argc != 4) {
-		printf("Usage: %s inputFile outputFile method (0: EG, 1: LU)\n", argv[0]);
-		exit;
-	}
-
-	ifstream inputFile(argv[1]);
-
-	if (inputFile.bad()) {
-		printf("Non-existant input file.\n");
-		exit;
-	}
-
-	string line;
-	getline(inputFile, line);
-	sscanf(line.c_str(),"%lf %lf %d %d %lf %d",&r_i,&r_e,&m,&n,&iso,&ninst);
-
-	cout << "r_i: " << r_i << " r_e: " << r_e << " m+1: " << m << " n: " << n << " iso: " << iso << " ninst: " << ninst << endl;
-	cout << "inputFile: " << argv[1] << ", outputFile: " << argv[2] << ", method: " << argv[3] << endl;
-
-	t_i = new double[n];
-	t_e = new double[n]; 
-
-	// load temperatures (one instance for now)
-	getline(inputFile, line);
-
- 	char* buffer = strtok(strdup(line.c_str()), " ");
-
- 	for (int i = 0; i < n; ++i) {
- 		sscanf(buffer, "%lf", &t_i[i]);
- 		buffer = strtok(NULL, " ");
- 	}
-
- 	for (int i = 0; i < n; ++i) {
- 		sscanf(buffer, "%lf", &t_e[i]);
- 		buffer = strtok(NULL, " ");
- 	}
-
-	inputFile.close();
 }
 
 int mod(int a, int b) {
