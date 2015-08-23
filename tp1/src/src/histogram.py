@@ -63,7 +63,7 @@ def plotHistogram():
 	#xnew = np.arange(0, 2, d0)	
 	#plt.plot(xnew, f(xnew), '-') 
 
-	plt.axis([0, 2, r_i, r_e])	 
+	plt.axis([0, 2, r_e, r_i])	 
 
 	plt.ylabel('Difference: $x_e$ - $x_{iso}$ (more is better)')
 	plt.legend(['data', 'linear interpolation'], loc='best')
