@@ -58,8 +58,9 @@ def plotHistogram():
 	plt.plot(xAxisTheta, yAxisIso, '-')
 
 	#Es igual a unir cada punto con una linea
-	#f = interp1d(xAxisTheta, yAxisIsoDiff, bounds_error=False)
-	#xnew = np.arange(0, 2, d0)	
+	#f = interp1d(xAxisTheta, yAxisIso, bounds_error=False)
+	#xnew = np.arange(0, 2, d0) #Queda igual que la funcion original dado que el dominio es el mismo.	
+	#xnew = np.arange(0, 2, 0.1)	
 	#plt.plot(xnew, f(xnew), '-') 
 
 	plt.axis([0, 2, r_i, r_e])	 
