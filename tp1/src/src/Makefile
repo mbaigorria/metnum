@@ -11,7 +11,7 @@ LDFLAGS=
 INCDIR=../../../../../Modulos-CPP
 
 # Agregar acá los archivos .cpp a compilar
-SOURCES=main.cpp
+SOURCES=buildSystem.cpp
 
 # Objetos que serán generados (no tocar)
 OBJECTS=$(SOURCES:.cpp=.o)

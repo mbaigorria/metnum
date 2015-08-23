@@ -17,59 +17,79 @@ def plotHistogram():
 
 	f = open(fileName, 'r')
 	
-	angulos, r_i, r_e, iso, innerTemp, umbral = map(int, f.readline().split())	
-
-	i = 0
-
-	yAxisIso = []	
-
-	while i < angulos:
-		arr = map(int, f.readline().split())	
-		if i < angulos:		
-			yAxisIso.append(arr[0])
-
-		i+=1
-
-	xAxisTheta = []
-
-	n = float(angulos)
-	d0 = 2/n
+	ninst, r_i, r_e = map(int, f.readline().split())
 	
-	#Calcular a mano del dominio
-	#j = 0
-	#count = 0.0
-	#while j < angulos:
-		#xAxisTheta.append(round(count,2))
-		#count+=d0
-		#j+=1
+	radiosPorPlot = []
+	angulosPorPlot = []
+
+	z = 0
 	
-	#Plot con las diferencias entre la posicion de la isoterma y el radio externo	
-	#plt.figure(1)	
-	#plt.subplot(211)
+	while z < ninst:	
+		radios, angulos = map(int, f.readline().split())	
 
-	title = 'Histogram of isotherm: $\pi_i$ = %d, $\pi_e$ = %d, $\Theta_0$ = %1.1f$\Theta$, umbral = %d' % (r_i, r_e, d0, umbral)
-	plt.title(title)
-	#Calculo automatico del dominio	
-	xAxisTheta = np.arange(0, 2, d0)
-	plt.plot(xAxisTheta, yAxisIso, 'bo') 
-	plt.plot(xAxisTheta, yAxisIso, '-')
-	umbralLine = [80 for x in xAxisTheta]	
-	plt.plot(xAxisTheta, umbralLine, 'r--')
+		radiosPorPlot.append(radios) 
+		angulosPorPlot.append(angulos)
 
-	#Es igual a unir cada punto con una linea
-	#f = interp1d(xAxisTheta, yAxisIso, bounds_error=False)
-	#xnew = np.arange(0, 2, d0) #Queda igual que la funcion original dado que el dominio es el mismo.	
-	#xnew = np.arange(0, 2, 0.1)	
-	#plt.plot(xnew, f(xnew), '-') 
+		i = 0
+
+		yAxisIso = []	
+
+		while i < angulos:
+			arr = map(int, f.readline().split())	
+			if i < angulos:		
+				yAxisIso.append(arr[0])
+
+			i+=1
+
+		xAxisTheta = []
+
+		n = float(angulos)
+		d0 = 2/n
+	
+		#Calcular a mano del dominio
+		#j = 0
+		#count = 0.0
+		#while j < angulos:
+			#xAxisTheta.append(round(count,2))
+			#count+=d0
+			#j+=1
+	
+		#Plot con las diferencias entre la posicion de la isoterma y el radio externo	
+		#plt.figure(1)	
+		#plt.subplot(211)
+
+		#Calculo automatico del dominio	
+		xAxisTheta = np.arange(0, 2, d0)
+		#plt.plot(xAxisTheta, yAxisIso, 'o') 
+		plt.plot(xAxisTheta, yAxisIso, '-',  markersize=3)
+
+		#Es igual a unir cada punto con una linea
+		#f = interp1d(xAxisTheta, yAxisIso, bounds_error=False)
+		#xnew = np.arange(0, 2, d0) #Queda igual que la funcion original dado que el dominio es el mismo.	
+		#xnew = np.arange(0, 2, 0.1)	
+		#plt.plot(xnew, f(xnew), '-') 
+		
+		z+=1
 
 	plt.axis([0, 2, r_i, r_e])	 
-
+	title = 'Histogram of isotherm: $r_i$: %d, $r_e$: %d' % (r_i, r_e)
+	plt.title(title)
 	plt.ylabel('Isotherm position: $x_{iso}$ (less is better)')
-	plt.legend(['data', 'linear interpolation', 'umbral'], loc='best')
+	plt.xlabel('Theta (Angle): $[0, 2\pi]$')
+
+	legend = []
+	
+	#while para las legendas
+	n = 0	
+	while n < len(angulosPorPlot):
+		text = '$\Delta\Theta$: %.2f$\pi$ - $\Delta$r: %.2f' % (2/float(angulosPorPlot[n]), (r_e-r_i)/float(radiosPorPlot[n]))
+
+		legend.append(text)
+		n+=1
+
+	plt.legend(legend, loc='best')
 	# Tweak spacing to prevent clipping of ylabel
 	plt.subplots_adjust(left=0.15)
-
-	plt.xlabel('Theta (Angle): $[0, 2\Theta]$')
 	plt.grid(True)
 	plt.show()
 

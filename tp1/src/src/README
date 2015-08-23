@@ -6,13 +6,19 @@ scipy: opcional, si quieren hacer interpolaciones.
 El archivo dataSetExample es un ejemplo de como deberia ser el archivo que recibe el plotter por linea de comandos. 
 El mismo tiene este formato
 
-angulos r_i r_e iso innerTemp umbral
+ninst r_i r_e
+radios angulos
 x_1
 x_2
 .
 .
 .
 x_angulos
-
-En principio es un solo archivo pero pueden ser dos. Esto mismo me lo pueden pedir y lo puedo cambiar.
+radios angulos
+x_1
+x_2
+.
+.
+.
+x_angulos
 
