@@ -39,25 +39,30 @@ def plotHistogram():
 	n = float(angulos)
 	d0 = 2/n
 	
-	j = 0
-	count = 0.0
-	while j < angulos:
-		xAxisTheta.append(round(count,2))
-		count+=d0
-		j+=1
+	#Calcular a mano del dominio
+	#j = 0
+	#count = 0.0
+	#while j < angulos:
+		#xAxisTheta.append(round(count,2))
+		#count+=d0
+		#j+=1
 	
-	#Plot con las diferencias entre la posicion de la isoterma y el radio externo
-	
+	#Plot con las diferencias entre la posicion de la isoterma y el radio externo	
 	#plt.figure(1)	
 	title = 'Histogram of isotherm: $\pi_e$ = %d, $\pi_i$ = %d, $\Theta_0$ = %1.1f$\Theta$' % (r_i, r_e, d0)
 	plt.title(title)
 
 	#plt.subplot(211)
+	#Calculo automatico del dominio	
+	xAxisTheta = np.arange(0, 2, d0)
 	plt.plot(xAxisTheta, yAxisIsoDiff, 'bo') 
-	#plt.plot(xAxisTheta, yAxisIsoDiff, 'k')
-	f = interp1d(xAxisTheta, yAxisIsoDiff, bounds_error=False)
-	xnew = np.arange(0, 2, d0)	
-	plt.plot(xnew, f(xnew), '-') 
+	plt.plot(xAxisTheta, yAxisIsoDiff, '-')
+
+	#Es igual a unir cada punto con una linea
+	#f = interp1d(xAxisTheta, yAxisIsoDiff, bounds_error=False)
+	#xnew = np.arange(0, 2, d0)	
+	#plt.plot(xnew, f(xnew), '-') 
+
 	plt.axis([0, 2, r_i, r_e])	 
 
 	plt.ylabel('Difference: $x_e$ - $x_{iso}$ (more is better)')
