@@ -73,6 +73,13 @@ int main(int argc, char** argv) {
  			load_b(b,r_i,r_e,n,m,t_i,t_e);
 			Matrix<double> result(e.solve(b));
 			save_result(result, pFile);
+			if (argc == 5 && j == 0) {
+				pIsoFile = fopen(argv[4],"w");
+			}
+			if (argc == 5) {
+				generate_isotherm_lower(pIsoFile, result, m, n, r_i, r_e, iso);
+				// generate_isotherm_weighted(pIsoFile, result, m, n, r_i, r_e, iso);
+			}
 		}
 	} else {
 		load_a(A,r_i,r_e,n,m);
@@ -94,7 +101,8 @@ int main(int argc, char** argv) {
 
 	inputFile.close();
 	fclose(pFile);
-	fclose(pIsoFile);
+
+	if (pIsoFile != NULL) fclose(pIsoFile);
 
 	return 0;
 }
