@@ -49,7 +49,7 @@ def plotHistogram():
 	#plt.figure(1)	
 	#plt.subplot(211)
 
-	title = 'Histogram of isotherm: $\pi_e$ = %d, $\pi_i$ = %d, $\Theta_0$ = %1.1f$\Theta$' % (r_i, r_e, d0)
+	title = 'Histogram of isotherm: $\pi_i$ = %d, $\pi_e$ = %d, $\Theta_0$ = %1.1f$\Theta$' % (r_i, r_e, d0)
 	plt.title(title)
 
 	#Calculo automatico del dominio	
