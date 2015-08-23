@@ -54,14 +54,15 @@ def plotHistogram():
 	j = 0
 	count = 0.0
 	while j < angulos:
-		xAxisTheta.append(round(count,1))
+		xAxisTheta.append(round(count,2))
 		count+=d0
 		j+=1
 	
 	#Plot con las diferencias entre la posicion de la isoterma y el radio externo
 	
 	#plt.figure(1)	
-	plt.title(r'Histogram of isotherm: $\pi_e=100, \pi_i=100, \Theta=15$')
+	title = 'Histogram of isotherm: $\pi_e$ = %d, $\pi_i$ = %d, $\Theta_0$ = %1.1f$\Theta$' % (r_i, r_e, d0)
+	plt.title(title)
 
 	#plt.subplot(211)
 	plt.plot(xAxisTheta, yAxisIsoDiff, 'bo') 
@@ -69,9 +70,9 @@ def plotHistogram():
 	f = interp1d(xAxisTheta, yAxisIsoDiff, bounds_error=False)
 	xnew = np.arange(0, 2, d0)	
 	plt.plot(xnew, f(xnew), '-') 
-	plt.axis([0, 2, r_i, r_e]) 
+	plt.axis([0, 2, r_i, r_e])	 
 
-	plt.ylabel('Difference: $x_e - x_{iso}$')
+	plt.ylabel('Difference: $x_e$ - $x_{iso}$ (more is better)')
 	plt.legend(['data', 'linear interpolation'], loc='best')
 	# Tweak spacing to prevent clipping of ylabel
 	plt.subplots_adjust(left=0.15)
