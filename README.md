@@ -15,6 +15,7 @@ Hay dos metodos para calcular isotermas, generate_isotherm_lower y generate_isot
 
 Eso se hace comentando el codigo, no agregue un parametro para poder elegir.
 Asi que lo que falta es:
+
 1. Terminar la eliminacion gausiana
 2. Exp (comp de sistema). Ir variando las granularidades de angulo y de radio, analizar. Cambiar temperaturas externas con uniformidad.
 3. Exp con muchas instancias, ninst > 1. Aca es donde la LU te ahorra banda. Hacer graficos de complejidad, y una tabla comparando porcentajes.
