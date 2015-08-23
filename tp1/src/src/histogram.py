@@ -1,15 +1,3 @@
-"""
-Demo of the histogram (hist) function with a few features.
-
-In addition to the basic histogram, this demo shows a few optional features:
-
-    * Setting the number of data bins
-    * The ``normed`` flag, which normalizes bin heights so that the integral of
-      the histogram is 1. The resulting histogram is a probability density.
-    * Setting the face color of the bars
-    * Setting the opacity (alpha value).
-
-"""
 import numpy as np
 import matplotlib.mlab as mlab
 import matplotlib.pyplot as plt
