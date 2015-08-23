@@ -16,12 +16,14 @@ void insert_a(Matrix<double>& A, int j, int k, double r_i, double r_e, int n, in
 void insert_b(Matrix<double>& b, int j, int k, double r_i, double r_e, int n, int m, double* t_i, double* t_e);
 void load_temps(ifstream& inputFile, double* t_i, double* t_e, int n);
 void save_result(Matrix<double>& m, FILE * pFile);
+void generate_isotherm_lower(FILE * pFile, Matrix<double>& b, int m, int n, double r_i, double r_e, double iso);
+void generate_isotherm_weighted(FILE * pFile, Matrix<double>& b, int m, int n, double r_i, double r_e, double iso);
 int mod(int a, int b);
 
 int main(int argc, char** argv) {
 
-	if (argc != 4) {
-		printf("Usage: %s inputFile outputFile method (0: EG, 1: LU)\n", argv[0]);
+	if (argc < 4) {
+		printf("Usage: %s inputFile outputFile method (0: EG, 1: LU) isoFile (optional)\n", argv[0]);
 		return 0;
 	}
 
@@ -62,7 +64,7 @@ int main(int argc, char** argv) {
  	// build system: Ax = b
 	Matrix<double> A(n*m,n*m,0);
 	Matrix<double> b(n*m,1,0);
-
+	FILE * pIsoFile;
 	if (solver == 0) { // Gaussian Elimination
 		load_a(A,r_i,r_e,n,m);
 		EquationSystemLU<double> e(A); //temp
@@ -80,13 +82,56 @@ int main(int argc, char** argv) {
  			load_b(b,r_i,r_e,n,m,t_i,t_e);
 			Matrix<double> result(e.solve(b));
 			save_result(result, pFile);
+			if (argc == 5 && j == 0) {
+				pIsoFile = fopen(argv[4],"w");
+			}
+			if (argc == 5) {
+				generate_isotherm_lower(pIsoFile, result, m, n, r_i, r_e, iso);
+				// generate_isotherm_weighted(pIsoFile, result, m, n, r_i, r_e, iso);
+			}
 		}
 	}
 
 	inputFile.close();
 	fclose(pFile);
+	fclose(pIsoFile);
 
 	return 0;
+}
+
+void generate_isotherm_lower(FILE * pFile, Matrix<double>& b, int m, int n, double r_i, double r_e, double iso) {
+
+	double dR = (r_e - r_i) / (m - 1);
+
+	for (int k = 0; k < n; k++) {
+		for (int j = 0; j < m; j++) {
+			if (b(j * n + k) < iso || j == m-1) {
+				fprintf(pFile, "%f\r\n", r_i + j*dR);
+				break;
+			}
+		}
+	}
+
+}
+
+void generate_isotherm_weighted(FILE * pFile, Matrix<double>& b, int m, int n, double r_i, double r_e, double iso) {
+
+	double dR = (r_e - r_i) / (m - 1);
+
+	for (int k = 0; k < n; k++) {
+		for (int j = 0; j < m; j++) {
+			if (b(j * n + k) < iso && j != m-1 && j != 0) {
+				fprintf(pFile, "%f\r\n", r_i + (j-1)*dR + (b((j-1) * n + k) - b(j * n + k)) / iso * dR);
+				break;
+			} else if (b(j * n + k) < iso && j == 0) {
+				fprintf(pFile, "%f\r\n", r_i);
+			} else if (j == m-1) {
+				fprintf(pFile, "%f\r\n", r_i + j*dR);
+				break;
+			}
+		}
+	}
+
 }
 
 void save_result(Matrix<double>& m, FILE * pFile) {

@@ -3,6 +3,7 @@ function horno(inputfile, solution, isofile)
 ifid = fopen(inputfile);
 solfid = fopen(solution);
 instparam = fscanf(ifid, '%d',6);
+
 if (nargin > 2)
    isofid = fopen(isofile);
 end
@@ -53,10 +54,11 @@ for k = 1:ninst
     %aca ploteo la isoterma
     if (nargin > 2)
         figure;
+        
         radioiso = fscanf(isofid, '%f',angulos);
+        
         radioiso = [radioiso; radioiso(1)];
         radioiso = radioiso';
-
 
         theta=linspace(0,2*pi,angulos+1);
         interno=linspace(radioi,radioi,angulos+1);
