@@ -1,0 +1,18 @@
+Para correr el histogram.py necesitan 3 librerias: 
+numpy
+matplotlib
+scipy
+
+El archivo dataSetExample que es un ejemplo de como deberia ser el archivo que recibe el plotter por linea de comandos. 
+El mismo tiene este formato
+
+angulos r_i r_e iso innerTemp umbral
+x_1
+x_2
+.
+.
+.
+x_angulos
+
+En principio es un solo archivo pero pueden ser dos. Esto mismo me lo pueden pedir y lo puedo cambiar.
+
