@@ -21,15 +21,13 @@ def plotHistogram():
 
 	i = 0
 
-	yAxisIso = []
-	outerTemp = []	
+	yAxisIso = []	
 
-	while i < 2*angulos:
+	while i < angulos:
 		arr = map(int, f.readline().split())	
 		if i < angulos:		
 			yAxisIso.append(arr[0])
-		elif i < 2*angulos-1:
-			outerTemp.append(arr[0])
+
 		i+=1
 
 	xAxisTheta = []
