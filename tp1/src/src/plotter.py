@@ -72,7 +72,7 @@ def plotData():
 		z+=1
 
 	plt.axis([0, 2, r_i, r_e])	 
-	title = 'Histogram of isotherm: $r_i$: %d, $r_e$: %d' % (r_i, r_e)
+	title = 'Isotherm proximity to the external edge: $r_i$: %d, $r_e$: %d' % (r_i, r_e)
 	plt.title(title)
 	plt.ylabel('Isotherm position: $x_{iso}$ (less is better)')
 	plt.xlabel('Theta (Angle): $[0, 2\pi]$')
