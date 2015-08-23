@@ -7,7 +7,7 @@ import os
 
 PI = math.pi
 
-def plotHistogram():
+def plotData():
 
 	fileName = raw_input("please give a directory of the file: ")
 
@@ -95,4 +95,4 @@ def plotHistogram():
 
 
 
-plotHistogram()
+plotData()
