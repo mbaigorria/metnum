@@ -47,7 +47,7 @@ class RandomParametersGenerator(object):
 			
 		res = raw_input("Do you want constant temperature in the external wall? \n please, press Y or n: ")
 		constante = False		
-		constantTemp = random.uniform(0, self.innerTemp)		
+		constantTemp = random.uniform(0, self.iso)		
 		if res.lower() == YES: 
 			constante = True
 		
@@ -61,7 +61,7 @@ class RandomParametersGenerator(object):
 					if constante:
 						f.write(str(constantTemp))						
 					else:
-						f.write(str(random.uniform(0, self.innerTemp)))
+						f.write(str(random.uniform(0, self.iso)))
 				
 					if i < 2*self.n-1:
 						f.write(" ")
