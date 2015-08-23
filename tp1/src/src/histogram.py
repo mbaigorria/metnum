@@ -17,7 +17,7 @@ def plotHistogram():
 
 	f = open(fileName, 'r')
 	
-	angulos, r_i, r_e, iso, innerTemp = map(int, f.readline().split())	
+	angulos, r_i, r_e, iso, innerTemp, umbral = map(int, f.readline().split())	
 
 	i = 0
 
@@ -47,13 +47,14 @@ def plotHistogram():
 	#plt.figure(1)	
 	#plt.subplot(211)
 
-	title = 'Histogram of isotherm: $\pi_i$ = %d, $\pi_e$ = %d, $\Theta_0$ = %1.1f$\Theta$' % (r_i, r_e, d0)
+	title = 'Histogram of isotherm: $\pi_i$ = %d, $\pi_e$ = %d, $\Theta_0$ = %1.1f$\Theta$, umbral = %d' % (r_i, r_e, d0, umbral)
 	plt.title(title)
-
 	#Calculo automatico del dominio	
 	xAxisTheta = np.arange(0, 2, d0)
 	plt.plot(xAxisTheta, yAxisIso, 'bo') 
 	plt.plot(xAxisTheta, yAxisIso, '-')
+	umbralLine = [80 for x in xAxisTheta]	
+	plt.plot(xAxisTheta, umbralLine, 'r--')
 
 	#Es igual a unir cada punto con una linea
 	#f = interp1d(xAxisTheta, yAxisIso, bounds_error=False)
@@ -64,11 +65,12 @@ def plotHistogram():
 	plt.axis([0, 2, r_i, r_e])	 
 
 	plt.ylabel('Isotherm position: $x_{iso}$ (less is better)')
-	plt.legend(['data', 'linear interpolation'], loc='best')
+	plt.legend(['data', 'linear interpolation', 'umbral'], loc='best')
 	# Tweak spacing to prevent clipping of ylabel
 	plt.subplots_adjust(left=0.15)
 
 	plt.xlabel('Theta (Angle): $[0, 2\Theta]$')
+	plt.grid(True)
 	plt.show()
 
 
