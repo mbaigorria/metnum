@@ -21,15 +21,13 @@ def plotHistogram():
 
 	i = 0
 
-	#yAxisIso = []
-	yAxisIsoDiff = []
+	yAxisIso = []
 	outerTemp = []	
 
 	while i < 2*angulos:
 		arr = map(int, f.readline().split())	
 		if i < angulos:		
-			yAxisIsoDiff.append(r_e - arr[0])
-			#yAxisIso.append(arr[0])
+			yAxisIso.append(arr[0])
 		elif i < 2*angulos-1:
 			outerTemp.append(arr[0])
 		i+=1
@@ -49,40 +47,27 @@ def plotHistogram():
 	
 	#Plot con las diferencias entre la posicion de la isoterma y el radio externo	
 	#plt.figure(1)	
+	#plt.subplot(211)
+
 	title = 'Histogram of isotherm: $\pi_e$ = %d, $\pi_i$ = %d, $\Theta_0$ = %1.1f$\Theta$' % (r_i, r_e, d0)
 	plt.title(title)
 
-	#plt.subplot(211)
 	#Calculo automatico del dominio	
 	xAxisTheta = np.arange(0, 2, d0)
-	plt.plot(xAxisTheta, yAxisIsoDiff, 'bo') 
-	plt.plot(xAxisTheta, yAxisIsoDiff, '-')
+	plt.plot(xAxisTheta, yAxisIso, 'bo') 
+	plt.plot(xAxisTheta, yAxisIso, '-')
 
 	#Es igual a unir cada punto con una linea
 	#f = interp1d(xAxisTheta, yAxisIsoDiff, bounds_error=False)
 	#xnew = np.arange(0, 2, d0)	
 	#plt.plot(xnew, f(xnew), '-') 
 
-	plt.axis([0, 2, r_e, r_i])	 
+	plt.axis([0, 2, r_i, r_e])	 
 
-	plt.ylabel('Difference: $x_e$ - $x_{iso}$ (more is better)')
+	plt.ylabel('Isotherm position: $x_{iso}$ (less is better)')
 	plt.legend(['data', 'linear interpolation'], loc='best')
 	# Tweak spacing to prevent clipping of ylabel
 	plt.subplots_adjust(left=0.15)
-
-	#Plot con la posicion real de la isoterma
-	#plt.subplot(212)
-	#plt.plot(xAxisTheta, yAxisIso, 'bo') 
-	#plt.plot(xAxisTheta, yAxisIso, 'k')
-	#f = interp1d(xAxisTheta, yAxisIso, bounds_error=False)
-	#xnew = np.arange(0, 2, d0)	
-	#plt.plot(xnew, f(xnew), '--') 
-	#plt.axis([0, 2, r_i, r_e]) 
-
-	#plt.ylabel('Isotherm position: $x_{iso}$')
-	#plt.legend(['data', 'linear interpolation'], loc='best')
-	# Tweak spacing to prevent clipping of ylabel
-	#plt.subplots_adjust(left=0.15)
 
 	plt.xlabel('Theta (Angle): $[0, 2\Theta]$')
 	plt.show()
