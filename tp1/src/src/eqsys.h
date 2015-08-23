@@ -83,8 +83,8 @@ EquationSystemLU<T>::EquationSystemLU(const Matrix<T>& inicial)
             coef = upper(j, i) / upper(i, i);
             lower(j, i) = coef;
             // Colocamos cero en la columna bajo la diagonal
-            //upper(j,i) = 0;
-            for(k = i; k < upper.columns(); k++) {
+            upper(j,i) = 0;
+            for(k = i + 1; k < upper.columns(); k++) {
                 upper(j, k) = upper(j, k) - coef * upper(i, k);
             }
         }
@@ -144,11 +144,93 @@ class EquationSystem{
     public:
         EquationSystem(const Matrix<T>& inicial);
         
-        vector<T> solve(const vector<T>& values);
+        Matrix<T> solve(const Matrix<T>& b_values);
         
     private:
-        Matrix<T> matrix;
+        Matrix<T> _matrix;
 };
+
+template<class T>
+EquationSystem<T>::EquationSystem(const Matrix<T>& inicial)
+    : _matrix(inicial)
+{}
+
+template<class T>
+Matrix<T> EquationSystem<T>::solve(const Matrix<T>& b_values) {
+    T coef;
+    int i, j, k, l;
+    bool isPermutated;
+    Matrix<T> temp_matrix(_matrix);
+    Matrix<T> temp_values(b_values);
+    Matrix<T> permutation;
+            
+    for(i = 0; i < temp_matrix.columns(); i++) {
+        for(j = i + 1; j < temp_matrix.rows(); j++) {
+            if(temp_matrix(i, i) == 0) {
+                // Hay que buscar la proxima fila sin cero
+                for(k = i + 1; k < temp_matrix.rows(); k++) {
+                    if(temp_matrix(k, i) != 0) {
+                        break;
+                    }
+                }
+                
+                if(k == temp_matrix.rows()) { // No hay filas para permutar
+                    abort();
+                } else {
+                    if(!isPermutated){
+                        // Generamos la matriz de permutacion con uno en la diagonal
+                        isPermutated = true;
+                        permutation = Matrix<T>(temp_matrix.rows(), temp_matrix.columns(), 0);
+                        
+                        for(l = 0; l < permutation.rows(); l++) {
+                            permutation(l,l) = 1;
+                        }
+                    }
+                    // Permutamos las filas
+                    for(l = 0; l < permutation.columns(); l++) {
+                        if(l == k) {
+                            permutation(i, l) = 1;
+                        } else {
+                            permutation(i, l) = 0;
+                        }
+                        if(l == i) {
+                            permutation(k, l) = 1;
+                        } else {
+                            permutation(k, l) = 0;
+                        }                        
+                    }
+                    // Hacemos el producto para efectivamente permutar
+                    temp_matrix = permutation * temp_matrix;
+                    temp_values = permutation * temp_values;
+                }
+            }
+            
+            // Calculamos y guardamos el coeficiente
+            coef = temp_matrix(j, i) / temp_matrix(i, i);
+            // Colocamos cero en la columna bajo la diagonal
+            temp_matrix(j, i) = 0;
+            for(k = i + 1; k < temp_matrix.columns(); k++) {
+                temp_matrix(j, k) = temp_matrix(j, k) - coef * temp_matrix(i, k);
+            }
+            temp_values(j) = temp_values(j) - coef * temp_values(i);
+        }
+    }
+
+    Matrix<T> x_values = Matrix<T>(temp_values.rows());
+    
+    for(int i = temp_values.rows() - 1; i >= 0; i--) {
+        for (int j = temp_values.rows() - 1; j > i; j--) {
+            temp_values(i) -= x_values(j) * temp_matrix(i,j);
+        }
+        if(i == x_values.rows() - 1) {
+            x_values(x_values.rows() - 1) = temp_values(temp_values.rows() - 1) / temp_matrix(temp_matrix.rows() - 1, temp_matrix.columns() - 1);
+        } else {
+            x_values(i) = temp_values(i) / temp_matrix(i,i);
+        }
+    }
+
+    return x_values;
+}
 
 #endif	/* EQSYS_H */
 
