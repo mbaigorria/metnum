@@ -71,7 +71,7 @@ def plotData():
 		
 		z+=1
 
-	plt.axis([0, 2, 0, r_e + len(angulosPorPlot)*3])	 
+	plt.axis([0, 2, r_i, r_e])	 
 	title = 'Isotherm proximity to the external edge: $r_i$: %d, $r_e$: %d' % (r_i, r_e)
 	plt.title(title)
 	plt.ylabel('Isotherm position: $x_{iso}$ (less is better)')
@@ -82,7 +82,7 @@ def plotData():
 	#while para las legendas
 	n = 0	
 	while n < len(angulosPorPlot):
-		text = '$\Delta\Theta$: %f$\pi$ - $\Delta$r: %f' % (2/float(angulosPorPlot[n]), (r_e-r_i)/float(radiosPorPlot[n]))
+		text = '$\Delta\Theta$: $\\frac{%d}{%d}$$\pi$ - $\Delta$r: %.3f' % (2, angulosPorPlot[n], (r_e-r_i)/float(radiosPorPlot[n]))
 
 		legend.append(text)
 		n+=1
