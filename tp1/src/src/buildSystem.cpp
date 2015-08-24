@@ -64,7 +64,7 @@ int main(int argc, char** argv) {
  	// build system: Ax = b
 	Matrix<double> A(n*m,n*m,0);
 	Matrix<double> b(n*m,1,0);
-	FILE * pIsoFile;
+	FILE * pIsoFile = NULL;
 	if (solver == 0) { // Gaussian Elimination
 		load_a(A,r_i,r_e,n,m);
 		EquationSystemLU<double> e(A); //temp
