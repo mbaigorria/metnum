@@ -1,0 +1,49 @@
+\section{Desarrollo}
+
+Como ya se ha visto en la materia, no es posible aplicar los metodos propuestos para la resoluci\'on a cualquier sistema de ecuaciones. Por ello deberemos demostrar la siguiente proposici\'on.
+
+\begin{proposition}
+Sea $A \in \mathbb{R}^{n \times n}$ la matriz obtenida para el sistema definido por (1)-(6). Demostrar que es posible
+aplicar Eliminaci\'on Gaussiana sin pivoteo.
+\end{proposition}
+
+Demostremos primero que la matriz $A$ del sistema lineal, definida como antes, cumple la propiedad de ser diagonal dominante (no estricta).
+
+Esto en nuestro caso es pedir que:
+
+\begin{equation}
+ \left | \alpha_{jj} \right | \geq \sum_{k=0,k \neq j}^{(m+1)(n-1)} \left | \alpha_{jk} \right |, \forall j \in \{ 0,...,(m+1)(n-1)\}
+\end{equation}
+
+En el caso de que $j \in \{0,...,n-1\} \cup \{(m+1)(n-1)-n,...,(m+1)(n-1))\}$, es decir, que se trate de las primeras o \'ultimas $n$ filas, $(12)$ es satisfecha trivialmente, pues  $\left | \alpha_{jj} \right | = 1 \geq \sum_{k=0,k \neq j}^{(m+1)(n-1)} \left | \alpha_{jk} \right | =  \underbrace{0+ \ldots +0}_{(m+1)(n-1)} = 0$ pues $\alpha_{ji_{i\neq j}}=0 $ 
+\\
+\\
+Nos queda ver el caso contrario. Para ello debemos desarrollar la sumatoria y despejar los $\alpha_{jk}$ mediante $(7)...(11)$, de los cuales los siguientes 5 se\'an los \'unicos $\alpha_{jk}$ distintos de $0$.
+\\
+De este caso, en particular llegaremos a una equivalencia.
+
+\begin{equation}
+ \left | \alpha_{jj} \right | = \left | \alpha_{j+1k} \right | + \left | \alpha_{j-1k} \right | + \left | \alpha_{jk-1} \right | + \left | \alpha_{jk+1} \right |
+\end{equation}
+
+\begin{equation}
+ \left | \frac{-2}{(\Delta r)^2} + \frac{1}{r_j \times \Delta r} + \frac{-2}{r_j^2 \times (\Delta \theta)^2} \right | = \left | \frac{1}{(\Delta r)^2} \right | + \left | \frac{1}{(\Delta r)^2} - \frac{1}{r_j \times \Delta r} \right | + \left | \frac{1}{r_j^2 \times (\Delta \theta)^2} \right | + \left | \frac{1}{r_j^2 \times (\Delta \theta)^2} \right |
+\end{equation}
+
+\begin{equation}
+ \left | -\left ( \frac{-2}{(\Delta r)^2} + \frac{1}{r_j \times \Delta r} + \frac{-2}{r_j^2 \times (\Delta \theta)^2} \right ) \right | = \left | \frac{1}{(\Delta r)^2} \right | + \left | \frac{1}{(\Delta r)^2} - \frac{1}{r_j \times \Delta r} \right | + \left | \frac{2}{r_j^2 \times (\Delta \theta)^2} \right | 
+\end{equation}
+
+\begin{equation}
+ \left | \frac{1}{(\Delta r)^2} + \underbrace{\frac{1}{(\Delta r)^2} - \frac{1}{r_j \times \Delta r}}_{ \geq 0} + \frac{2}{r_j^2 \times (\Delta \theta)^2} \right | = \left | \frac{1}{(\Delta r)^2} \right | + \left | \frac{1}{(\Delta r)^2} - \frac{1}{r_j \times \Delta r} \right | +  \left | \frac{2}{r_j^2 \times (\Delta \theta)^2} \right |
+\end{equation}
+
+\begin{equation}
+ \left | \frac{1}{(\Delta r)^2} \right | + \left | \frac{1}{(\Delta r)^2} - \frac{1}{r_j \times \Delta r} \right | + \left | \frac{2}{r_j^2 \times (\Delta \theta)^2} \right | = \left | \frac{1}{(\Delta r)^2} \right | + \left | \frac{1}{(\Delta r)^2} - \frac{1}{r_j \times \Delta r} \right | +  \left | \frac{2}{r_j^2 \times (\Delta \theta)^2} \right | \qed
+\end{equation}
+
+
+
+
+
+
