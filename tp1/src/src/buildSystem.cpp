@@ -5,6 +5,7 @@
 #include <sstream>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include <new>
 #include "eqsys.h"
 
@@ -67,10 +68,12 @@ int main(int argc, char** argv) {
 	FILE * pIsoFile = NULL;
 	if (solver == 0) { // Gaussian Elimination
 		load_a(A,r_i,r_e,n,m);
+        clock_t before = clock();
 		EquationSystemLU<double> e(A); //temp
 		for (int j = 0; j < ninst; ++j) { // for every instance
 			load_temps(inputFile, t_i, t_e, n);
  			load_b(b,r_i,r_e,n,m,t_i,t_e);
+
 			Matrix<double> result(e.solve(b));
 			save_result(result, pFile);
 			if (argc == 5 && j == 0) {
@@ -81,8 +84,11 @@ int main(int argc, char** argv) {
 				// generate_isotherm_weighted(pIsoFile, result, m, n, r_i, r_e, iso);
 			}
 		}
+        clock_t result = clock() - before;
+        cout << "method 0 takes: " << result/float(CLOCKS_PER_SEC) << " seconds" << endl;
 	} else {
 		load_a(A,r_i,r_e,n,m);
+        clock_t before = clock();
 		EquationSystemLU<double> e(A); //temp
 		for (int j = 0; j < ninst; ++j) { // for every instance
 			load_temps(inputFile, t_i, t_e, n);
@@ -97,6 +103,8 @@ int main(int argc, char** argv) {
 				// generate_isotherm_weighted(pIsoFile, result, m, n, r_i, r_e, iso);
 			}
 		}
+        clock_t result = clock() - before;
+        cout << "method 1 takes: " << result/float(CLOCKS_PER_SEC) << " seconds" << endl;
 	}
 
 	inputFile.close();
