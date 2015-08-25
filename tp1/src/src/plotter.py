@@ -85,8 +85,6 @@ def plotData():
 		
 		z+=1
 
-	print maximo 
-	print minimo
 	#plt.axis([0, 2, r_i, r_e + len(angulosPorPlot)*3])	 
 	plt.axis([0, 2, minimo + -10, maximo + 10])	
 	title = 'Isotherm proximity to the external edge: $r_i$: %d, $r_e$: %d' % (r_i, r_e)
