@@ -9,6 +9,9 @@ PI = math.pi
 
 def plotData():
 
+	maximo = 0
+	minimo = -1
+
 	fileName = raw_input("please give a directory of the file: ")
 
 	if (os.path.isfile(fileName) and os.access(fileName, os.R_OK)) == False:
@@ -35,12 +38,23 @@ def plotData():
 		yAxisIso = []	
 
 		while i < angulos:
-			arr = map(int, f.readline().split())	
+			arr = map(float, f.readline().split())	
 			if i < angulos:		
 				yAxisIso.append(arr[0])
 
 			i+=1
+		
+		tempMax = max(yAxisIso)
+		if maximo < tempMax:
+			maximo = tempMax
 
+		if minimo == -1:
+			minimo = maximo 
+		
+		tempMin = min(yAxisIso)
+		if minimo > tempMin:
+			minimo = tempMin
+				
 		xAxisTheta = []
 
 		n = float(angulos)
@@ -61,17 +75,20 @@ def plotData():
 		#Calculo automatico del dominio	
 		xAxisTheta = np.arange(0, 2, d0)
 		#plt.plot(xAxisTheta, yAxisIso, 'o') 
-		plt.plot(xAxisTheta, yAxisIso, '-',  markersize=3)
+		plt.plot(xAxisTheta, yAxisIso, '-',  linewidth=2)
 
 		#Es igual a unir cada punto con una linea
-		#f = interp1d(xAxisTheta, yAxisIso, bounds_error=False)
+		#interpFunc = interp1d(xAxisTheta, yAxisIso, bounds_error=False)
 		#xnew = np.arange(0, 2, d0) #Queda igual que la funcion original dado que el dominio es el mismo.	
-		#xnew = np.arange(0, 2, 0.1)	
-		#plt.plot(xnew, f(xnew), '-') 
+		#xnew = np.arange(0, 2, .001)	
+		#plt.plot(xnew, interpFunc(xnew), '-') 
 		
 		z+=1
 
-	plt.axis([0, 2, r_i, r_e])	 
+	print maximo 
+	print minimo
+	#plt.axis([0, 2, r_i, r_e + len(angulosPorPlot)*3])	 
+	plt.axis([0, 2, minimo + -10, maximo + 10])	
 	title = 'Isotherm proximity to the external edge: $r_i$: %d, $r_e$: %d' % (r_i, r_e)
 	plt.title(title)
 	plt.ylabel('Isotherm position: $x_{iso}$ (less is better)')
@@ -92,7 +109,5 @@ def plotData():
 	plt.subplots_adjust(left=0.15)
 	plt.grid(True)
 	plt.show()
-
-
 
 plotData()
