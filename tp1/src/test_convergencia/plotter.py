@@ -114,7 +114,7 @@ def plotData():
         plt.grid(True)
 
         if len(soluciones) > 1: 
-#PRE: usar soluciones > 1 <==> ninst > 1 : usar ninst > 1 solo con soluciones que tengan la misma cantidad de puntos.
+	#PRE: usar soluciones > 1 <==> ninst > 1 : usar ninst > 1 solo con soluciones que tengan la misma cantidad de puntos.
             plt.subplot(212)
 
             ultima = soluciones[len(soluciones)-1]
