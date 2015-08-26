@@ -114,7 +114,7 @@ def plotData():
         plt.grid(True)
 
         if len(soluciones) > 1: 
-	#PRE: usar soluciones > 1 <==> ninst > 1 : usar ninst > 1 solo con soluciones que tengan la misma cantidad de puntos.
+	        #PRE: usar soluciones > 1 <==> ninst > 1 : usar ninst > 1 solo con soluciones que tengan la misma cantidad de puntos.
             plt.subplot(212)
 
             ultima = soluciones[len(soluciones)-1]
@@ -125,15 +125,16 @@ def plotData():
             for lista in soluciones:
                 if tempIndex != len(soluciones)-1:
 		    #Suma de las diferencias (arma pares y los resta)
-                    listDifferences.append(sum([x-y if x>y else y-x for x, y in zip(ultima, lista)])) 
+                    listDifferences.append(sum([x-y if x>y else y-x for x, y in zip(ultima, lista)]))
+                    #listDifferences.append(sum([x-y for x, y in zip(ultima, lista)]))
 
             xAxisAngulos = np.arange(0, len(angulosPorPlot), 1)
             xAxisRadios = np.arange(0, max(radiosPorPlot)+1, 0.01)
             interpolFunc = interp1d(xAxisAngulos, listDifferences, bounds_error=False)
             plt.plot(xAxisRadios, interpolFunc(xAxisRadios), '-',  linewidth=2)
 
-            plt.ylabel('Difference with the theorical isotherm: $\sum_{i=0}^m-1 x_max - x_i$')
-            plt.xlabel('#Radius: n')
+            plt.ylabel('Difference with the theorical isotherm')
+            plt.xlabel('#Radios: m+1')
 
         plt.show()
 
