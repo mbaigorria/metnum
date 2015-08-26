@@ -100,49 +100,36 @@ def plotData():
 
         legend = []
 
-        n = 0
-        while n < len(angulosPorPlot):
-            text = '$\Delta\Theta$: $\\frac{%d}{%d}$$\pi$ - $\Delta$r: %.3f' % (2, angulosPorPlot[n], (r_e-r_i)/float(radiosPorPlot[n]))
+#        n = 0
+#        while n < len(angulosPorPlot):
+#            text = '$\Delta\Theta$: $\\frac{%d}{%d}$$\pi$ - $\Delta$r: %.3f' % (2, angulosPorPlot[n], (r_e-r_i)/float#(radiosPorPlot[n]))
 
-            legend.append(text)
-            n+=1
+#            legend.append(text)
+#            n+=1
 
-        plt.legend(legend, loc='best')
+#        plt.legend(legend, loc='center left', bbox_to_anchor=(1, 0.5))
+	
         # Tweak spacing to prevent clipping of ylabel
         plt.subplots_adjust(left=0.15)
         plt.grid(True)
 
-        if len(soluciones) > 1: #PRE: usar soluciones > 1 <==> ninst > 1 : usar ninst > 1 solo con soluciones que tengan la misma cantidad de puntos.
+        if len(soluciones) > 1: 
+#PRE: usar soluciones > 1 <==> ninst > 1 : usar ninst > 1 solo con soluciones que tengan la misma cantidad de puntos.
             plt.subplot(212)
 
-            sumaMaxima = -1
-            indexSumaMaxima = 0
-            tempIndex = 0
+            ultima = soluciones[len(soluciones)-1]
 
-            #Busco la lista de puntos de suma maxima (los que tienen mas diferencia con el resto)
-            for lista in soluciones:
-                tempSum = sum(lista)
-                if sumaMaxima == -1:
-                    sumaMaxima = tempSum
-                elif sumaMaxima < tempSum:
-                    sumaMaxima = tempSum
-                    indexSumaMaxima = tempIndex
-
-                tempIndex+=1
-
-            listaDeSumaMaxima = soluciones[indexSumaMaxima]
-
-            listSumDifferenceForEachPointWithMaxList = []
+            listDifferences = []
 
             tempIndex = 0
             for lista in soluciones:
-                if tempIndex != indexSumaMaxima:
-                    listSumDifferenceForEachPointWithMaxList.append(sum([x - y for x, y in zip(listaDeSumaMaxima, lista)])) #Suma de las diferencias (arma pares y los resta)
+                if tempIndex != len(soluciones)-1:
+		    #Suma de las diferencias (arma pares y los resta)
+                    listDifferences.append(sum([x-y if x>y else y-x for x, y in zip(ultima, lista)])) 
 
             xAxisAngulos = np.arange(0, len(angulosPorPlot), 1)
-            xAxisRadios = np.arange(0, max(radiosPorPlot), 1)
-            #xAxisRadios = np.arange(0, 2, .001)
-            interpolFunc = interp1d(xAxisAngulos, listSumDifferenceForEachPointWithMaxList, bounds_error=False)
+            xAxisRadios = np.arange(0, max(radiosPorPlot)+1, 0.01)
+            interpolFunc = interp1d(xAxisAngulos, listDifferences, bounds_error=False)
             plt.plot(xAxisRadios, interpolFunc(xAxisRadios), '-',  linewidth=2)
 
             plt.ylabel('Difference with the theorical isotherm: $\sum_{i=0}^m-1 x_max - x_i$')
