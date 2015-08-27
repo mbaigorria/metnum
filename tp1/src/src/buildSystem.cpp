@@ -99,8 +99,8 @@ int main(int argc, char** argv) {
 				pIsoFile = fopen(argv[4],"w");
 			}
 			if (argc == 5) {
-				generate_isotherm_lower(pIsoFile, result, m, n, r_i, r_e, iso);
-				// generate_isotherm_weighted(pIsoFile, result, m, n, r_i, r_e, iso);
+				// generate_isotherm_lower(pIsoFile, result, m, n, r_i, r_e, iso);
+				generate_isotherm_weighted(pIsoFile, result, m, n, r_i, r_e, iso);
 			}
 		}
         clock_t result = clock() - before;
