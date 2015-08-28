@@ -5,16 +5,14 @@ from   scipy.interpolate import interp1d
 from   numpy import matrix
 import math
 import os
+import sys
 
 PI = math.pi
 
-def plotData():
-
+def plotData(fileName, angulosVariables=False):
         soluciones = []
         maximo = 0
         minimo = -1
-
-        fileName = raw_input("please give a directory of the file: ")
 
         if (os.path.isfile(fileName) and os.access(fileName, os.R_OK)) == False:
             print "Could not open file! Invalid file name!"
@@ -32,10 +30,11 @@ def plotData():
         #Plot con las diferencias entre la posicion de la isoterma y el radio externo
         #plt.figure(1)
         #PRE: ninst > 1 <==> Las instancias tienen igual cantidad de soluciones.
-        if ninst > 1:
+        if ninst > 1 and angulosVariables == False:
             plt.subplot(211)
 
         while z < ninst:
+
             radios, angulos = map(int, f.readline().split())
 
             radiosPorPlot.append(radios)
@@ -51,6 +50,7 @@ def plotData():
                     yAxisIso.append(arr[0])
 
                 i+=1
+
 
             soluciones.append(yAxisIso)
 
@@ -79,9 +79,10 @@ def plotData():
             #j+=1
 
             #Calculo automatico del dominio
-            xAxisTheta = np.arange(0, 2, d0)
-            #plt.plot(xAxisTheta, yAxisIso, 'o')
-            plt.plot(xAxisTheta, yAxisIso, '-',  linewidth=2)
+            if z % 2 == 0:
+                xAxisTheta = np.arange(0, 2, d0)
+                #plt.plot(xAxisTheta, yAxisIso, 'o')
+                plt.plot(xAxisTheta, yAxisIso, '-',  linewidth=1)
 
             #Es igual a unir cada punto con una linea
             #interpFunc = interp1d(xAxisTheta, yAxisIso, bounds_error=False)
@@ -113,7 +114,7 @@ def plotData():
         plt.subplots_adjust(left=0.15)
         plt.grid(True)
 
-        if len(soluciones) > 1: 
+        if len(soluciones) > 1 and angulosVariables == False:
 	        #PRE: usar soluciones > 1 <==> ninst > 1 : usar ninst > 1 solo con soluciones que tengan la misma cantidad de puntos.
             plt.subplot(212)
 
@@ -124,18 +125,35 @@ def plotData():
             tempIndex = 0
             for lista in soluciones:
                 if tempIndex != len(soluciones)-1:
-		    #Suma de las diferencias (arma pares y los resta)
-                    listDifferences.append(sum([x-y if x>y else y-x for x, y in zip(ultima, lista)]))
+		            #Suma de las diferencias (arma pares y los resta)
+                    listDifferences.append(sum([x-y if x>y else y-x for x, y in zip(ultima, lista)])/len(lista))
                     #listDifferences.append(sum([x-y for x, y in zip(ultima, lista)]))
 
             xAxisAngulos = np.arange(0, len(angulosPorPlot), 1)
             xAxisRadios = np.arange(0, max(radiosPorPlot)+1, 0.01)
             interpolFunc = interp1d(xAxisAngulos, listDifferences, bounds_error=False)
-            plt.plot(xAxisRadios, interpolFunc(xAxisRadios), '-',  linewidth=2)
+            plt.plot(xAxisRadios, interpolFunc(xAxisRadios), 'k',  linewidth=1)
 
             plt.ylabel('Difference with the theorical isotherm')
             plt.xlabel('#Radios: m+1')
 
+        plt.subplots_adjust(left=0.15)
+        plt.grid(True)
+
         plt.show()
 
-plotData()
+def main(argv):
+    lista = sys.argv
+    if len(sys.argv) == 2:
+        fileName = lista[1]
+        plotData(fileName)
+    elif len(sys.argv) == 3:
+        fileName = lista[1]
+        angulosVariables = bool(int(lista[2]))
+        print angulosVariables
+        plotData(lista[1], angulosVariables)
+    else:
+        print "Invalid format. You must past a file name and optionally the method (0 or 1)"
+
+if __name__ == "__main__":
+   main(sys.argv[1:])
