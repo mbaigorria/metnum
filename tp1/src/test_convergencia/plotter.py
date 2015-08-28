@@ -81,7 +81,6 @@ def plotData(fileName, angulosVariables=False):
             #Calculo automatico del dominio
             if z % 2 == 0:
                 xAxisTheta = np.arange(0, 2, d0)
-                #plt.plot(xAxisTheta, yAxisIso, 'o')
                 plt.plot(xAxisTheta, yAxisIso, '-',  linewidth=1)
 
             #Es igual a unir cada punto con una linea
@@ -92,7 +91,6 @@ def plotData(fileName, angulosVariables=False):
 
             z+=1
 
-        #plt.axis([0, 2, r_i, r_e + len(angulosPorPlot)*3])
         plt.axis([0, 2, minimo + -10, maximo + 10])
         title = 'Isotherm proximity to the external edge: $r_i$: %d, $r_e$: %d' % (r_i, r_e)
         plt.title(title)
@@ -115,7 +113,7 @@ def plotData(fileName, angulosVariables=False):
         plt.grid(True)
 
         if len(soluciones) > 1 and angulosVariables == False:
-	        #PRE: usar soluciones > 1 <==> ninst > 1 : usar ninst > 1 solo con soluciones que tengan la misma cantidad de puntos.
+	    #PRE: usar soluciones > 1 <==> ninst > 1 : usar ninst > 1 solo con soluciones que tengan la misma cantidad de puntos.
             plt.subplot(212)
 
             ultima = soluciones[len(soluciones)-1]
@@ -125,10 +123,14 @@ def plotData(fileName, angulosVariables=False):
             tempIndex = 0
             for lista in soluciones:
                 if tempIndex != len(soluciones)-1:
-		            #Suma de las diferencias (arma pares y los resta)
-                    listDifferences.append(sum([x-y if x>y else y-x for x, y in zip(ultima, lista)])/len(lista))
-                    #listDifferences.append(sum([x-y for x, y in zip(ultima, lista)]))
+		    #Suma de las diferencias (arma pares y los resta)
+                    #listDifferences.append(sum([x-y if x>y else y-x for x, y in zip(ultima, lista)])/len(lista))
 
+		    value = (sum(ultima)/float(len(lista))) - (sum(lista)/float(len(lista)))
+		    if value < 0:
+			value *=-1
+		    listDifferences.append(value)
+	
             xAxisAngulos = np.arange(0, len(angulosPorPlot), 1)
             xAxisRadios = np.arange(0, max(radiosPorPlot)+1, 0.01)
             interpolFunc = interp1d(xAxisAngulos, listDifferences, bounds_error=False)
@@ -153,7 +155,7 @@ def main(argv):
         print angulosVariables
         plotData(lista[1], angulosVariables)
     else:
-        print "Invalid format. You must past a file name and optionally the method (0 or 1)"
+        print "Invalid format: filename method (0 or 1)"
 
 if __name__ == "__main__":
    main(sys.argv[1:])
