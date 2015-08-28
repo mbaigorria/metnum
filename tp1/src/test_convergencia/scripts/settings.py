@@ -3,8 +3,8 @@ import os
 # Parametros de isoterma "ideal" y temperaturas para los proximos dos tests
 tempInt = 1500
 tempExt = 200
-mIdeal = 100
-nIdeal = 100
+mIdeal = 10
+nIdeal = 10
 
 # Paramtros test aumentando m
 cantM = 10
