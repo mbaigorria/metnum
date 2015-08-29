@@ -18,16 +18,14 @@ class RandomParametersGenerator(object):
         self.outerTemp = outerTemp
         self.lastFile = 0
         
-    def generateTest(self, name, m=30, n=30, ninst=1, tempInt=1500, tempExt=30, subindex=1, tempConst=True):
+    def generateTest(self, name, r_i=10, r_e=100, m=30, n=30, ninst=1, tempInt=1500, tempExt=30, subindex=1, tempConst=True):
         
         self.m = m
         self.n = n
         self.ninst = ninst
-        self.tempInt = tempInt
+        self.innerTemp = tempInt
         if tempConst:
-            self.tempExt = tempExt
-        else:
-            random.seed(tempExt) # El valor de tempExt se usa como seed
+            self.outerTemp = tempExt
         
         f = open("instancias/" + name + "_" + str(subindex) + ".in", 'w+')
         self.lastFile += 1
@@ -60,26 +58,34 @@ class RandomParametersGenerator(object):
 rpg = RandomParametersGenerator()
 
 # Generar isoterma ideal
-rpg.generateTest(name='isotermaIdeal', m=settings.mIdeal, n=settings.nIdeal, tempInt=settings.tempInt, tempExt=settings.tempExt)
+rpg.generateTest(name='isotermaIdeal', r_i=settings.radioInt, r_e=settings.radioExt, m=settings.mIdeal, n=settings.nIdeal, tempInt=settings.tempInt, tempExt=settings.tempExt)
 
 # Generar tests de m
 valorM = settings.inicioM
 for i in xrange(settings.cantM):
-    rpg.generateTest(name="mVariable", m=valorM, n=settings.valorN, tempInt=settings.tempInt, tempExt=settings.tempExt, subindex=i+1)
+    rpg.generateTest(name="mVariable", r_i=settings.radioInt, r_e=settings.radioExt, m=valorM, n=settings.valorN, tempInt=settings.tempInt, tempExt=settings.tempExt, subindex=i+1)
     valorM += settings.aumentoM
     
 # Generar tests de n
 valorN = settings.inicioN
 for i in xrange(settings.cantN):
-    rpg.generateTest(name="nVariable", m=settings.valorM, n=valorN, tempInt=settings.tempInt, tempExt=settings.tempExt, subindex=i+1)
+    rpg.generateTest(name="nVariable", r_i=settings.radioInt, r_e=settings.radioExt, m=settings.valorM, n=valorN, tempInt=settings.tempInt, tempExt=settings.tempExt, subindex=i+1)
     valorN += settings.aumentoN
     
 # Generar tests de temperatura con aumento constante
 valorTemp = settings.tempInicial
 for i in xrange(settings.cantAumentos):
-    rpg.generateTest(name="tempVariable", m=settings.valorM, n=valorN, tempInt=settings.tempInt, tempExt=valorTemp, subindex=i+1)
+    rpg.generateTest(name="tempVariable", r_i=settings.radioInt, r_e=settings.radioExt, m=settings.valorM, n=valorN, tempInt=settings.tempInt, tempExt=valorTemp, subindex=i+1)
     valorTemp += settings.tempAumento
 
+random.seed(settings.seed)
 # Generar tests con tempera externa aleatoria
 for i in xrange(settings.cantAleatorias):
-    rpg.generateTest(name="tempAleatoria", m=settings.mTestAleatorio, n=settings.nTestAleatorio, tempInt=settings.tempInt, tempExt=settings.seed, subindex=i+1, tempConst=False)
+    rpg.generateTest(name="tempAleatoria", r_i=settings.radioInt, r_e=settings.radioExt, m=settings.mTestAleatorio, n=settings.nTestAleatorio, tempInt=settings.tempInt, tempExt=settings.seed, subindex=i+1, tempConst=False)
+
+# Generar tests de m con temperatura externa aletoria
+valorM = settings.inicioM
+for i in xrange(settings.cantM):
+    random.seed(settings.seed)
+    rpg.generateTest(name="mVariableTempVariable", r_i=settings.radioInt, r_e=settings.radioExt, m=valorM, n=settings.valorN, tempInt=settings.tempInt, tempExt=settings.tempExt, subindex=i+1, tempConst=False)
+    valorM += settings.aumentoM

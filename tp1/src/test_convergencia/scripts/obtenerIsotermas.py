@@ -10,16 +10,20 @@ runSystem('instancias/isotermaIdeal_1.in', 'instancias/isotermaIdeal_1.out', str
 
 for i in xrange(settings.cantM):
     fName = 'instancias/mVariable_' + str(i+1)
-    runSystem(fName + '.in', fName + '.out', str(1), 'isotermas/mVariable_' + str(i+1) + '.iso')
+    runSystem(fName + '.in', fName + '.out', str(1), 'isotermas/mVariable_' + str(i+1) + 'iso.out')
     
 for i in xrange(settings.cantN):
     fName = 'instancias/nVariable_' + str(i+1)
-    runSystem(fName + '.in', fName + '.out', str(1), 'isotermas/nVariable_' + str(i+1) + '.iso')
+    runSystem(fName + '.in', fName + '.out', str(1), 'isotermas/nVariable_' + str(i+1) + 'iso.out')
     
 for i in xrange(settings.cantAumentos):
     fName = 'instancias/tempVariable_' + str(i+1)
-    runSystem(fName + '.in', fName + '.out', str(1), 'isotermas/tempVariable_' + str(i+1) + '.iso')
+    runSystem(fName + '.in', fName + '.out', str(1), 'isotermas/tempVariable_' + str(i+1) + 'iso.out')
     
+for i in xrange(settings.cantM):
+    fName = 'instancias/mVariableTempVariable_' + str(i+1)
+    runSystem(fName + '.in', fName + '.out', str(1), 'isotermas/mVariableTempVariable_' + str(i+1) + 'iso.out')
+
 for i in xrange(settings.cantAleatorias):
     fName = 'instancias/tempAleatoria_' + str(i+1)
-    runSystem(fName + '.in', fName + '.out', str(1), 'isotermas/tempAleatoria_' + str(i+1) + '.iso')
+    runSystem(fName + '.in', fName + '.out', str(1), 'isotermas/tempAleatoria_' + str(i+1) + 'iso.out')
