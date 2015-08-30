@@ -141,6 +141,7 @@ void generate_isotherm_weighted(FILE * pFile, Matrix<double>& b, int m, int n, d
 				break;
 			} else if (b(j * n + k) < iso && j == 0) {
 				fprintf(pFile, "%f\r\n", r_i);
+				break;
 			} else if (j == m-1) {
 				fprintf(pFile, "%f\r\n", r_i + j*dR);
 				break;
