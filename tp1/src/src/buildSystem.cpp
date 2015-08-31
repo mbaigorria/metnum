@@ -99,8 +99,8 @@ int main(int argc, char** argv) {
 				pIsoFile = fopen(argv[4],"w");
 			}
 			if (argc == 5) {
-				// generate_isotherm_lower(pIsoFile, result, m, n, r_i, r_e, iso);
-				generate_isotherm_weighted(pIsoFile, result, m, n, r_i, r_e, iso);
+				generate_isotherm_lower(pIsoFile, result, m, n, r_i, r_e, iso);
+				// generate_isotherm_weighted(pIsoFile, result, m, n, r_i, r_e, iso);
 			}
 		}
         clock_t result = clock() - before;
@@ -118,11 +118,13 @@ int main(int argc, char** argv) {
 void generate_isotherm_lower(FILE * pFile, Matrix<double>& b, int m, int n, double r_i, double r_e, double iso) {
 
 	double dR = (r_e - r_i) / (m - 1);
-
 	for (int k = 0; k < n; k++) {
 		for (int j = 0; j < m; j++) {
-			if (b(j * n + k) < iso || j == m-1) {
+			if ((b(j * n + k) <= iso || j == m-1) && j != 0) {
 				fprintf(pFile, "%f\r\n", r_i + j*dR);
+				break;
+			} else if (b(j * n + k) <= iso && j == 0) {
+				fprintf(pFile, "%f\r\n", r_i);
 				break;
 			}
 		}
@@ -137,17 +139,15 @@ void generate_isotherm_weighted(FILE * pFile, Matrix<double>& b, int m, int n, d
 	for (int k = 0; k < n; k++) {
 		for (int j = 0; j < m; j++) {
 			if (b(j * n + k) < iso && j != m-1 && j != 0) {
-				if ((b((j-1) * n + k) - b(j * n + k)) < 0) cout << "wtf\n" << endl;
 				fprintf(pFile, "%f\r\n", r_i + (j-1)*dR + (b((j-1) * n + k) - b(j * n + k)) / iso * dR);
 				break;
+			} else if (b(j * n + k) < iso && j == 0) {
+				fprintf(pFile, "%f\r\n", r_i);
+				break;
+			} else if (j == m-1) {
+				fprintf(pFile, "%f\r\n", r_i + j*dR);
+				break;
 			}
-			// } else if (b(j * n + k) < iso && j == 0) {
-			// 	fprintf(pFile, "%f\r\n", r_i);
-			// 	break;
-			// } else if (j == m-1) {
-			// 	fprintf(pFile, "%f\r\n", r_i + j*dR);
-			// 	break;
-			// }
 		}
 	}
 
@@ -241,7 +241,6 @@ void insert_a(Matrix<double>& A, int j, int k, double r_i, double r_e, int n, in
 
 void insert_b(Matrix<double>& b, int j, int k, double r_i, double r_e, int n, int m, double* t_i, double* t_e) {
 
-	double dO = 2*M_PI / n;
 	double dR = (r_e - r_i) / (m - 1);
 
 	int r = j * n + k;
