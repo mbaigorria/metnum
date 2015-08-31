@@ -92,8 +92,6 @@ Mauro Cherubini & 835/13                      & cheru.mf@gmail.com \\ \hline
 \end{tabular}
 \end{table}
 
-\vfill
-
 \begin{center}
 \textbf{Reservado para la cátedra}
 \end{center}
@@ -107,24 +105,32 @@ Segunda entrega &         &      \\ \hline
 \end{tabular}
 \end{table}
 
+\vfill
+\textbf{Resumen:}
+El siguiente trabajo practico tiene como objetivo implementar, utilizar y evaluar el método de eliminación gausiana y la factorización LU para resolver un problema que involucra la propagación del calor en la pared de un horno descripta con un laplaciano. Para ello se discretizara esta ecuación diferencial y luego se planteara un sistema de la forma $Ax = b$ para calcular la temperatura en los diferentes puntos de la discretizacion en la pared del horno.
+Se analizaran diferentes escenarios en las condiciones del problema para evaluar en que escenarios una factorización supera a la otra. Se evaluaran algunas cuestiones relacionadas con el problema en sí, como por ejemplo la presición de un algoritmo de búsqueda de isotermas en la pared del horno y la velocidad de convergencia a la isoterma teórica.
+Finalmente concluimos que la factorización LU supera ampliamente a la eliminación gausiana en cuanto a complejidad temporal en escenarios donde cambia el vector $b$ de forma recurrente. A su vez, notamos que la presición del algoritmo de búsqueda de isotermas no es estrictamente decreciente en función de la discretización, aunque por supuesto mejora a medida que aumenta en múltiplos de 2.
+
+\textbf{Keywords:} Gaussian Elimination, LU Factorization.
+
 \newpage
 \tableofcontents
 \newpage
 
 % end cover page
 
-\input{introduction}
+\input{introduccion}
 \newpage
-\input{body}
+\input{desarrollo}
 \newpage
-\input{results}
+\input{experimentacion}
 \newpage
-\input{discussion}
-\newpage
-\input{conclusion}
+\input{conclusiones}
 \newpage
 
-\section{Codigo}
+\section{Apéndice A: Enunciado}
+\input{appendixA.tex}
+\section{Apéndice B: Código}
 \subsection{matrix.h}
 \lstinputlisting[language=C++, breaklines=true]{../src/src/matrix.h}
 \subsection{eqsys.h}
