@@ -42,18 +42,19 @@ for k = 1:ninst
     end
 
     %Aca ploteo el calor en el horno
-    figure;
+    h = figure;
     xdib = reshape(xdib,angulos,radios);
     xdib(angulos+1,:) = xdib(1,:);
     ydib = reshape(ydib,angulos,radios);
     ydib(angulos+1,:) = ydib(1,:);
     x = reshape(x,angulos,radios);
     x(angulos+1,:) = x(1,:);
-    h = pcolor(xdib,ydib,x);
-
+    pcolor(xdib,ydib,x);
+    saveas(h,strcat(inputfile,'_heat.eps'));
+    
     %aca ploteo la isoterma
     if (nargin > 2)
-        figure;
+        h = figure;
         
         radioiso = fscanf(isofid, '%f',angulos);
         
@@ -67,6 +68,7 @@ for k = 1:ninst
         polar(theta,radioiso);
         polar(theta,interno);
         hold off;
-        pause;
+        saveas(h,strcat(inputfile,'_iso.eps'));
+        %pause;
     end
 end
