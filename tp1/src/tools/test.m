@@ -1,1 +1,1 @@
-horno('../tests/test4.in', '../tests/test4.out', '../tests/iso');
+horno('tempAleatoria_1.in', 'tempAleatoria_1.out', 'tempAleatoria_1.iso.out');
