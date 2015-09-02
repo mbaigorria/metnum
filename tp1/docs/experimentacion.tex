@@ -4,7 +4,7 @@
 
 Los siguientes experimentos fueron generados a partir de archivos de entrada para nuestro algoritmo que siguen ciertas reglas. En todos los casos donde analizamos el tiempo de ejecución de los algoritmos, decidimos generar 100 instancias para el mismo experimento y luego tomar la media. Esto se debe a que el uso del CPU no es uniforme y lleva a que las mediciones estén sesgadas, principalmente causado por el algoritmo de scheduling del SO y el uso de memoria.
 
-\subsection{Tiempos de Ejecución}
+\subsection{Evaluación de los métodos}
 
 \subsubsection{Variando la dimensión}
 
@@ -39,11 +39,13 @@ Para generar las instancias utilizadas en el gráfico, estos fueron los valores 
 Coincidiendo nuevamente con la teoría, aquí es donde se pueden ver efectivamente las ganancias de la factorización LU. Aunque ambos algoritmos son cúbicos, en este problema la EG se ejecuta en \order{ninst \times n^3} mientras que la factorización LU en \order{n^3 + ninst \times n^2} $\in$ \order{n^3}. Esto se puede ver claramente en el gráfico.
 
 \newpage
+\subsection{Comportamiento del Sistema}
+
 \subsection{Isoterma Empírica}
 
 La idea de los siguientes experimentos es ver como varia la diferencia entre la isoterma empírica y la isoterma numérica a medida que cambiamos el nivel de granularidad, es decir, a medida que cambiamos la cantidad de radios y ángulos. Haremos este análisis para nuestros dos algoritmos de búsqueda.
 
-\subsubsection{Variando el numero de radios}
+\subsubsection*{Variando el numero de radios}
 
 En este experimento vamos a evaluar la calidad de las isotermas a medida que aumentamos el numero de radios. A priori, esperábamos que la calidad de la solución fuese monótona creciente con el nivel de granularidad, en este caso particular en la cantidad de radios. A su vez, pensábamos que hacer un promedio pesado nos iba a acercar mas a la isoterma empírica que simplemente utilizando el método lower.
 
@@ -74,7 +76,7 @@ En cuanto a la razón de por que el metodo lower se comporta mejor que el weight
 
 \pagebreak
 
-\subsubsection{Variando el numero de ángulos}
+\subsubsection*{Variando el numero de ángulos}
 
 Para este experimento, utilizaremos instancias con las siguientes características: $m = 20$, $n = 4$, $r_i = 10$, $r_e = 100$, $ninst = 1$, con $n$ aumentando de a 4.
 
