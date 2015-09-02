@@ -62,6 +62,8 @@ Para este experimento utilizamos instancias con los siguientes parámetros: $m =
   \end{minipage}
 \end{figure}
 
+\textbf{Recordar analizar el trade off entre calidad de la solucion y tiempo de computo! Cambiarle escala al primer grafico?}
+
 En contra de lo que pensábamos que iba a suceder, la calidad de la solución no es monótona creciente con el nivel de granularidad. A su vez, se puede ver que el algoritmo de tomar la isoterma justo menor al que se busca supera ampliamente al método weighted. En un principio pensábamos que nuestros experimentos podían estar mal, pero la realidad es que existe una explicación para estos resultados.
 
 Cuando discretizamos el dominio de búsqueda en coordenadas polares y resolvemos el sistema lineal, lo que estamos haciendo es básicamente buscar una aproximación de la temperatura en cada punto de la discretización. Esta aproximación cambia a medida que variamos la granularidad. A mayor granularidad, la aproximación de la temperatura en cierto punto dado por cualquiera de nuestros algoritmos no es necesariamente mejor. La única forma de garantizar esto es que la nueva discretización no solo pase por los puntos que tenia la vieja discretización, si no que también agregue nuevos puntos. Dada la definición de nuestro problema, esto solo sucede cuando la granularidad en cualquiera de sus dimensiones aumenta en múltiplos de 2. Al observar estos múltiplos, aquí si podremos observar como la isoterma se comporta de la forma en la que nosotros originalmente habíamos esperado.

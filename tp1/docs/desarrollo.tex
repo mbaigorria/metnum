@@ -112,7 +112,13 @@ Donde:
 
 \vspace{5mm}
 
-Luego armamos la matriz del sistema, en donde los coeficientes ser\'an los $\alpha$ anteriores, expresando en cada fila su valor para cada temperatura. Hay que tener en cuenta que en todas las ecuaciones habr\'a un $\alpha$ para cada uno de los $t_{j,k}$, valiendo $0$ en aquellos casos en que no aparezca dicha incognita, $1$ en caso de ser $t_i$ o $t_e{\theta}$, o en su defecto $\alpha$ como se han definido en el desarrollo anterior.
+Luego armamos la matriz del sistema, en donde los coeficientes ser\'an los $\alpha$ anteriores, expresando en cada fila su valor para cada temperatura. Hay que tener en cuenta que en todas las ecuaciones habr\'a un $\alpha$ para cada uno de los $t_{j,k}$, valiendo $0$ en aquellos casos en que no aparezca dicha incógnita, $1$ en caso de ser $t_i$ o $t_e{\theta}$, o en su defecto $\alpha$ como se han definido en el desarrollo anterior.
+
+\subsubsection{Métodos de resolución}
+
+\textbf{Agregar pseudo-codigo de la forma en la que armamos el sistema. Hablar de EG, LU y su respectiva complejidad.}
+
+\subsubsection{Propiedades del sistema}
 
 Por cuestiones de optimizaci\'on organizamos la matriz con el orden de sus columnas (inducidas por los $t_{k,j}$), de acuerdo al orden de aparici\'on impartido por el recorrido de $\theta_0$ a $\theta_{n-1}$ (variando el radio luego de cada vuelta) desde $r_i$ hasta $r_e$ inclusive. De esta forma, la matriz del sistema ser\'a una matriz $banda$.
 \\
