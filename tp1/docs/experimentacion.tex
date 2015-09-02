@@ -68,9 +68,34 @@ Cuando discretizamos el dominio de búsqueda en coordenadas polares y resolvemos
 
 En cuanto a la razón de por que el metodo lower se comporta mejor que el weighted, conjeturamos que la razón mas significativa es el hecho de que quizás la temperatura no se propaga de forma uniforme en la pared del horno. El método weighted hace un promedio pesado asumiendo uniformidad, y quizá este supuesto es incorrecto.
 
+\textbf{Hacer un testeo que muestre si el calor se propaga de forma uniforme. En clase te lo comente. Duplicas la temperatura externa, te fijas en cuanto se mueve la isoterma.}
+
 \pagebreak
 
 \subsubsection{Variando el numero de ángulos}
 
-Para este experimento, utilizaremos instancias con las siguientes caracteristicas: $m = 20$, $n = 4$, $r_i = 10$, $r_e = 100$, $ninst = 1$, con $m$ aumentando de a 4.
+Para este experimento, utilizaremos instancias con las siguientes características: $m = 20$, $n = 4$, $r_i = 10$, $r_e = 100$, $ninst = 1$, con $n$ aumentando de a 4.
+
+A partir de las conclusiones del experimento anterior, ya no esperamos que la calidad de la solución mejore monotonamente a medida que aumentamos la cantidad de ángulos.
+
+\begin{figure}[h]
+  \centering
+  \begin{minipage}[b]{0.49\textwidth}
+    \includegraphics[width=\textwidth]{graficos/nVariable_l.pdf}
+    \caption{Algoritmo: Lower}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[b]{0.49\textwidth}
+    \includegraphics[width=\textwidth]{graficos/nVariable_w.pdf}
+    \caption{Algoritmo: Weighted}
+  \end{minipage}
+\end{figure}
+
+\textbf{Porque los ángulos arrancan en 400? Que escala fea che.}
+
+Como se puede observar, ambos algoritmos tienen una performance sumamente similar y no se observan mejoras significativas en la calidad de las isotermas a medida que aumenta la cantidad de ángulos. Esto se debe a que nuestro caso de prueba fue un caso simétrico, donde para cualquier angulo las temperaturas para cualquier radio son idénticas. Esto nos trae una conclusión bastante importante: en casos que sean bastante simétricos, formar un caso simétrico tomando como temperatura externa el máximo, tomando solo 1 angulo y aumentando solo la cantidad de radios es la estrategia optima para evaluar la integridad estructural de un horno. Bajamos el tiempo de ejecución al no tener que evaluar todos los ángulos explotando la simetría del problema y solo aumentamos la dimension de granularidad relevante.
+
+Variar el numero de ángulos cuando la temperatura es sumamente uniforme en el exterior puede tener efectos significativos sobre la calidad de la solución, aunque no tan significativos como la de variar los radios.
+
+\textbf{Experimentar un poco con esta proposición?}
 

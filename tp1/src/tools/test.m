@@ -1,1 +1,1 @@
-horno('isotermaIdeal_1.in', 'bIdeal.out', 'isoIdeal.out');
+horno('tempPicos_1.in', 'tempPicos_1.out', 'tempPicos_1.iso.out');
