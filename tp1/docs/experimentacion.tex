@@ -2,152 +2,75 @@
 
 \subsection{Metodología}
 
-\subsection{Test de tiempos}
+Los siguientes experimentos fueron generados a partir de archivos de entrada para nuestro algoritmo que siguen ciertas reglas. En todos los casos donde analizamos el tiempo de ejecución de los algoritmos, decidimos generar 100 instancias para el mismo experimento y luego tomar la media. Esto se debe a que el uso del CPU no es uniforme y lleva a que las mediciones estén sesgadas, principalmente causado por el algoritmo de scheduling del SO y el uso de memoria.
 
-Valores usados(Test de dimensions): \\
-$m = 3$, $n = 3$, $r_i = 10$, $r_e = 100$, $ninst = 1$, $m$ y $n$ aumentan en 1. \\
-Valores usados(Test de instancias): \\
-$m = 15$, $n = 15$, $r_i = 10$, $r_e = 100$, $ninst = 1$, $ninst$ aumenta en 1. \\
+\subsection{Tiempos de Ejecución}
 
-\includegraphics[scale=0.45]{graficos/dimVariable_EG.pdf}
-\includegraphics[scale=0.45]{graficos/dimVariable_LU.pdf}
-\newline
-\includegraphics[scale=0.45]{graficos/dimVariableDiv_EG.pdf}
-\includegraphics[scale=0.45]{graficos/dimVariableDiv_LU.pdf}
-\newline
-\includegraphics[scale=0.45]{graficos/instVariable_EG.pdf}
-\includegraphics[scale=0.45]{graficos/instVariable_LU.pdf}
+\subsubsection{Variando la dimensión}
 
-\begin{table}[]
+Para este experimento, decidimos analizar el tiempo de ejecución de nuestro algoritmo en función de la dimension de la matriz $A$. A priori, dado que ambos algoritmos son \order{n^3} y solo se están ejecutando sobre una única instancia, esperamos que los tiempos de ejecución sean sumamente similares.
+
+Para la generación de instancias, utilizamos $m = 3$, $n = 3$, $r_i = 10$, $r_e = 100$, $ninst = 1$, $m = 10$ y $n$ aumentando de a 1. Aumentamos solo $n$ para aumentar la dimension de la matriz A dado que lo que relevante al tiempo de ejecución final del algoritmo es la dimension total, no de donde proviene la misma.
+
+\begin{figure}[h]
 \centering
-\caption{Tiempo en obtener solucion (microsegundos)}
-\label{tabla-eg-lu}
-\begin{tabular}{lll}
-\hline
-Dim  & Tiempo(EG) & Tiempo(LU) \\ \hline
-9    & 40000.0    & 24800.0    \\
-16   & 26300.0    & 23300.0    \\
-25   & 24700.0    & 23000.0    \\
-36   & 25000.0    & 25200.0    \\
-49   & 34500.0    & 31600.0    \\
-64   & 30400.0    & 33600.0    \\
-81   & 36300.0    & 40800.0    \\
-100  & 42900.0    & 43900.0    \\
-121  & 54500.0    & 59000.0    \\
-144  & 75500.0    & 78300.0    \\
-169  & 105400.0   & 110600.0   \\
-196  & 147500.0   & 153100.0   \\
-225  & 206800.0   & 215500.0   \\
-256  & 292600.0   & 305200.0   \\
-289  & 408000.0   & 427700.0   \\
-324  & 574400.0   & 586600.0   \\
-361  & 769000.0   & 808500.0   \\
-400  & 1032500.0  & 1071700.0  \\
-441  & 1368600.0  & 1423400.0  \\
-484  & 1801900.0  & 1882200.0  \\
-529  & 2338800.0  & 2454000.0  \\
-576  & 3126600.0  & 3170100.0  \\
-625  & 3850500.0  & 4073100.0  \\
-676  & 4868300.0  & 5099500.0  \\
-729  & 6115900.0  & 6420000.0  \\
-784  & 7585900.0  & 7853900.0  \\
-841  & 9363600.0  & 9725900.0  \\
-900  & 11505200.0 & 12010300.0 \\
-961  & 13940400.0 & 14459000.0 \\
-1024 & 16863300.0 & 17570100.0 \\ \hline
-\end{tabular}
-\end{table}
+\includegraphics[scale=0.7]{graficos/dimVariable.pdf}
+\caption{Tiempos de ejecución según dimension, EG vs LU.}
+\end{figure}
 
-\begin{table}[]
+Como se puede observar en estos gráficos, ambos algoritmos tienen casi los mismos tiempos de ejecución para una dimension dada. Esto coincide con la teoría.
+
+\pagebreak
+
+\subsubsection{Variando numero de instancias}
+
+Para este experimento la idea es ver la diferencia en performance de la eliminación gausiana y la factorización LU a medida que aumenta el numero de instancias, es decir, a medida que cambiamos la matriz $b$. Aunque ambos algoritmos pertenecen a \order{n^3}, esperamos que la factorización LU sea superior a la eliminación gausiana dado que para la factorización LU el costo adicional de resolver otras instancias es de \order{n^2} (es un simple producto de matrices) mientras que la eliminación gausiana debe repetir todo el procedimiento en \order{n^3}.
+
+Para generar las instancias utilizadas en el gráfico, estos fueron los valores que utilizamos: $m = 15$, $n = 15$, $r_i = 10$, $r_e = 100$, $ninst = 1$, $ninst$ aumentando de a 1.
+
+\begin{figure}[h]
 \centering
-\caption{Tiempo en resolver todas las instacias (microsegundos)}
-\label{tabla-instancias}
-\begin{tabular}{lll}
-\hline
-Ninst & Tiempo(EG) & Tiempo(LU) \\ \hline
-1     & 208600.0   & 238800.0   \\
-2     & 391800.0   & 221400.0   \\
-3     & 571500.0   & 227200.0   \\
-4     & 754100.0   & 235200.0   \\
-5     & 935400.0   & 242000.0   \\
-6     & 1121900.0  & 253600.0   \\
-7     & 1298700.0  & 270300.0   \\
-8     & 1490800.0  & 274100.0   \\
-9     & 1664000.0  & 280100.0   \\
-10    & 1843100.0  & 275500.0   \\
-11    & 2030100.0  & 286700.0   \\
-12    & 2262700.0  & 288500.0   \\
-13    & 2388500.0  & 296500.0   \\
-14    & 2620200.0  & 308500.0   \\
-15    & 2768700.0  & 331800.0   \\ \hline
-\end{tabular}
-\end{table}
+\includegraphics[scale=0.7]{graficos/ninstVariable.pdf}
+\caption{Tiempos de ejecución variando numero de instancias, EG vs LU.}
+\end{figure}
+
+\textbf{Este testeo podríamos mejorarlo utilizando m y n mas chicos, como para tener mas datos y que se pueda ver la forma de la curva mejor.}
+
+Coincidiendo nuevamente con la teoría, aquí es donde se pueden ver efectivamente las ganancias de la factorización LU. Aunque ambos algoritmos son cúbicos, en este problema la EG se ejecuta en \order{ninst \times n^3} mientras que la factorización LU en \order{n^3 + ninst \times n^2} $\in$ \order{n^3}. Esto se puede ver claramente en el gráfico.
 
 \newpage
-\subsection{Test de radios}
+\subsection{Isoterma Empírica}
 
-Valores usados: \\
-$m = 8$, $n = 2$, $r_i = 10$, $r_e = 100$, $ninst = 1$, $epsilon$ para la convergencia $= 0.25$, $m$ aumenta en 4. \\
+La idea de los siguientes experimentos es ver como varia la diferencia entre la isoterma empírica y la isoterma numérica a medida que cambiamos el nivel de granularidad, es decir, a medida que cambiamos la cantidad de radios y ángulos. Haremos este análisis para nuestros dos algoritmos de búsqueda.
 
-Izquierda: Metodo Lower, Derecha: Metdo Weighted \\
+\subsubsection{Variando el numero de radios}
 
-$r_i = 10$, $r_e = 100$ \\
-\includegraphics[scale=0.45]{graficos/mVariable_l_10_100.pdf}
-\includegraphics[scale=0.45]{graficos/mVariable_w_10_100.pdf}
-\newline
+En este experimento vamos a evaluar la calidad de las isotermas a medida que aumentamos el numero de radios. A priori, esperábamos que la calidad de la solución fuese monótona creciente con el nivel de granularidad, en este caso particular en la cantidad de radios. A su vez, pensábamos que hacer un promedio pesado nos iba a acercar mas a la isoterma empírica que simplemente utilizando el método lower.
 
-$r_i = 25$, $r_e = 85$ \\
-\includegraphics[scale=0.45]{graficos/mVariable_l_25_85.pdf}
-\includegraphics[scale=0.45]{graficos/mVariable_w_25_85.pdf}
-\newline
+Para este experimento utilizamos instancias con los siguientes parámetros: $m = 8$, $n = 2$, $r_i = 10$, $r_e = 100$, $ninst = 1$, con $m$ aumentando de a 4. 
 
-$r_i = 40$, $r_e = 60$ \\
-\includegraphics[scale=0.45]{graficos/mVariable_l_40_60.pdf}
-\includegraphics[scale=0.45]{graficos/mVariable_w_40_60.pdf}
-\newline
+\begin{figure}[h]
+  \centering
+  \begin{minipage}[b]{0.49\textwidth}
+    \includegraphics[width=\textwidth]{graficos/mVariable_l.pdf}
+    \caption{Algoritmo: Lower}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[b]{0.49\textwidth}
+    \includegraphics[width=\textwidth]{graficos/mVariable_w.pdf}
+    \caption{Algoritmo: Weighted}
+  \end{minipage}
+\end{figure}
 
-\begin{table}[]
-\centering
-\caption{Valor de $m$ al partir del cual la solucion obtenida converge a la optima}
-\label{tabla-metodos-isotermas}
-\begin{tabular}{lll}
-\hline
-$\vert r_e - r_i \vert$ & Metodo Lower & Metodo Weighted \\ \hline
-90                      & 144          & 400             \\
-60                      & 164          & 216             \\
-30                      & 68           & 72              \\ \hline
-\end{tabular}
-\end{table}
+En contra de lo que pensábamos que iba a suceder, la calidad de la solución no es monótona creciente con el nivel de granularidad. A su vez, se puede ver que el algoritmo de tomar la isoterma justo menor al que se busca supera ampliamente al método weighted. En un principio pensábamos que nuestros experimentos podían estar mal, pero la realidad es que existe una explicación para estos resultados.
 
-\subsection{Test de angulos}
+Cuando discretizamos el dominio de búsqueda en coordenadas polares y resolvemos el sistema lineal, lo que estamos haciendo es básicamente buscar una aproximación de la temperatura en cada punto de la discretización. Esta aproximación cambia a medida que variamos la granularidad. A mayor granularidad, la aproximación de la temperatura en cierto punto dado por cualquiera de nuestros algoritmos no es necesariamente mejor. La única forma de garantizar esto es que la nueva discretización no solo pase por los puntos que tenia la vieja discretización, si no que también agregue nuevos puntos. Dada la definición de nuestro problema, esto solo sucede cuando la granularidad en cualquiera de sus dimensiones aumenta en múltiplos de 2. Al observar estos múltiplos, aquí si podremos observar como la isoterma se comporta de la forma en la que nosotros originalmente habíamos esperado.
 
-$m = 20$, $n = 4$, $r_i = 10$, $r_e = 100$, $ninst = 1$, $m$ aumenta en 4. \\
+En cuanto a la razón de por que el metodo lower se comporta mejor que el weighted, conjeturamos que la razón mas significativa es el hecho de que quizás la temperatura no se propaga de forma uniforme en la pared del horno. El método weighted hace un promedio pesado asumiendo uniformidad, y quizá este supuesto es incorrecto.
 
-\includegraphics[scale=0.5]{graficos/{nVariable_1.in_iso}.eps}
-\includegraphics[scale=0.5]{graficos/{nVariable_2.in_iso}.eps}
-\newline
+\pagebreak
 
-\includegraphics[scale=0.5]{graficos/{nVariable_3.in_iso}.eps}
-\includegraphics[scale=0.5]{graficos/{nVariable_4.in_iso}.eps}
-\newline
+\subsubsection{Variando el numero de ángulos}
 
-\includegraphics[scale=0.5]{graficos/{nVariable_5.in_iso}.eps}
-\newline
-
-\subsection{Test de "no circularidad" de la Isoterma}
-
-$m = 20$, $n = 20$, $r_i = 10$, $r_e = 100$, $ninst = 1$, $seed = 1520$ $temp\_ext$ aleatoria. \\
-
-\includegraphics[scale=0.5]{graficos/{tempAleatoria_1.in_heat}.eps}
-\includegraphics[scale=0.5]{graficos/{tempAleatoria_1.in_iso}.eps}
-\newline
-
-\includegraphics[scale=0.5]{graficos/{tempAleatoria_2.in_heat}.eps}
-\includegraphics[scale=0.5]{graficos/{tempAleatoria_2.in_iso}.eps}
-\newline
-
-\includegraphics[scale=0.5]{graficos/{tempAleatoria_3.in_heat}.eps}
-\includegraphics[scale=0.5]{graficos/{tempAleatoria_3.in_iso}.eps}
-\newline
-
+Para este experimento, utilizaremos instancias con las siguientes caracteristicas: $m = 20$, $n = 4$, $r_i = 10$, $r_e = 100$, $ninst = 1$, con $m$ aumentando de a 4.
 
