@@ -18,10 +18,10 @@ for variante in settings.variantes:
                 dataTime.append(float(row[1]))
                 dataTimeDiv.append(float(row[1]) / (float(row[0]))**3)
                 
-    fig = plt.figure(figsize=(5,5))
+    fig = plt.figure()
     sub = fig.add_subplot(1,1,1)
     sub.scatter(dataDim, dataTime)
-    plt.axis([0.0, float(lastline[0]) + 100.0, 0.0, float(lastline[1])])
+    plt.axis([0.0, float(lastline[0]) + 100.0, 0.0, 18000000.0])
     plt.xlabel('Dimension')
     plt.ylabel('T(us)')
     plt.title('Tiempo de ejecucion segun dimension (' + variante + ')')
@@ -29,12 +29,12 @@ for variante in settings.variantes:
     fig.savefig('graficos/dimVariable_' + variante + '.pdf')
     plt.close(fig)
 
-    fig = plt.figure(figsize=(5,5))
+    fig = plt.figure()
     sub = fig.add_subplot(1,1,1)
     sub.scatter(dataDim, dataTimeDiv)
     plt.axis([0.0, float(lastline[0]) + 100.0, 0.0, 0.1]) # Ajustar el eje Y a mano
     plt.xlabel('Dimension')
-    plt.ylabel('T(us)/ dim3')
+    plt.ylabel('T(us)/dim$^3$')
     plt.title('Tiempo de ejecucion segun dimension (' + variante + ')')
     plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
     fig.savefig('graficos/dimVariableDiv_' + variante + '.pdf')
@@ -50,13 +50,73 @@ for variante in settings.variantes:
                 dataNinst.append(int(row[0]))
                 dataTime.append(float(row[1]))
                 
-    fig = plt.figure(figsize=(5,5))
+    fig = plt.figure()
     sub = fig.add_subplot(1,1,1)
     sub.scatter(dataNinst, dataTime)
-    plt.axis([0.0, float(lastline[0]), 0.0, float(lastline[1])])
+    plt.axis([0.0, float(lastline[0]), 0.0, 5300000.0])
     plt.xlabel('Nro. de instacias')
     plt.ylabel('T(us)')
     plt.title('Tiempo de ejecucion segun Nro. de instacias (' + variante + ')')
     plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
-    fig.savefig('graficos/instVariable_' + variante + '.pdf')
+    fig.savefig('graficos/ninstVariable_' + variante + '.pdf')
     plt.close(fig)
+    
+dataDim = []
+dataTimeEG = []
+dataTimeLU = []
+with open('promedios/dimVariable_EG.csv','rb') as csvfile:
+    reader = csv.reader(csvfile, delimiter=',')
+    for row in reader:
+        if(row[0] != 'Dim'):
+            dataDim.append(int(row[0]))
+            dataTimeEG.append(float(row[1]))
+
+with open('promedios/dimVariable_LU.csv','rb') as csvfile:
+    reader = csv.reader(csvfile, delimiter=',')
+    for row in reader:
+        if(row[0] != 'Dim'):
+            lastline = row
+            dataTimeLU.append(float(row[1]))
+            
+fig = plt.figure()
+sub = fig.add_subplot(1,1,1)
+sub.scatter(dataDim, dataTimeEG, color='blue', edgecolor='black', label='EG')
+sub.scatter(dataDim, dataTimeLU, color='red', edgecolor='black', label='LU')
+plt.legend(loc='upper right', scatterpoints=1)
+plt.axis([0.0, float(lastline[0]) + 200.0, 0.0, 18000000.0])
+plt.xlabel('Dimension')
+plt.ylabel('T(us)')
+plt.title('Tiempo de ejecucion segun dimension')
+plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
+fig.savefig('graficos/dimVariable.pdf')
+plt.close(fig)
+
+dataNinst = []
+dataTimeEG = []
+dataTimeLU = []
+with open('promedios/ninstVariable_EG.csv','rb') as csvfile:
+    reader = csv.reader(csvfile, delimiter=',')
+    for row in reader:
+        if(row[0] != 'Ninst'):
+            dataNinst.append(int(row[0]))
+            dataTimeEG.append(float(row[1]))
+
+with open('promedios/ninstVariable_LU.csv','rb') as csvfile:
+    reader = csv.reader(csvfile, delimiter=',')
+    for row in reader:
+        if(row[0] != 'Ninst'):
+            lastline = row
+            dataTimeLU.append(float(row[1]))
+            
+fig = plt.figure()
+sub = fig.add_subplot(1,1,1)
+sub.scatter(dataNinst, dataTimeEG, color='blue', edgecolor='black', label='EG')
+sub.scatter(dataNinst, dataTimeLU, color='red', edgecolor='black', label='LU')
+plt.legend(loc='upper right', scatterpoints=1)
+plt.axis([0.0, float(lastline[0]) + 5.0, 0.0, 5300000.0])
+plt.xlabel('Numero de Instancias')
+plt.ylabel('T(us)')
+plt.title('Tiempo de ejecucion segun dimension')
+plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
+fig.savefig('graficos/ninstVariable.pdf')
+plt.close(fig)

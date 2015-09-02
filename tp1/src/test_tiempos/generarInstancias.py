@@ -7,7 +7,7 @@ PI = math.pi
 YES = 'y'
 
 class RandomParametersGenerator(object):
-    def __init__(self, r_i=10, r_e=100, m=30, n=30, iso=500, ninst=1, innerTemp=1500, outerTemp=200):
+    def __init__(self, r_i=25, r_e=85, m=30, n=30, iso=500, ninst=1, innerTemp=1500, outerTemp=200):
         self.r_i = r_i
         self.r_e = r_e
         self.m = m

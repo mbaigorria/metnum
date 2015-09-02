@@ -39,7 +39,7 @@ for variante in settings.variantes:
                 d.time += float(row[1])
                 d.counter += 1
             
-            if d.counter == 10:
+            if d.counter == settings.muestras:
                 dataList.append(d)
                 d = Data()
 
