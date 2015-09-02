@@ -6,7 +6,7 @@ Los siguientes experimentos fueron generados a partir de archivos de entrada par
 
 \subsection{Evaluación de los métodos}
 
-\subsubsection{Variando la dimensión}
+\subsubsection{Tiempo de ejecución variando la dimensión}
 
 Para este experimento, decidimos analizar el tiempo de ejecución de nuestro algoritmo en función de la dimension de la matriz $A$. A priori, dado que ambos algoritmos son \order{n^3} y solo se están ejecutando sobre una única instancia, esperamos que los tiempos de ejecución sean sumamente similares.
 
@@ -16,13 +16,14 @@ Para la generación de instancias, utilizamos $m = 3$, $n = 3$, $r_i = 10$, $r_e
 \centering
 \includegraphics[scale=0.7]{graficos/dimVariable.pdf}
 \caption{Tiempos de ejecución según dimension, EG vs LU.}
+\label{timeDim}
 \end{figure}
 
 Como se puede observar en estos gráficos, ambos algoritmos tienen casi los mismos tiempos de ejecución para una dimension dada. Esto coincide con la teoría.
 
 \pagebreak
 
-\subsubsection{Variando numero de instancias}
+\subsubsection{Tiempo de ejecución variando número de instancias}
 
 Para este experimento la idea es ver la diferencia en performance de la eliminación gausiana y la factorización LU a medida que aumenta el numero de instancias, es decir, a medida que cambiamos la matriz $b$. Aunque ambos algoritmos pertenecen a \order{n^3}, esperamos que la factorización LU sea superior a la eliminación gausiana dado que para la factorización LU el costo adicional de resolver otras instancias es de \order{n^2} (es un simple producto de matrices) mientras que la eliminación gausiana debe repetir todo el procedimiento en \order{n^3}.
 
@@ -34,9 +35,7 @@ Para generar las instancias utilizadas en el gráfico, estos fueron los valores 
 \caption{Tiempos de ejecución variando numero de instancias, EG vs LU.}
 \end{figure}
 
-\textbf{Este testeo podríamos mejorarlo utilizando m y n mas chicos, como para tener mas datos y que se pueda ver la forma de la curva mejor.}
-
-Coincidiendo nuevamente con la teoría, aquí es donde se pueden ver efectivamente las ganancias de la factorización LU. Aunque ambos algoritmos son cúbicos, en este problema la EG se ejecuta en \order{ninst \times n^3} mientras que la factorización LU en \order{n^3 + ninst \times n^2} $\in$ \order{n^3}. Esto se puede ver claramente en el gráfico.
+Coincidiendo nuevamente con la teoría, aquí es donde se pueden ver efectivamente las ganancias de la factorización LU. Aunque ambos algoritmos son cúbicos, en este problema la EG se ejecuta en \order{ninst \times n^3} mientras que la factorización LU en \order{n^3 + ninst \times n^2} $\in$ \order{n^3}. Esto se puede ver claramente en el gráfico. Como $n$ esta fijo, es razonable que los tiempos de ejecución formen dos rectas.
 
 \newpage
 \subsection{Comportamiento del Sistema}
@@ -64,13 +63,13 @@ Para este experimento utilizamos instancias con los siguientes parámetros: $m =
   \end{minipage}
 \end{figure}
 
-\textbf{Recordar analizar el trade off entre calidad de la solucion y tiempo de computo! Cambiarle escala al primer grafico?}
-
 En contra de lo que pensábamos que iba a suceder, la calidad de la solución no es monótona creciente con el nivel de granularidad. A su vez, se puede ver que el algoritmo de tomar la isoterma justo menor al que se busca supera ampliamente al método weighted. En un principio pensábamos que nuestros experimentos podían estar mal, pero la realidad es que existe una explicación para estos resultados.
 
 Cuando discretizamos el dominio de búsqueda en coordenadas polares y resolvemos el sistema lineal, lo que estamos haciendo es básicamente buscar una aproximación de la temperatura en cada punto de la discretización. Esta aproximación cambia a medida que variamos la granularidad. A mayor granularidad, la aproximación de la temperatura en cierto punto dado por cualquiera de nuestros algoritmos no es necesariamente mejor. La única forma de garantizar esto es que la nueva discretización no solo pase por los puntos que tenia la vieja discretización, si no que también agregue nuevos puntos. Dada la definición de nuestro problema, esto solo sucede cuando la granularidad en cualquiera de sus dimensiones aumenta en múltiplos de 2. Al observar estos múltiplos, aquí si podremos observar como la isoterma se comporta de la forma en la que nosotros originalmente habíamos esperado.
 
-En cuanto a la razón de por que el metodo lower se comporta mejor que el weighted, conjeturamos que la razón mas significativa es el hecho de que quizás la temperatura no se propaga de forma uniforme en la pared del horno. El método weighted hace un promedio pesado asumiendo uniformidad, y quizá este supuesto es incorrecto.
+Otro factor sumamente importante que debemos considerar es el \texttt{trade off} entre calidad de la solución y tiempo de computo (Figura \ref{timeDim}). A medida que aumentamos la cantidad de radios, la ganancia adicional en términos de calidad de la solución es cada vez menor. Sin embargo, dado que los algoritmos para resolver el sistema son \order{n^3}, el tiempo de computo sube de forma cubica. A fines prácticos no es una buena idea tender la granularidad a infinito dado que aunque la solución numérica tienda a la solución empírica, el tiempo de ejecución seria extremadamente alto. Por supuesto que esto depende de la tolerancia de error que tenga el usuario.
+
+En cuanto a la razón de por que el método lower se comporta mejor que el weighted, conjeturamos que esto sucede debido a que quizás la temperatura no se propaga de forma uniforme en la pared del horno. El método weighted hace un promedio pesado asumiendo uniformidad, y quizá este supuesto es incorrecto.
 
 \textbf{Hacer un testeo que muestre si el calor se propaga de forma uniforme. En clase te lo comente. Duplicas la temperatura externa, te fijas en cuanto se mueve la isoterma.}
 
