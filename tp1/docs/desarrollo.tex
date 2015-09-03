@@ -110,17 +110,13 @@ Donde:
 \alpha_{j-1,k} = \frac{1}{(\Delta r)^2} - \frac{1}{r_j \times \Delta r}
 \end{equation}
 
-\vspace{5mm}
+%\vspace{5mm}
 
-Luego armamos la matriz del sistema, en donde los coeficientes ser\'an los $\alpha$ anteriores, expresando en cada fila su valor para cada temperatura. Hay que tener en cuenta que en todas las ecuaciones habr\'a un $\alpha$ para cada uno de los $t_{j,k}$, valiendo $0$ en aquellos casos en que no aparezca dicha incógnita, $1$ en caso de ser $t_i$ o $t_e{\theta}$, o en su defecto $\alpha$ como se han definido en el desarrollo anterior.
+\subsubsection{Matriz del sistema}
 
-\subsubsection{Métodos de resolución}
+Con las ecuaciones \textit{(7)-(11)} armamos la matriz del sistema, en donde los coeficientes ser\'an los $\alpha$ anteriores, expresando en cada fila su valor para cada temperatura. Hay que tener en cuenta que en todas las ecuaciones habr\'a un $\alpha$ para cada uno de los $t_{j,k}$, valiendo $0$ en aquellos casos en que no aparezca dicha incógnita, $1$ en caso de ser $t_i$ o $t_e{\theta}$, o en su defecto $\alpha$ como se han definido en el desarrollo anterior.
 
-\textbf{Agregar pseudo-codigo de la forma en la que armamos el sistema. Hablar de EG, LU y su respectiva complejidad.}
-
-\subsubsection{Propiedades del sistema}
-
-Por cuestiones de optimizaci\'on organizamos la matriz con el orden de sus columnas (inducidas por los $t_{k,j}$), de acuerdo al orden de aparici\'on impartido por el recorrido de $\theta_0$ a $\theta_{n-1}$ (variando el radio luego de cada vuelta) desde $r_i$ hasta $r_e$ inclusive. De esta forma, la matriz del sistema ser\'a una matriz $banda$.
+Por cuestiones de optimizaci\'on organizamos la matriz con el orden de sus columnas (inducidas por los $t_{k,j}$), de acuerdo al orden de aparici\'on impartido por el recorrido de $\theta_0$ a $\theta_{n-1}$ (variando el radio luego de cada vuelta) desde $r_i$ hasta $r_e$ inclusive.
 \\
 Gráficamente dicha matriz queda definida de la siguiente forma:
 \\
@@ -140,7 +136,11 @@ $
 \\
 \\
 \\
-Y como las primeras y \'ultimas $n$ filas corresponden al radio interior y exterior respectivamente, sabemos que en ese rango $\alpha_{jj} = 1$ y $\alpha_{ji} = 0, \forall j \neq i$. Lo que nos genera una matriz identidad de $n*n$ en las esquinas superior izquierda e inferior derecha.
+Notese que la indexaci\'on de los coeficientes empieza en $0$, en vez de en $1$ como es habitual; el motivo es el de generar una mayor cohesi\'on con la idexaci\'on de las temperaturas, que a su vez, son indexadas de acuerdo a los $r_i$ y los $\theta_i$ correspondientes (indexados efectivamente desde el $0$).
+
+Ahora bien como las primeras y \'ultimas $n$ filas corresponden al radio interior y exterior respectivamente, sabemos que en ese rango $\alpha_{jj} = 1$ y $\alpha_{ji} = 0, \forall j \neq i$. Lo que nos genera una matriz identidad de $n*n$ en las esquinas superior izquierda e inferior derecha; dando adem\'as a la matriz del sistema la condici\'on de matriz \textit{banda}.
+\\
+\\
 
 $
 \hspace{1.3cm}
@@ -156,6 +156,34 @@ $
       0 & \cdots & 0 & 0 & \cdots  & 0 & \cdots & 0 & 1 
      \end{pmatrix}
 $
+
+\vspace{4mm}
+Si bien no se muestra explicitamente en la figura, para sistemas lo suficientemente grandes se podr\'a apreciar como debajo de la $Id$ superior izquierda y arriba de la $Id$ inferior derecha, se generan submatrices diagonales que estrecharan la anchura de la banda, dejandonos una matriz \textit{banda-n}. 
+
+\iffalse
+\subsubsection{Métodos de resolución}
+
+
+\subsubsection{Eliminaci\'on Gaussiana}
+
+\underline{Eliminaci\'on Gaussiana}
+\\
+
+Este metodo consiste en convertir a la matriz de entrada en una matriz \testit{equivalente} que cumple con la condici\'on de triangular superior. Esta en particular es el resultado de la composici\'on de una serie de matrices elementales, que consiguen realizar una serie de conmutaciones, sumas y multiplicaciones (por escalares). Dicho composici\'on se puede realizar por el siguiente algoritmo iterativo.
+\begin{itemize}
+\item Para $i = 1,...,n-1$
+\begin{itemize}
+\item Si $a_{ii} = 0$ intercambio $Fila_i$ con $Fila_j$ tal que $a_{ji} \neq 0, j<i$ 
+\item Para $j = i+1,...,n$
+\begin{itemize}
+\item $m_{ji} = \frac{\alpha_{ji}}{\alpha_{ii}}$
+\item $Fila_j = Fila_j - m_{ji}*Fila_i$
+\end{itemize}
+\end{itemize}
+\end{itemize}
+
+\textbf{Agregar pseudo-codigo de la forma en la que armamos el sistema. Hablar de EG, LU y su respectiva complejidad.}
+\fi
 
 \subsection{Isoterma}
 Una vez que resolvamos el sistema lineal, debemos buscar la isoterma. Dado que es una aproximación discreta, es muy probable que no encontremos valores de temperatura iguales a la curva de nivel. Por lo tanto debemos tener cierta tolerancia de error, o hasta interpolar de alguna manera las curvas de nivel adyacentes en la discretización. Es decir, debemos definir algún criterio de búsqueda sobre el vector $b$. Nuestros criterios de búsqueda se basaran en el supuesto de que a medida que nos alejamos del centro del horno en \texttt{estado estacionario}, las temperaturas serán menores. Una consideración sumamente importante en el contexto de nuestro problema: intentaremos buscar métodos que sean pesimistas, es decir, que sigan el principio de prudencia. Esto significa que nuestros algoritmos intentaran ubicar la aproximación de la isoterma mas cerca de la pared del horno de lo que efectivamente esta, para poder evaluar de forma certera si el horno es estructuralmente estable o no.
@@ -235,15 +263,15 @@ Siendo $A$ $d.d.$ (no estricta), probemos que $\left | \alpha_{jj}^{(2)} \right 
 \\
 \\
 \begin{equation}
-\alpha_{jk}^{(2)} =  \alpha_{jk} - \frac{\alpha_{0k}}{\alpha_{00}}\alpha_{00}
+\alpha_{jk}^{(2)} =  \alpha_{jk} - \frac{\alpha_{0k}}{\alpha_{00}}\alpha_{j0}
 \end{equation}
 
 \begin{equation}
-\sum_{k=1,k \neq j}^{(m+1)(n-1)} \left | \alpha_{jk}^{(2)} \right | = \sum_{k=1,k \neq j}^{(m+1)(n-1)} \left | \alpha_{jk} - \frac{\alpha_{0k}}{\alpha_{00}}\alpha_{00} \right | \leq \sum_{k=1,k \neq j}^{(m+1)(n-1)} \left | \alpha_{jk} \right | + \sum_{k=1,k \neq j}^{(m+1)(n-1)} \left | \frac{\alpha_{0k}\alpha_{j0}}{\alpha_{00}} \right | 
+\sum_{k=1,k \neq j}^{(m+1)(n-1)} \left | \alpha_{jk}^{(2)} \right | = \sum_{k=1,k \neq j}^{(m+1)(n-1)} \left | \alpha_{jk} - \frac{\alpha_{0k}}{\alpha_{00}}\alpha_{j0} \right | \leq \sum_{k=1,k \neq j}^{(m+1)(n-1)} \left | \alpha_{jk} \right | + \sum_{k=1,k \neq j}^{(m+1)(n-1)} \left | \frac{\alpha_{0k}\alpha_{j0}}{\alpha_{00}} \right | 
 \end{equation}
 
 \begin{equation}
-\leq \left | \alpha_{jj} \right | - \left | \alpha_{j0} \right | + \frac{\left | \alpha_{j0} \right |}{\left | \alpha_{00} \right |}\left(\left | \alpha_{00} \right | - \left | \alpha_{j0} \right | \right) \leq \left | \alpha_{jj} \right | - \frac{\left | \alpha_{0k} \right | \left |\alpha_{j0} \right | }{ \left | \alpha_{00} \right | } \leq \left | \alpha_{jj} - \frac{\alpha_{0k}\alpha_{j0}}{\alpha_{00}} \right | = \left | \alpha_{jj}^{(2)} \right |
+\leq \left | \alpha_{jj} \right | - \left | \alpha_{j0} \right | + \frac{\left | \alpha_{j0} \right |}{\left | \alpha_{00} \right |}\left(\left | \alpha_{00} \right | - \left | \alpha_{0j} \right | \right) \leq \left | \alpha_{jj} \right | - \frac{\left | \alpha_{j0} \right | \left |\alpha_{0j} \right | }{ \left | \alpha_{00} \right | } \leq \left | \alpha_{jj} - \frac{\alpha_{j0}\alpha_{0j}}{\alpha_{00}} \right | = \left | \alpha_{jj}^{(2)} \right |
 \end{equation}
 \\
 \\
@@ -257,19 +285,19 @@ Queremos ver que: $\left | \alpha_{jj}^{(i+1)} \right | \geq \sum_{k=0,k \neq j}
 \\
 \\
 \begin{equation}
-\alpha_{jk}^{(i+1)} =  \alpha_{jk}^{(i)} - \frac{\alpha_{i-2,k}}{\alpha_{i-2,i-2}}\alpha_{i-2,i-2}
+\alpha_{jk}^{(i+1)} =  \alpha_{jk}^{(i)} - \frac{\alpha_{i-2,k}^{(i)}}{\alpha_{i-2,i-2}^{(i)}}\alpha_{j,i-2}^{(i)}
 \end{equation}
 \\
 \begin{equation}
-\sum_{k=i-1,k \neq j}^{(m+1)(n-1)} \left | \alpha_{jk}^{(i+1)} \right | = \sum_{k=i-1,k \neq j}^{(m+1)(n-1)} \left | \alpha_{jk}^{(i)} - \frac{\alpha_{i-2,k}^{(i)}}{\alpha_{i-2,i-2}^{(i)}}\alpha_{i-2,i-2}^{(i)} \right | \leq \sum_{k=i-1,k \neq j}^{(m+1)(n-1)} \left | \alpha_{jk}^{(i)} \right | + \sum_{k=i-1,k \neq j}^{(m+1)(n-1)} \left | \frac{\alpha_{i-1,k}^{(i)}\alpha_{j,i-2}^{(i)}}{\alpha_{i-2,i-2}^{(i)}} \right | 
+\sum_{k=i-1,k \neq j}^{(m+1)(n-1)} \left | \alpha_{jk}^{(i+1)} \right | = \sum_{k=i-1,k \neq j}^{(m+1)(n-1)} \left | \alpha_{jk}^{(i)} - \frac{\alpha_{i-2,k}^{(i)}}{\alpha_{i-2,i-2}^{(i)}}\alpha_{j,i-2}^{(i)} \right | \leq \sum_{k=i-1,k \neq j}^{(m+1)(n-1)} \left | \alpha_{jk}^{(i)} \right | + \sum_{k=i-1,k \neq j}^{(m+1)(n-1)} \left | \frac{\alpha_{i-1,k}^{(i)}\alpha_{j,i-2}^{(i)}}{\alpha_{i-2,i-2}^{(i)}} \right | 
 \end{equation}
 
 \begin{equation}
-\stackrel{\text{Por Hip.}}{\leq} \left | \alpha_{jj}^{(i)} \right | - \underbrace{\sum_{k=0,k \neq j}^{i-2} \left | \alpha_{j,k}^{(i)} \right |}_{= 0} + \frac{\left | \alpha_{j,i-2}^{(i)} \right |}{\left | \alpha_{i-2,i-2}^{(i)} \right |}\left(\left | \alpha_{i-2,i-2}^{(i)} \right | - \underbrace{\sum_{k=0,k \neq j}^{i-2} \left | \alpha_{i-2,k}^{(i)} \right |}_{= 0} \right) \leq \left | \alpha_{jj}^{(i)} \right | - \left | \alpha_{j,i-2}^{(i)} \right |
+\stackrel{\text{Por Hip.}}{\leq} \left | \alpha_{jj}^{(i)} \right | - \underbrace{\sum_{k=0,k \neq j}^{i-2} \left | \alpha_{j,k}^{(i)} \right |}_{= 0} + \frac{\left | \alpha_{j,i-2}^{(i)} \right |}{\left | \alpha_{i-2,i-2}^{(i)} \right |}\left(\left | \alpha_{i-2,i-2}^{(i)} \right | - \underbrace{\sum_{k=0,k \neq j}^{i-2} \left | \alpha_{i-2,k}^{(i)} \right |}_{= 0} \right)
 \end{equation}
 
 \begin{equation}
-\leq \left | \alpha_{jj}^{(i)} \right | - \frac{\left | \alpha_{i-2,k}^{(i)} \right | \left |\alpha_{j,i-2}^{(i)} \right | }{ \left | \alpha_{i-2,i-2}^{(i)} \right | } \leq \left | \alpha_{jj}^{(i)} - \frac{\alpha_{i-2,k}^{(i)}\alpha_{j,i-2}^{(i)}}{\alpha_{i-2,i-2}^{(i)}} \right | = \left | \alpha_{jj}^{(i+1)} \right | \qed
+\leq \left | \alpha_{jj}^{(i)} \right | - \frac{\left | \alpha_{j,i-2}^{(i)} \right | \left |\alpha_{i-2,j}^{(i)} \right | }{ \left | \alpha_{i-2,i-2}^{(i)} \right | } \leq \left | \alpha_{jj}^{(i)} - \frac{\alpha_{j,i-2}^{(i)}\alpha_{i-2,j}^{(i)}}{\alpha_{i-2,i-2}^{(i)}} \right | = \left | \alpha_{jj}^{(i+1)} \right | \qed
 \end{equation}
 \\
 \\
