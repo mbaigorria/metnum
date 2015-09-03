@@ -15,7 +15,7 @@ Para la generación de instancias, utilizamos $m = 3$, $n = 3$, $r_i = 10$, $r_e
 \begin{figure}[h]
 \centering
 \includegraphics[scale=0.7]{graficos/dimVariable.pdf}
-\caption{Tiempos de ejecución según dimension, EG vs LU.}
+\caption{Tiempos de ejecución según dimensión, EG vs LU.}
 \label{timeDim}
 \end{figure}
 
@@ -94,9 +94,7 @@ A partir de las conclusiones del experimento anterior, ya no esperamos que la ca
   \end{minipage}
 \end{figure}
 
-\textbf{Porque los ángulos arrancan en 400? Que escala fea che.}
-
-Como se puede observar, ambos algoritmos tienen una performance sumamente similar y no se observan mejoras significativas en la calidad de las isotermas a medida que aumenta la cantidad de ángulos. Esto se debe a que nuestro caso de prueba fue un caso simétrico, donde para cualquier angulo las temperaturas para cualquier radio son idénticas. Esto nos trae una conclusión bastante importante: en casos que sean bastante simétricos, formar un caso simétrico tomando como temperatura externa el máximo, tomando solo 1 angulo y aumentando solo la cantidad de radios es la estrategia optima para evaluar la integridad estructural de un horno. Bajamos el tiempo de ejecución al no tener que evaluar todos los ángulos explotando la simetría del problema y solo aumentamos la dimension de granularidad relevante.
+Como se puede observar, ambos algoritmos tienen una performance sumamente similar y no se observan mejoras significativas en la calidad de las isotermas a medida que aumenta la cantidad de ángulos. Esto se debe a que nuestro caso de prueba fue un caso simétrico, donde para cualquier angulo las temperaturas para cualquier radio son idénticas. Esto nos trae una conclusión bastante importante: en casos que sean bastante simétricos, formar un caso simétrico tomando como temperatura externa el máximo, tomando solo 1 angulo y aumentando solo la cantidad de radios es la estrategia optima para evaluar la integridad estructural de un horno. Bajamos el tiempo de ejecución al no tener que evaluar todos los ángulos explotando la simetría del problema y solo aumentamos la granularidad en la dimension $m$ relevante.
 
 Variar el numero de ángulos cuando la temperatura es sumamente uniforme en el exterior puede tener efectos significativos sobre la calidad de la solución, aunque no tan significativos como la de variar los radios.
 
