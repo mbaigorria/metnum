@@ -1,0 +1,16 @@
+Test de Tiempo:
+
+Antes de correr los scripts hace falta compilar el ejecutable, el mismo luego debe ser colocado en la
+carpeta de los scripts bajo el nombre "tp". La compilacion se puede hacer con cualquiera de los dos
+metodos para la isoterma, eso no se va a evaluar en estos tests.
+
+Para generar los graficos y tablas, hay que correr los scripts en el siguiente orden:
+
+- generarInstancias.py
+- tomarTiempos.py
+- promediarTiempos.py
+- generarTablas.py
+- graficarTablas.py
+- graficarTiempos.py
+
+Para configurar los parametros de test alcanza con modificar el settings.py.

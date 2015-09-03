@@ -1,24 +1,2 @@
-Para correr el histogram.py necesitan al menos 2 librerias: 
-numpy
-matplotlib
-scipy: opcional, si quieren hacer interpolaciones.
-
-El archivo dataSetExample es un ejemplo de como deberia ser el archivo que recibe el plotter por linea de comandos. 
-El mismo tiene este formato
-
-ninst r_i r_e
-radios angulos
-x_1
-x_2
-.
-.
-.
-x_angulos
-radios angulos
-x_1
-x_2
-.
-.
-.
-x_angulos
-
+Para compilar el programa alcanza con ejecutar make. Para seleccionar las variantes del
+generador de isoterma hay que elegir el metodo en las lineas 83, 84, 102 y 103 de buildSystem.cpp.

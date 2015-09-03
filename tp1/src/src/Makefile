@@ -17,7 +17,7 @@ SOURCES=buildSystem.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 
 # Nombre del ejecutable a generar
-EXECUTABLE=main
+EXECUTABLE=tp
 
 all: $(SOURCES) $(EXECUTABLE)
 	

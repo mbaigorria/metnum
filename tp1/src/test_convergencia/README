@@ -1,0 +1,15 @@
+Tests de Convergencia:
+
+Antes de correr los scripts es necesario compilar las dos variantes del TP, la lower y la weighted,
+y renombrarlas a "tp_l" y "tp_w" respectivamente. Luego hay que copiar los ejecutables a la carpeta con
+los scripts.
+
+Para generar los graficos y tablas, hay que correr los scripts en el siguiente orden:
+
+- generarInstancias.py
+- obtenerIsotermas.py
+- promediarTiempos.py
+- generarTablas.py
+- plotterDiferencias.py
+
+Para configurar los parametros de test alcanza con modificar el settings.py.
