@@ -11,21 +11,21 @@ def getTime():
 
 for solver in xrange(2):
     variante = settings.variantes[solver]
-    valorMN = settings.inicioDim
-    with open('resultados/dimVariable_' + variante + '.csv', 'wb') as csvfile:
-        writer = csv.writer(csvfile, delimiter=',')
-        writer.writerow(['Dim'] + ['Time'])
-        for j in xrange(settings.cantDimVariable):
-            dim = valorMN**2
-            valorMN += settings.aumentoDim
+    # valorMN = settings.inicioDim
+    # with open('resultados/dimVariable_' + variante + '.csv', 'wb') as csvfile:
+        # writer = csv.writer(csvfile, delimiter=',')
+        # writer.writerow(['Dim'] + ['Time'])
+        # for j in xrange(settings.cantDimVariable):
+            # dim = valorMN**2
+            # valorMN += settings.aumentoDim
             
-            for i in xrange(settings.muestras):
-                writer = csv.writer(csvfile, delimiter=',')
-                start_time = getTime()
-                fName = 'instancias/dimVariable_' + str(j+1)
-                runSystem(fName + '.in', fName + '.out', str(solver))
-                end_time = getTime() - start_time
-                writer.writerow([str(dim)] + [str(end_time)])
+            # for i in xrange(settings.muestras):
+                # writer = csv.writer(csvfile, delimiter=',')
+                # start_time = getTime()
+                # fName = 'instancias/dimVariable_' + str(j+1)
+                # runSystem(fName + '.in', fName + '.out', str(solver))
+                # end_time = getTime() - start_time
+                # writer.writerow([str(dim)] + [str(end_time)])
     
     valorInst = settings.inicioInst
     with open('resultados/ninstVariable_' + variante + '.csv', 'wb') as csvfile:

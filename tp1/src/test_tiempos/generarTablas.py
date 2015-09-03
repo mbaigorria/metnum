@@ -30,10 +30,10 @@ with open('tablas/dimVariable.csv', 'wb') as csvfile:
     writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
     writer.writerow(["Dim"] + ["EG"] + ["LU"] + ["EG/LU"]);
     for data in dataList:
-        tiempo_eg = data.time_eg / 1000000.0
-        tiempo_lu = data.time_lu / 1000000.0
+        tiempo_eg = data.time_eg
+        tiempo_lu = data.time_lu
         division = data.time_eg / data.time_lu
-        writer.writerow([data.dim] + [round(tiempo_eg,3)] + [round(tiempo_lu,3)] + [round(division,3)])
+        writer.writerow([data.dim] + [tiempo_eg] + [tiempo_lu] + [division])
         
 dataList = []
 with open('promedios/ninstVariable_EG.csv', 'rb') as csvfile:
@@ -59,7 +59,7 @@ with open('tablas/ninstVariable.csv', 'wb') as csvfile:
     writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
     writer.writerow(["Ninst"] + ["EG"] + ["LU"] + ["EG/LU"]);
     for data in dataList:
-        tiempo_eg = data.time_eg / 1000000.0
-        tiempo_lu = data.time_lu / 1000000.0
+        tiempo_eg = data.time_eg
+        tiempo_lu = data.time_lu
         division = data.time_eg / data.time_lu
-        writer.writerow([data.dim] + [round(tiempo_eg,3)] + [round(tiempo_lu,3)] + [round(division,3)])
+        writer.writerow([data.dim] + [tiempo_eg] + [tiempo_lu] + [division])
