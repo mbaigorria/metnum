@@ -40,11 +40,11 @@ Coincidiendo nuevamente con la teoría, aquí es donde se pueden ver efectivamen
 \newpage
 \subsection{Comportamiento del Sistema}
 
-\subsection{Isoterma Empírica}
+\subsubsection{Isoterma Empírica}
 
 La idea de los siguientes experimentos es ver como varia la diferencia entre la isoterma empírica y la isoterma numérica a medida que cambiamos el nivel de granularidad, es decir, a medida que cambiamos la cantidad de radios y ángulos. Haremos este análisis para nuestros dos algoritmos de búsqueda.
 
-\subsubsection*{Variando el numero de radios}
+\subsubsection{Variando el numero de radios}
 
 En este experimento vamos a evaluar la calidad de las isotermas a medida que aumentamos el numero de radios. A priori, esperábamos que la calidad de la solución fuese monótona creciente con el nivel de granularidad, en este caso particular en la cantidad de radios. A su vez, pensábamos que hacer un promedio pesado nos iba a acercar mas a la isoterma empírica que simplemente utilizando el método lower.
 
@@ -71,11 +71,43 @@ Otro factor sumamente importante que debemos considerar es el \texttt{trade off}
 
 En cuanto a la razón de por que el método lower se comporta mejor que el weighted, conjeturamos que esto sucede debido a que quizás la temperatura no se propaga de forma uniforme en la pared del horno. El método weighted hace un promedio pesado asumiendo uniformidad, y quizá este supuesto es incorrecto.
 
-\textbf{Hacer un testeo que muestre si el calor se propaga de forma uniforme. En clase te lo comente. Duplicas la temperatura externa, te fijas en cuanto se mueve la isoterma.}
+\pagebreak
+
+\subsubsection{Propagación del calor}
+
+Para evaluar nuestro supuesto de propagación del calor, generaremos instancias con las siguientes características:
+
+\begin{enumerate}
+\item Radio Interno = 10
+\item Radio Externo = 100
+\item Isoterma = 200
+\item Temperatura Externa = 10
+\item Cantidad de Radios = 35
+\item Cantidad de Ángulos = 35
+\end{enumerate}
+
+Para la temperatura se tomo un valor inicial de 250 (Para que la isoterma se encuentre dentro de la pared), por cada
+iteracion se aumento la temperatura interna de la siguiente forma:
+
+temp\_int(i+1) = temp\_int(i) + temp\_int inicial
+
+Se generaron 20 instancias distintas con los parámetros indicados, actualizando la temperatura interna con la regla
+propuesta anteriormente
+
+De esta manera podremos evaluar si al duplicar la temperatura, la distancia de la isoterma empírica al centro del horno efectivamente se duplica o no. A priori, y considerando la experimentación del punto anterior, parece claro que este supuesto es incorrecto. Pensemos esto con un poco de intuición física (le pido disculpa a los físicos). El calor se transmite entre átomos. Dado que el horno es circular, podemos pensar que la pared del mismo esta compuesto de múltiples capas. Una capa tiene $\pi \times r^2$ átomos. Es decir, para que el calor se transfiera de una capa a otra, se debe transferir desde $\pi \times r^2$ átomos a $\pi \times (r+\epsilon)^2$ átomos. Por lo tanto, dado que la cantidad de átomos entre capas crece de forma cuadrática, el calor no se va a transferir de forma uniforme. De esta forma se podría sacar una formula para la propagación del calor entre dos radios y mejorar el promedio pesado, que conjeturo que sera función de la raíz de la distancia entre capas.
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.6]{graficos/tempProp_w.pdf}
+\caption{Propagación del calor}
+\label{timeDim}
+\end{figure}
+
+Este gráfico confirma nuestra intuición física y los resultados de los experimentos anteriores.
 
 \pagebreak
 
-\subsubsection*{Variando el numero de ángulos}
+\subsubsection{Variando el numero de ángulos}
 
 Para este experimento, utilizaremos instancias con las siguientes características: $m = 20$, $n = 4$, $r_i = 10$, $r_e = 100$, $ninst = 1$, con $n$ aumentando de a 4.
 
@@ -95,8 +127,3 @@ A partir de las conclusiones del experimento anterior, ya no esperamos que la ca
 \end{figure}
 
 Como se puede observar, ambos algoritmos tienen una performance sumamente similar y no se observan mejoras significativas en la calidad de las isotermas a medida que aumenta la cantidad de ángulos. Esto se debe a que nuestro caso de prueba fue un caso simétrico, donde para cualquier angulo las temperaturas para cualquier radio son idénticas. Esto nos trae una conclusión bastante importante: en casos que sean bastante simétricos, formar un caso simétrico tomando como temperatura externa el máximo, tomando solo 1 angulo y aumentando solo la cantidad de radios es la estrategia optima para evaluar la integridad estructural de un horno. Bajamos el tiempo de ejecución al no tener que evaluar todos los ángulos explotando la simetría del problema y solo aumentamos la granularidad en la dimension $m$ relevante.
-
-Variar el numero de ángulos cuando la temperatura es sumamente uniforme en el exterior puede tener efectos significativos sobre la calidad de la solución, aunque no tan significativos como la de variar los radios.
-
-\textbf{Experimentar un poco con esta proposición?}
-

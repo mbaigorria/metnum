@@ -10,4 +10,6 @@ Para resolver el problema del horno, tuvimos en primer lugar que buscar alguna m
 
 Nos sorprendió notar que aumentar la granularidad no necesariamente aumenta la calidad de las isotermas encontradas. Al aumentar la cantidad de radios, esto solo sucede cuando aumentamos la granularidad en múltiplos de 2, dado que bajo estas condiciones todos los puntos anteriores al aumento se encuentran contenidos en la nueva discretización.
 
-Por otro lado, muchas veces nos encontramos ante problemas simétricos, donde la temperatura externa es uniforme para todos los ángulos. Aquí es donde notamos que podemos explotar esta simetría y solo considerar un angulo para el sistema. Utilizando esto podemos lograr una presición mucho mayor de las isotermas para una dada dimension de la matriz A.
+Por otro lado, muchas veces nos encontramos ante problemas simétricos, donde la temperatura externa es uniforme para todos los ángulos. Aquí es donde notamos que podemos explotar esta simetría y solo considerar un angulo para el sistema. Utilizando esto podemos lograr una precisión mucho mayor de las isotermas para una dada dimension de la matriz A.
+
+Un dato que puede sonar bastante intuitivo, la propagación del calor no es uniforme en una estructura circular. Uno de nuestros algoritmos de búsqueda de isotermas se basaba incorrectamente en el supuesto de que la propagación si era uniforme, razón por la cual el algoritmo de búsqueda 'naive' termino dando mejores resultados.
