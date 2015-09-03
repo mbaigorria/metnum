@@ -218,6 +218,23 @@ Este criterio buscara ubicar la isoterma de forma inteligente, buscando el valor
 \EndProcedure
 \end{algorithmic}
 
+\subsection{Estabilidad del horno}
+
+Para determinar si el horno se encuentra en peligro, utilizamos la posicion de la isoterma y su distancia respecto al radio exterior. Esto se puede ver en el siguiente pseudo-código:
+
+\begin{algorithmic}
+\Procedure{IsStable}{isoterma, $radio_{ext}$, distancia}
+\For{pos \textbf{in} isoterma}
+	\If{$radio_{ext}$\ -\ $isoterma_{pos}$ $\geq$ distancia}
+		\State \Return{false}
+	\EndIf
+\EndFor
+\Return{true}
+\EndProcedure
+\end{algorithmic}
+
+La distancia es la posicion mas cercana a la pared externa donde puede ubicarse la isoterma segun el material de la pared.
+
 \subsection{Propiedades del sistema}
 Como ya se ha visto en la materia, no es posible aplicar los métodos propuestos para la resoluci\'on a cualquier sistema de ecuaciones. Por ello deberemos demostrar la siguiente proposici\'on.
 
