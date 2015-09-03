@@ -69,7 +69,7 @@ int main(int argc, char** argv) {
 	if (solver == 0) { // Gaussian Elimination
 		load_a(A,r_i,r_e,n,m);
         clock_t before = clock();
-		EquationSystemLU<double> e(A); //temp
+		EquationSystem<double> e(A); //temp
 		for (int j = 0; j < ninst; ++j) { // for every instance
 			load_temps(inputFile, t_i, t_e, n);
  			load_b(b,r_i,r_e,n,m,t_i,t_e);
@@ -80,8 +80,8 @@ int main(int argc, char** argv) {
 				pIsoFile = fopen(argv[4],"w");
 			}
 			if (argc == 5) {
-				// generate_isotherm_lower(pIsoFile, result, m, n, r_i, r_e, iso);
-                generate_isotherm_weighted(pIsoFile, result, m, n, r_i, r_e, iso);
+				generate_isotherm_lower(pIsoFile, result, m, n, r_i, r_e, iso);
+                // generate_isotherm_weighted(pIsoFile, result, m, n, r_i, r_e, iso);
 			}
 		}
         clock_t result = clock() - before;

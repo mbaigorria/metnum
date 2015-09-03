@@ -106,6 +106,7 @@ Matrix<T> EquationSystemLU<T>::solve(Matrix<T>& b_values) {
         temp_values = permutation * temp_values;
     }
     
+    // Resuelvo el sistema L * y = b
     for(int i = 0; i < temp_values.rows(); i++) {
         for (int j = 0; j < i; j++) {
             temp_values(i) -= y_values(j) * lower(i,j);
@@ -117,6 +118,7 @@ Matrix<T> EquationSystemLU<T>::solve(Matrix<T>& b_values) {
         }
     }
 
+    // Resuelvo el sistema U * x = y
     temp_values = y_values;
     for(int i = temp_values.rows() - 1; i >= 0; i--) {
         for (int j = temp_values.rows() - 1; j > i; j--) {
@@ -129,10 +131,7 @@ Matrix<T> EquationSystemLU<T>::solve(Matrix<T>& b_values) {
         }
     }
 
-    //if(isPermutated) {
-    //    x_values = permutation * x_values;
-    //}
-
+    // Retorno la solucion al sistema LU * x = b
     return x_values;
 
 }
@@ -218,6 +217,7 @@ Matrix<T> EquationSystem<T>::solve(const Matrix<T>& b_values) {
 
     Matrix<T> x_values = Matrix<T>(temp_values.rows());
     
+    // Resuelvo el sistema A * x = b, con A triangular superior
     for(int i = temp_values.rows() - 1; i >= 0; i--) {
         for (int j = temp_values.rows() - 1; j > i; j--) {
             temp_values(i) -= x_values(j) * temp_matrix(i,j);
@@ -229,6 +229,7 @@ Matrix<T> EquationSystem<T>::solve(const Matrix<T>& b_values) {
         }
     }
 
+    // Retorno la solucion a A * x = b
     return x_values;
 }
 

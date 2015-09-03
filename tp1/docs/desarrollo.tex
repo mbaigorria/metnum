@@ -188,17 +188,35 @@ Este metodo consiste en convertir a la matriz de entrada en una matriz \testit{e
 \subsection{Isoterma}
 Una vez que resolvamos el sistema lineal, debemos buscar la isoterma. Dado que es una aproximación discreta, es muy probable que no encontremos valores de temperatura iguales a la curva de nivel. Por lo tanto debemos tener cierta tolerancia de error, o hasta interpolar de alguna manera las curvas de nivel adyacentes en la discretización. Es decir, debemos definir algún criterio de búsqueda sobre el vector $b$. Nuestros criterios de búsqueda se basaran en el supuesto de que a medida que nos alejamos del centro del horno en \texttt{estado estacionario}, las temperaturas serán menores. Una consideración sumamente importante en el contexto de nuestro problema: intentaremos buscar métodos que sean pesimistas, es decir, que sigan el principio de prudencia. Esto significa que nuestros algoritmos intentaran ubicar la aproximación de la isoterma mas cerca de la pared del horno de lo que efectivamente esta, para poder evaluar de forma certera si el horno es estructuralmente estable o no.
 
-\subsubsection{Algoritmo: Ultimo mayor}
+\subsubsection{Algoritmo: Primer menor}
 
 El primer criterio de búsqueda consiste en tomar el primer valor de temperatura menor al que estamos buscando para cada angulo en la discretización. Esto se puede ver en el siguiente pseudo-código:
 
-\textbf{Inserte pseudo-codigo aqui.}
+\begin{algorithmic}
+\Procedure{Lower}{}
+\State posicion $\gets$ Vector($\vert$angulos$\vert$)
+\For{i \textbf{in} angulos}
+    \State $posicion_i$ $\gets$ \texttt{primer radio con temperatura menor a la isoterma}
+\EndFor
+\Return{posicion}
+\EndProcedure
+\end{algorithmic}
 
 \subsubsection{Algoritmo: Promedio pesado}
 
 Este criterio buscara ubicar la isoterma de forma inteligente, buscando el valor mayor y menor entre los que se ubica la isoterma y haciendo un promedio pesado. Esto se puede ver en el siguiente pseudo-código:
 
-\textbf{Inserte pseudo-codigo aqui.}
+\begin{algorithmic}
+\Procedure{Weighted}{}
+\State posicion $\gets$ Vector($\vert$angulos$\vert$)
+\For{i \textbf{in} angulos}
+    \State a $\gets$ \texttt{ultimo radio con temperatura mayor a la isoterma}
+    \State b $\gets$ \texttt{primer radio con temperatura menor a la isoterma}
+    \State $posicion_i$ $\gets$ a + $\frac{temp(a)-temp(b)}{isoterma}(b-a)$
+\EndFor
+\Return{posicion}
+\EndProcedure
+\end{algorithmic}
 
 \subsection{Propiedades del sistema}
 Como ya se ha visto en la materia, no es posible aplicar los métodos propuestos para la resoluci\'on a cualquier sistema de ecuaciones. Por ello deberemos demostrar la siguiente proposici\'on.
