@@ -44,6 +44,8 @@ Coincidiendo nuevamente con la teoría, aquí es donde se pueden ver efectivamen
 
 La idea de los siguientes experimentos es ver como varia la diferencia entre la isoterma empírica y la isoterma numérica a medida que cambiamos el nivel de granularidad, es decir, a medida que cambiamos la cantidad de radios y ángulos. Haremos este análisis para nuestros dos algoritmos de búsqueda.
 
+Una pregunta natural que puede surgir es como obtener la isoterma empírica a partir de una aproximación numérica. Al estar aproximando una ecuación diferencial de forma discreta para encontrar la temperatura, si tendemos la granularidad a valores muy grandes, las aproximaciones de todas las derivadas de primer y segundo orden convergerán a su valor verdadero, ergo el laplaciano convergerá a su valor verdadero y podremos obtener la isoterma empírica con un alto grado de precision.
+
 \subsubsection{Variando el numero de radios}
 
 En este experimento vamos a evaluar la calidad de las isotermas a medida que aumentamos el numero de radios. A priori, esperábamos que la calidad de la solución fuese monótona creciente con el nivel de granularidad, en este caso particular en la cantidad de radios. A su vez, pensábamos que hacer un promedio pesado nos iba a acercar mas a la isoterma empírica que simplemente utilizando el método lower.
