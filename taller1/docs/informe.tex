@@ -1,0 +1,237 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[paper=a4paper, hmargin=1.5cm, bottom=1.5cm, top=3cm]{geometry}
+
+\usepackage[utf8x]{inputenc}
+\usepackage[spanish]{babel}
+
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+
+\usepackage{xcolor}
+\usepackage{listingsutf8}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{multirow}
+
+\usepackage{caption}
+\usepackage{subcaption}
+
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{relsize}
+\usepackage{epstopdf}
+
+\usepackage{chessboard}
+\storechessboardstyle{6x6}{maxfield=h8}
+
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+
+%\let\NombreFuncion=\textsc
+%\let\TipoVariable=\texttt
+
+%\newcommand{\TipoFuncion}[3]{%
+  %\NombreFuncion{#1}(#2) \ifx#3\empty\else $\to$ \res\,: \TipoVariable{#3}\fi%
+%}
+
+% set the default code style
+\lstset{
+    frame=tb, % draw a frame at the top and bottom of the code block
+    tabsize=4, % tab space width
+    showstringspaces=false, % don't mark spaces in strings
+    numbers=left, % display line numbers on the left
+    commentstyle=\color{green}, % comment color
+    keywordstyle=\color{blue}, % keyword color
+    stringstyle=\color{red} % string color
+}
+
+% mathy stuff
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposición}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\newenvironment{proof}[1][Demostración]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{definition}[1][Definición]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{example}[1][Example]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{remark}[1][Remark]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+
+\newcommand{\qed}{\nobreak \ifvmode \relax \else
+      \ifdim\lastskip<1.5em \hskip-\lastskip
+      \hskip1.5em plus0em minus0.5em \fi \nobreak
+      \vrule height0.75em width0.5em depth0.25em\fi}
+
+\title{Métodos Numéricos \\ Taller 1: Image Denoising}
+
+\newcommand{\order}[1]{$\mathcal{O}(#1)$}
+
+\begin{document}
+
+%% cover page
+
+\maketitle
+
+\bigskip
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l l l|}
+\hline
+Integrante       & \multicolumn{1}{c}{LU}     & Correo electrónico        \\ \hline
+Martin Baigorria & \multicolumn{1}{c}{575/14} & martinbaigorria@gmail.com \\ 
+Federico Beuter & 827/13                      & federicobeuter@gmail.com \\
+Mauro Cherubini & 835/13                      & cheru.mf@gmail.com \\ 
+Rodrigo Kapobel & 695/12                      & rok\_35@live.com.ar \\  \hline
+\end{tabular}
+\end{table}
+
+\vfill
+
+\begin{center}
+\textbf{Reservado para la cátedra}
+\end{center}
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+Instancia       & Docente & Nota \\ \hline
+Primera entrega &         &      \\ \hline
+Segunda entrega &         &      \\ \hline
+\end{tabular}
+\end{table}
+
+\newpage
+\tableofcontents
+\newpage
+
+% end cover page
+
+\section{Condiciones para garantizar que una matriz tiene factorización LU}
+
+\subsubsection{Factorización LU}
+
+Dada una matriz A cuadrada de dimension $n \times n$, la factorización LU busca expresar la matriz A como producto de una matriz triangular inferior $L$ y una matriz triangular superior $U$. Es decir, buscamos $L$ y $U$ tal que $A = LU$.
+
+\subsubsection{Matriz Simétrica Definida Positiva}
+
+\begin{definition}
+Una matriz $A$ de dimension $n \times n$ se dice simétrica definida positiva (sdp) si es simétrica y a su vez definida positiva.
+\end{definition}
+
+\begin{definition}
+Una matriz se dice simétrica cuando $A = A^t$.
+\end{definition}
+
+\begin{definition}
+Una matriz se dice definida positiva cuando $\forall x \in \mathbb{R}^{n,1}$, $x^t A x > 0$.
+\end{definition}
+
+\subsubsection{Condiciones para garantizar que una matriz tiene factorización LU}
+
+Las siguientes condiciones garantizan que una matriz $A$ tenga factorización LU.
+
+\begin{proposition}
+Una matriz estrictamente diagonal dominante es no singular. A su vez, se puede probar que se puede realizar la eliminación gausiana sin pivoteo. Por construcción, por lo tanto también se puede realizar la factorización LU.
+\end{proposition}
+
+\begin{proposition}
+A tiene sus submatrices principales no singulares $\iff$ tiene factorización LU.
+\end{proposition}
+
+\begin{proposition}
+Si a es semi definida positiva $\implies$ A tiene factorización LU.
+\end{proposition}
+
+\subsubsection{Otras proposiciones útiles}
+
+\begin{proposition}
+Una matriz simétrica es definida positiva $\iff$ todas sus submatrices principales tienen determinante positivo.
+\end{proposition}
+
+\section{¿Es cierto que si una matriz es inversible entonces tiene factorizacion LU?. Y si tengo una matriz que tiene factorizacion LU, ¿entonces es no singular? Demostrar o dar un contraejemplo.}
+
+\subsection{¿Es cierto que si una matriz es inversible entonces tiene factorizacion LU?}
+
+No es cierto que si una matriz es inversible entonces tiene factorizacion LU. Consideremos una matriz inversible  donde es necesaria la eliminacion gausiana con pivoteo.
+
+\begin{equation}
+PAx = Pb
+\end{equation}
+
+Luego, dado que A es inversible y una permutacion de sus filas es simplemente un reordenamiento de funciones que no afecta las propiedades de la base, podemos llevar a cabo la siguiente factorizacion, donde L es triangular inferior y U es triangular superior.
+
+\begin{equation}
+PA = LU
+\end{equation}
+
+Las matrices de permutacion a su vez tienen la siguiente propiedad: $P^{-1} = P^t$. Por lo tanto, podemos escribir la matriz A como:
+
+\begin{equation}
+A = P^tLU
+\end{equation}
+
+Esto significa que la matriz inversible A solo puede escribirse como $LU$ $\iff$ la matriz de permutacion es la identidad. Es decir, si no son necesarias permutaciones para  llevar a cabo la eliminacion gausiana.
+
+\textbf{No estoy seguro que este bien. Creo que hay que plantearlo por el lado de que asumo que A tiene LU tambien, y despues hago algo como A = PtLU y A = $L_2$ $U_2$, igualo, y llego al absurdo.}
+
+\pagebreak
+
+\subsection{Una matriz que tiene factorizacion LU es no singular?}
+
+Una matriz que tiene factorizacion LU no necesariamente es no singular. Consideremos el siguiente contraejemplo:
+
+$\underbrace{\left(
+\begin{matrix}
+0 & 0 \\
+0 & 0 \\
+\end{matrix}\right)}_{0}
+=
+\underbrace{\left(
+\begin{matrix}
+1 & 0 \\
+0 & 1 \\
+\end{matrix}\right)}_{L}
+\times
+\underbrace{\left(
+\begin{matrix}
+0 & 0 \\
+0 & 0 \\
+\end{matrix}\right)}_{U}$
+
+La matriz nula no es inversible dado que $det(0)=0$.
+
+\section{Verdadero o Falso}
+
+Sea $A \in \mathbb{R}^{n \times n}$, estudiemos las siguientes proposiciones:
+
+\subsection{$AA^t$ es una matriz simétrica}
+
+Una matriz es simétrica si $A = A^t$. Es decir, si para todo $j,i \in [1..n]$, $a_{i,j} = a{j,i}$.
+
+Sea $C = AA^t$ y $b_{i,j}$ los elementos de $A^t$. Al hacer el producto, en la posición $c_{i,j}$ nos queda:
+
+\begin{equation}
+c_{i,j} = \sum_{k=1}^{n} a_{i,k} \times b_{k,j}
+\end{equation}
+
+Por la definición de transpuesta $b_{i,j} = a_{j,i}$, entonces:
+
+\begin{equation}
+c_{i,j} = \sum_{k=1}^{n} a_{i,k} \times a_{j,k}
+\end{equation}
+
+Para que el producto sea simétrico entonces $c_{i,j} = c_{j,i}$, lo que efectivamente sucede si intercambiamos los indices en la ecuación 5. 
+
+\subsection{Si $A$ es no singular, entonces $A^tA$ es SDP}
+
+
+
+\end{document}
