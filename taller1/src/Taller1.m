@@ -1,11 +1,11 @@
 %% leo imagen de entrada
 close all, clear all;
-%I = imread('../Senales/64x64/lena.pgm');
-% I = imread('../Senales/64x64/fingerprint.pgm');
-% I = imread('../Senales/64x64/flinstones.pgm');
-% I = imread('../Senales/64x64/ladrillos.pgm');
- I = imread('../Senales/128x128/lena.pgm');
-% I = imread('../Senales/256x256/lena.pgm');
+I = imread('../senales/64x64/lena.pgm');
+% I = imread('../senales/64x64/fingerprint.pgm');
+% I = imread('../senales/64x64/flinstones.pgm');
+% I = imread('../senales/64x64/ladrillos.pgm');
+% I = imread('../senales/128x128/lena.pgm');
+% I = imread('../senales/256x256/lena.pgm');
 
 figure,imshow(I),title('Imagen original');
 
@@ -32,15 +32,15 @@ A = spdiags(B,d,NInc,NInc);
 %% Resolucion del sistema
 
 % Resolucion directa
-Usol = A\Utilde;
+%Usol = A\Utilde;
 
 % Resolucion cholesky de matlab
 %L = chol(A,'lower');
 %Usol = L'\(L\Utilde);
  
 % Resolucion cholesky por bloques
-%L = CholFromBlocks(A);
-%Usol = L'\(L\Utilde);
+L = CholFromBlocks(A);
+Usol = L'\(L\Utilde);
 
 % Resolucion cholesky LU
 %L = CholFromLU(A);

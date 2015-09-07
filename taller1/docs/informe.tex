@@ -232,6 +232,42 @@ Para que el producto sea simétrico entonces $c_{i,j} = c_{j,i}$, lo que efectiv
 
 \subsection{Si $A$ es no singular, entonces $A^tA$ es SDP}
 
+\textbf{Completar!}
 
+\pagebreak
+
+\section{Implementacion}
+
+\subsection{CheckCondLU.m}
+
+Si todos los menores principales de una matriz son no singulares, entonces la matriz tiene factorizacion LU.
+
+Si todos los menores principales de una matriz tienen determinante positivo si y solo si la matriz tiene factorizacion de Cholesky.
+
+\subsection{CheckFromLU.m}
+
+Para verificar si la factorizacion de Cholesky es efectivamente valida, podemos computar nuevamente la matriz haciendo $LL'$ y luego comparando elemento a elemento con la matriz A. Sin embargo, debemos recordar que estamos trabajando bajo aritmética finita, por lo que debemos tener algun tipo de tolerancia al error.
+
+\subsection{CholFromBlocks.m}
+
+Utilizando bloques, encontramos las siguientes expresiones para computar, a partir de la factorizacion de Cholesky de $A_n$ y la matriz $A_{n+1}$, la factorizacion de Cholesky de la matriz $A_{n+1}$.
+
+\begin{equation}
+A_n = L_n L'_n
+\end{equation}
+
+\begin{equation}
+f_{n+1} = l_{n+1} L'_n \implies l_{n+1} = f_{n+1} L_n^{'-1}
+\end{equation}
+
+Aqui la inversa de $l'_n$ existe dado que todos los menores principales son no singulares. $det(A) = det(LL') = det(L) \times det(L') > 0$.
+
+\begin{equation}
+a_{n+1,n+1} = l_{n+1} l'_{n+1} + l_{n+1,n+1}^2
+\end{equation}
+
+\begin{equation}
+l_{n+1,n+1} = \sqrt{a_{n+1,n+1} - l_{n+1} l'_{n+1}}
+\end{equation}
 
 \end{document}

@@ -9,7 +9,7 @@ function Lch = CholFromLU(A)
     Ach = Lch*Lch'; % Reconstruimos.
     for i = size(A,1)
         for j = size(A,2)
-            if A(i,j) == Ach(i,j) % Comparamos A y Ach. Como?
+            if abs(A(i,j) - Ach(i,j)) > 0.000001 % Comparamos A y Ach. Como?
                 error('no iguales')
             end
         end
