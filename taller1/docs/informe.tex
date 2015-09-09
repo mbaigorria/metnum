@@ -139,28 +139,42 @@ Una matriz se dice definida positiva cuando $\forall x \in \mathbb{R}^n / x \neq
 Las siguientes condiciones garantizan que una matriz $A$ tenga factorización LU.
 
 \begin{proposition}
-Una matriz estrictamente diagonal dominante es no singular. A su vez, se puede probar que se puede realizar la eliminación gausiana sin pivoteo. Por construcción, por lo tanto también se puede realizar la factorización LU.
+A tiene todas sus submatrices principales NO singulares $\iff$ A tiene factorización LU.
 \end{proposition}
 
 \begin{proposition}
-A tiene sus submatrices principales no singulares $\iff$ tiene factorización LU.
+A tiene todos sus menores distintos de cero $\iff$ A tiene factorización LU.
 \end{proposition}
 
 \begin{proposition}
-Si A es semi definida positiva $\implies$ A tiene factorización LU.
-\end{proposition}
-
-\subsubsection{Otras proposiciones útiles}
-
-\begin{proposition}
-Una matriz simétrica es definida positiva $\iff$ todas sus submatrices principales tienen determinante positivo.
+A es una matriz estrictamente diagonal dominante $\implies$ A tiene factorización LU. 
 \end{proposition}
 
 \section{¿Es cierto que si una matriz es inversible entonces tiene factorizacion LU?. Y si tengo una matriz que tiene factorizacion LU, ¿entonces es no singular? Demostrar o dar un contraejemplo.}
 
 \subsection{¿Es cierto que si una matriz es inversible entonces tiene factorizacion LU?}
 
-No es cierto que si una matriz es inversible entonces tiene factorizacion LU. Consideremos una matriz inversible  donde es necesaria la eliminacion gausiana con pivoteo.
+No, que A sea una matriz inversible es condición necesaria pero no suficiente. Lo que si vale es: \textit{A tiene todas sus submatrices principales NO singulares $\iff$ A tiene factorización LU.}
+\\
+\\
+Como contra ejemplo al caso anterior tenemos:
+\\
+
+$
+\hspace{10mm}
+\left(
+\begin{matrix}
+1 & 1 & 0 \\
+1 & 1 & 1 \\
+0 & 1 & 1 \\
+\end{matrix}\right)
+$
+\\
+\\
+Que es inversible, pero su submatriz principal de $2x2$ conformada integramente de unos, no lo es. Notemos que tras aplicar la primer iteración del algoritmo de Eliminación Gaussiana, habrá un 0 en la diagonal y un 1 por debajo en su misma columna, obligando a permutar la segunda y tercer fila. Por lo que para obtener la matriz LU, habrá que componer a A por una matriz de permutación, lo que nos deja una fatorización PLU. 
+%Notese que hay un "\iffalse".
+\iffalse
+No es cierto que si una matriz es inversible entonces tiene factorizacion LU. Consideremos una matriz inversible donde es necesaria la eliminacion gausiana con pivoteo.
 
 \begin{equation}
 PAx = Pb
@@ -181,14 +195,17 @@ A = P^tLU
 Esto significa que la matriz inversible A solo puede escribirse como $LU$ $\iff$ la matriz de permutacion es la identidad. Es decir, si no son necesarias permutaciones para  llevar a cabo la eliminacion gausiana.
 
 \textbf{No estoy seguro que este bien. Creo que hay que plantearlo por el lado de que asumo que A tiene LU tambien, y despues hago algo como A = $P^tLU$ y A = $L_2$ $U_2$, igualo, y llego al absurdo.}
-
+\fi
 \pagebreak
 
 \subsection{Una matriz que tiene factorizacion LU es no singular?}
 
 Una matriz que tiene factorizacion LU no necesariamente es no singular. Consideremos el siguiente contraejemplo:
+\\
 
-$\underbrace{\left(
+$
+\hspace{10mm}
+\underbrace{\left(
 \begin{matrix}
 0 & 0 \\
 0 & 0 \\
@@ -214,6 +231,14 @@ Sea $A \in \mathbb{R}^{n \times n}$, estudiemos las siguientes proposiciones:
 
 \subsection{$AA^t$ es una matriz simétrica}
 
+Una matriz es simétrica si $A = A^t$ o lo que es lo mismo $A_{i,j} = A_{j,i}$ $\forall j,i \in [1..n]$, pues se tiene que $A_{i,j}^t = A_{j,i}$.
+
+\begin{equation}
+\left(AA^t\right)_{i,j} = \sum_{k=1}^{n} A_{i,k} \times A^t_{k,j} = \sum_{k=1}^{n} A_{i,k} \times A_{j,k} = \sum_{k=1}^{n} A^t_{k,i} \times A_{j,k} = \sum_{k=1}^{n} A_{j,k} \times A^t_{k,i} = \left(AA^t\right)_{j,i} 
+\end{equation}
+
+%Notese que hay un "\iffalse".
+\iffalse
 Una matriz es simétrica si $A = A^t$. Es decir, si para todo $j,i \in [1..n]$, $a_{i,j} = a_{j,i}$.
 
 Sea $C = AA^t$ y $b_{i,j}$ los elementos de $A^t$. Al hacer el producto, en la posición $c_{i,j}$ nos queda:
@@ -229,7 +254,7 @@ c_{i,j} = \sum_{k=1}^{n} a_{i,k} \times a_{j,k}
 \end{equation}
 
 Para que el producto sea simétrico entonces $c_{i,j} = c_{j,i}$, lo que efectivamente sucede si intercambiamos los indices en la ecuación 5. 
-
+\fi
 \subsection{Si $A$ es no singular, entonces $A^tA$ es SDP}
 
 Una matriz es simétrica si y sólo si su traspuesta es simétrica. Por el inciso anterior $AA^t$ es simétrica, lo que ocurre si y sólo si $(AA^t)^t = A^tA$ es simétrica.
