@@ -1,17 +1,18 @@
 #include <iostream>
 #include <math.h>
-#include <stdio.h>
 #include <fstream>
 #include <sstream>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <new>
-#include "SparseMatrix.h"
+#include "sparseMatrix.h"
 
 using namespace std;
 
-SparseMatrix<double> rank(Matrix<double> M, double c, double d);
+SparseMatrix<double> rank(Matrix<double>& M, double c, double d);
+float rand_FloatRange(float a, float b);
 
 int main(int argc, char** argv) {
 
@@ -32,7 +33,36 @@ int main(int argc, char** argv) {
 	return 0;
 }
 
-SparseMatrix<double> rank(Matrix<double> M, double c, double d) {
+SparseMatrix<double> rank(Matrix<double>& M, double c, double d) {
     //work work work (https://en.wikipedia.org/wiki/PageRank buen codigo en matlab, es simple, el laburo esta en parsear todo)
+    srand(45);
+
+    float n = M.rows();
+    Matrix<double> E(M.rows(), M.rows(), (1 - c)*1/n); // PRE: rows == columns
+    Matrix<double> M_hat = M*c - E;
+    SparseMatrix<double> A(M_hat);
+    SparseMatrix<double> x(M.rows());
+    
+    for (int i = 0; i < M.rows(); i++) {
+        x(i) = rand_FloatRange(0, 1);
+    }
+    
+    SparseMatrix<double> last_x(rows());
+    
+    double delta = 0;
+    
+    do {
+        last_x = x;
+        x = A*x;
+        delta = x.L1(last_x);
+    }while (delta > d);
+    
+    printf("delta is %3.3f ", delta); //Deberia devolverse.
+    
+    return x;
+}
+
+float rand_FloatRange(float a, float b) {
+    return ((b-a)*((float)rand()/RAND_MAX))+a;
 }
 
