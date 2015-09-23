@@ -37,7 +37,7 @@ SparseMatrix<double> rank(Matrix<double>& M, double c, double d) {
     //work work work (https://en.wikipedia.org/wiki/PageRank buen codigo en matlab, es simple, el laburo esta en parsear todo)
     srand(45);
 
-    float n = M.rows();
+    double n = M.rows();
     Matrix<double> E(M.rows(), M.rows(), (1 - c)*1/n); // PRE: rows == columns
     Matrix<double> M_hat = M*c - E;
     SparseMatrix<double> A(M_hat);
