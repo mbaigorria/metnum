@@ -12,6 +12,7 @@
 #include <math.h>
 #include <vector>
 #include <stdio.h>
+#include <cmath>
 #include "matrix.h"
 
 using namespace std;
@@ -45,6 +46,7 @@ public:
     const T& operator()(const int a) const;
     
     Matrix<T> descompress();
+    double L1(const SparseMatrix<T>& other);
     
     int rows();
     int columns();
@@ -221,6 +223,17 @@ Matrix<T> SparseMatrix<T>::descompress() {
     }
     
     return result;
+}
+
+template<class T>
+double SparseMatrix<T>::L1(const SparseMatrix<T>& other) {
+    SparseMatrix<T> vectorSubs = *this - other;
+    double res = 0;
+    for(int i = 0; i < rows(); i++){
+        res = res + abs(vectorSubs(i));
+    }
+    
+    return res;
 }
 
 template<class T>
