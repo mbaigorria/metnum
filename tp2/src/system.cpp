@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
 	return 0;
 }
 
-SparseMatrix<double> rank(Matrix<double>& M, double c, double d) {
+Matrix<double> rank(Matrix<double>& M, double c, double d) {
     //work work work (https://en.wikipedia.org/wiki/PageRank buen codigo en matlab, es simple, el laburo esta en parsear todo)
     srand(45);
 
@@ -59,7 +59,7 @@ SparseMatrix<double> rank(Matrix<double>& M, double c, double d) {
     
     printf("delta is %3.3f ", delta); //Deberia devolverse.
     
-    return x;
+    return x.descompress();
 }
 
 double uniform_rand(double a, double b) {
