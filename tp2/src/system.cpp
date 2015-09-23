@@ -44,7 +44,7 @@ SparseMatrix<double> rank(Matrix<double>& M, double c, double d) {
     SparseMatrix<double> x(M.rows());
     
     for (int i = 0; i < M.rows(); i++) {
-        x(i) = rand_FloatRange(0, 1);
+        x(i) = uniform_rand(0, 1);
     }
     
     SparseMatrix<double> last_x(rows());
@@ -62,7 +62,7 @@ SparseMatrix<double> rank(Matrix<double>& M, double c, double d) {
     return x;
 }
 
-float rand_FloatRange(float a, float b) {
-    return ((b-a)*((float)rand()/RAND_MAX))+a;
+double uniform_rand(double a, double b) {
+    return ((b-a)*((double)rand()/RAND_MAX))+a;
 }
 
