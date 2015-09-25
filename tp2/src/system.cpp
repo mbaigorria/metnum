@@ -12,7 +12,7 @@
 
 using namespace std;
 
-SparseMatrix<double> rank(Matrix<double> M, double c, double d);
+Matrix<double> pageRank(Matrix<double>& M, double c, double d);
 double uniform_rand(double a, double b);
 
 const int number_line = 3;
@@ -46,7 +46,7 @@ int main(int argc, char** argv) {
 	
 	cout << "c: " << atof(argv[2]) << endl;
 	double c = (double) atof(argv[2]);
-	if (c < 0 || c > 1) {
+	if (c <= 0 || c > 1) {
 		printf("Error: Invalid teletransportation probability.\n");
 		return 0;
 	}
@@ -60,7 +60,7 @@ int main(int argc, char** argv) {
 
 	cout << "tolerance: " << atof(argv[5]) << endl;
 	double e = (double) atof(argv[5]);
-	if (e < 0 || e > 1) {
+	if (e <= 0 || e > 1) {
 		printf("Error: Invalid tolerance.\n");
 		return 0;
 	}
@@ -109,6 +109,13 @@ int main(int argc, char** argv) {
                 }
                 j++;
            }
+           
+           Matrix<double> res = pageRank(M, c, e);
+           
+           cout << "resultado: " << endl;
+           
+           res.printMatrix();
+           
         }else{
             // group algorithm webs
         }
@@ -120,26 +127,30 @@ int main(int argc, char** argv) {
         }
     }
     
-    M.printMatrix();
+    //M.printMatrix();
     
     //Depending on input data, create a matrix with the input file and call rank with matrix a values
 
 	return 0;
 }
 
-Matrix<double> rank(Matrix<double>& M, double c, double d) {
+Matrix<double> pageRank(Matrix<double>& M, double c, double d) {
     //work work work (https://en.wikipedia.org/wiki/PageRank buen codigo en matlab, es simple, el laburo esta en parsear todo)
     srand(45);
 
     double n = M.rows();
+
     Matrix<double> E(M.rows(), M.rows(), (1 - c)*1/n); // PRE: rows == columns
-    Matrix<double> M_hat = M*c - E;
+
+    Matrix<double> M_hat = M*c + E;
+
     SparseMatrix<double> A(M_hat);
+     
     SparseMatrix<double> x(M.rows());
     
     for (int i = 0; i < M.rows(); i++) {
         x(i) = uniform_rand(0, 1);
-    }
+    }    
     
     SparseMatrix<double> last_x(M.rows());
     
@@ -151,7 +162,7 @@ Matrix<double> rank(Matrix<double>& M, double c, double d) {
         delta = x.L1(last_x);
     }while (delta > d);
     
-    printf("delta is %3.3f ", delta); //Deberia devolverse.
+    printf("delta is %f ", delta); //Deberia devolverse.
     
     return x.descompress();
 }
