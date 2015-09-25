@@ -77,6 +77,12 @@ int main(int argc, char** argv) {
 
     if (inst == 0){
         if (alg == 0){
+           int nodesCount[nodes];
+           
+           for(int i = 0; i < nodes; i++){
+                nodesCount[i] = 0;
+           }
+        
            int i = 0;           
            while(i < edges){
                 int node_from = 0;
@@ -85,8 +91,24 @@ int main(int argc, char** argv) {
 	            getline(inputFile, line);
 	            sscanf(line.c_str(),"%d %d", &node_from, &node_to);
 	            cout << "node_from: " << node_from << " node_to: " << node_to << endl;
+	            
+	            nodesCount[node_from-1] += 1;
+	           
 	            M(node_to-1, node_from-1) = 1;
                 i++;
+           }
+          
+           int j = 0;
+           while(j < nodes){
+                i = 0;
+                while(i < nodes){
+                    if(M(i, j) != 0){
+                        cout << "divide por " << nodesCount[j] << endl;
+                        M(i, j) = 1/ (float)nodesCount[j];
+                    }
+                    i++;
+                }
+                j++;
            }
         }else{
             // group algorithm webs
