@@ -103,7 +103,6 @@ int main(int argc, char** argv) {
                 i = 0;
                 while(i < nodes){
                     if(M(i, j) != 0){
-                        cout << "divide por " << nodesCount[j] << endl;
                         M(i, j) = 1/ (float)nodesCount[j];
                     }
                     i++;
