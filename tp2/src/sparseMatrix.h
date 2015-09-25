@@ -50,6 +50,8 @@ public:
     
     int rows();
     int columns();
+    int rows() const;
+    int columns() const;
     void printSparseMatrix();
     
 private:
@@ -243,6 +245,16 @@ int SparseMatrix<T>::rows() {
 
 template<class T>
 int SparseMatrix<T>::columns() {
+    return _columns;
+}
+
+template<class T>
+int SparseMatrix<T>::rows() const{
+    return _iValues.size()-1;
+}
+
+template<class T>
+int SparseMatrix<T>::columns() const{
     return _columns;
 }
 
