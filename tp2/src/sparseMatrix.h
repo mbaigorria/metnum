@@ -24,7 +24,8 @@ class SparseMatrix {
 public:
     SparseMatrix();
     SparseMatrix(int rows); // column vector with 0´s
-    SparseMatrix(vector<int>& values, vector<int>& iValues, vector<int>& jValues, int columns); // PRE: jValues::size == values::size & values of iValues[0..iValues::size-2] are indices of values & iValue[iValues::size-1] == values::size
+    SparseMatrix(int rows, T value);
+    SparseMatrix(vector<T>& values, vector<int>& iValues, vector<int>& jValues, int columns); // PRE: jValues::size == values::size & values of iValues[0..iValues::size-2] are indices of values & iValue[iValues::size-1] == values::size
     SparseMatrix(const SparseMatrix<T>& other); // compress matrix
     SparseMatrix(const Matrix<T>& other);
     ~SparseMatrix();
@@ -47,6 +48,7 @@ public:
     
     Matrix<T> descompress();
     double L1(const SparseMatrix<T>& other);
+    double norm1();
     
     int rows();
     int columns();
@@ -77,7 +79,19 @@ SparseMatrix<T>::SparseMatrix(int rows)
 }
 
 template<class T>
-SparseMatrix<T>::SparseMatrix(vector<int>& values, vector<int>& iValues, vector<int>& jValues, int columns)
+SparseMatrix<T>::SparseMatrix(int rows, T value)
+: _values(rows), _iValues(1), _jValues(rows), _columns(1)
+{
+    for(int i = 0; i <= rows; i++){
+        _iValues.resize(i+1, i);
+        if(i < rows){
+            _values[i] = value;
+        }
+    }
+}
+
+template<class T>
+SparseMatrix<T>::SparseMatrix(vector<T>& values, vector<int>& iValues, vector<int>& jValues, int columns)
 : _values(values), _iValues(iValues), _jValues(jValues), _columns(columns)
 {}
 
@@ -184,7 +198,7 @@ SparseMatrix<T> SparseMatrix<T>::operator*(const T& scalar) {
     vector<T> resValues(_values.size());
     
     for(int i = 0; i < _values.size(); i++) {
-       resValues(i) = _values[i] * scalar;
+       resValues[i] = _values[i] * scalar;
     }
     
     SparseMatrix<T> result(_values, _iValues, _jValues, _columns);
@@ -197,7 +211,7 @@ SparseMatrix<T> SparseMatrix<T>::operator/(const T& scalar) {
     vector<T> resValues(_values.size());
     
     for(int i = 0; i < _values.size(); i++) {
-       resValues(i) = _values[i] / scalar;
+       resValues[i] = _values[i] / scalar;
     }
     
     SparseMatrix<T> result(_values, _iValues, _jValues, _columns);
@@ -233,6 +247,16 @@ double SparseMatrix<T>::L1(const SparseMatrix<T>& other) {
     double res = 0;
     for(int i = 0; i < rows(); i++){
         res = res + abs(vectorSubs(i));
+    }
+    
+    return res;
+}
+
+template<class T>
+double SparseMatrix<T>::norm1() {
+    double res = 0;
+    for(int i = 0; i < rows(); i++){
+        res = res + abs(_values[i]);
     }
     
     return res;

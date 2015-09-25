@@ -264,7 +264,7 @@ template<class T>
 void Matrix<T>::printMatrix() {
     for(int i = 0; i < _rows; i++) {;
         for(int j = 0; j < _columns; j++) {
-        	printf("%3.3f ", _values[i][j]);
+        	printf("%f ", _values[i][j]);
             // cout << _values[i][j] << " ";
         }
         cout << endl;

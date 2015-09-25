@@ -146,16 +146,18 @@ Matrix<double> pageRank(Matrix<double>& M, double c, double d) {
 
     SparseMatrix<double> A(M_hat);
      
-    SparseMatrix<double> x(M.rows());
+    SparseMatrix<double> x(M.rows(), 1/n);
     
-    for (int i = 0; i < M.rows(); i++) {
-        x(i) = uniform_rand(0, 1);
-    }    
+    //for (int i = 0; i < M.rows(); i++) {
+    //    x(i) = uniform_rand(0, 1);
+    //}    
     
     SparseMatrix<double> last_x(M.rows());
+
+    SparseMatrix<double> v(M.rows(), 1/n);
     
     double delta = 0;
-    
+   
     do {
         last_x = x;
         x = A*x;
