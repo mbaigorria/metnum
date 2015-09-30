@@ -106,17 +106,17 @@ int main(int argc, char** argv) {
                     if(M(i, j) != 0){
                         M(i, j) = 1/ (float)nodesCount[j];
                     }
-                    //else if(nodesCount[j] == 0){
-                    //    M(i, j) = 1/nodes; // dangling node
-                    //}
+                    else if(nodesCount[j] == 0){
+                        M(i, j) = 1/nodes; // dangling node
+                    }
                     i++;
                 }
                 j++;
            }
            
-           //Matrix<double> res = pageRank(M, c, e);
+           Matrix<double> res = pageRank(M, c, e);
            
-           Matrix<double> res = enhancementPageRank(M, c, e);
+           //Matrix<double> res = enhancementPageRank(M, c, e);
            
            cout << "resultado: " << endl;
            
