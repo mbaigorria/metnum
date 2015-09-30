@@ -147,7 +147,6 @@ int main(int argc, char** argv) {
 }
 
 Matrix<double> pageRank(Matrix<double>& M, double c, double d) {
-    //work work work (https://en.wikipedia.org/wiki/PageRank buen codigo en matlab, es simple, el laburo esta en parsear todo)
     srand(45);
 
     int n = M.rows();
