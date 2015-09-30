@@ -14,6 +14,7 @@ using namespace std;
 
 Matrix<double> pageRank(Matrix<double>& M, double c, double d);
 Matrix<double> enhancementPageRank(Matrix<double>& M, double c, double d);
+void saveResult(FILE * pFile, SparseMatrix<double> res);
 double uniform_rand(double a, double b);
 
 const int number_line = 3;
@@ -91,15 +92,12 @@ int main(int argc, char** argv) {
                 
 	            getline(inputFile, line);
 	            sscanf(line.c_str(),"%d %d", &node_from, &node_to);
-	            cout << "node_from: " << node_from << " node_to: " << node_to << endl;
+	            //cout << "node_from: " << node_from << " node_to: " << node_to << endl;
 	            
 	            nodesCount[node_from-1] += 1;
-	           
 	            M(node_to-1, node_from-1) = 1;
                 i++;
            }
-          
-           Matrix<double> M_prima(M);
           
            int j = 0;
            while(j < nodes){
@@ -107,27 +105,25 @@ int main(int argc, char** argv) {
                 while(i < nodes){
                     if(M(i, j) != 0){
                         M(i, j) = 1/ (float)nodesCount[j];
-                        M_prima(i, j) = 1/ (float)nodesCount[j];
-                    }else if(nodesCount[j] == 0){
-                        M(i, j) = 1/nodes; // dangling node
                     }
+//                    else if(nodesCount[j] == 0){
+//                        M(i, j) = 1/nodes; // dangling node
+//                    }
                     i++;
                 }
                 j++;
            }
-           
-           cout << "resultado page rank: " << endl;
-           
-           Matrix<double> res_1 = pageRank(M, c, e);
-           
-           res_1.printMatrix();
-           
-           cout << "resultado enhancement page rank: " << endl;
-           
-           Matrix<double> res_2 = enhancementPageRank(M_prima, c, e);
-           
-           res_2.printMatrix();
-           
+                      
+//           Matrix<double> res = pageRank(M, c, e);
+           Matrix<double> res = enhancementPageRank(M, c, e); 
+ 
+//           cout << "resultado page rank: " << endl;           
+           res.printMatrix();
+             
+            if (argc == 7) {
+                saveResult(pFile, res);
+            }
+            
         }else{
             // group algorithm webs
         }
@@ -139,6 +135,10 @@ int main(int argc, char** argv) {
         }
     }
     
+    inputFile.close();
+
+	if (pFile != NULL) fclose(pFile);
+    
     //M.printMatrix();
     
     //Depending on input data, create a matrix with the input file and call rank with matrix a values
@@ -147,7 +147,6 @@ int main(int argc, char** argv) {
 }
 
 Matrix<double> pageRank(Matrix<double>& M, double c, double d) {
-    //work work work (https://en.wikipedia.org/wiki/PageRank buen codigo en matlab, es simple, el laburo esta en parsear todo)
     srand(45);
 
     int n = M.rows();
@@ -177,7 +176,7 @@ Matrix<double> pageRank(Matrix<double>& M, double c, double d) {
         delta = x.L1(last_x);
     }while (delta > d);
     
-    printf("delta is %f ", delta); //Deberia devolverse.
+    printf("delta is %f\r\n", delta); //Deberia devolverse.
     
     return x.descompress();
 }
@@ -215,9 +214,19 @@ Matrix<double> enhancementPageRank(Matrix<double>& M, double c, double d) {
         delta = x.L1(last_x);
     }while (delta > d);
     
-    printf("delta is %f ", delta); //Deberia devolverse.
+    printf("delta is %f\r\n", delta); //Deberia devolverse.
     
     return x.descompress();
+}
+
+void saveResult(FILE * pFile, SparseMatrix<double> res) {
+    int n = res.rows();
+    int i = 0;
+    
+    while(i < n){
+        fprintf(pFile, "%f\r\n", res(i));
+        i++;    
+    }
 }
 
 double uniform_rand(double a, double b) {
