@@ -2,3 +2,6 @@ Para compilar: make clean y luego make
 Para utilizar la version mejorada de page rank, en system.cpp hacer lo siguiente:
 1) Comentar las lineas 109 a 111 y 117
 2) Descomentar la linea 118
+
+Si se usan los archivos del SNAP, los indices arrancan desde el 0 por lo cual en las lineas 97 y 98 deberian quitar los "-1"
+O podriamos usar la convencion del snap y cambiar el script de la catedra, dado que no hay problemas con eso.
