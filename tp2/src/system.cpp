@@ -13,6 +13,7 @@
 using namespace std;
 
 Matrix<double> pageRank(Matrix<double>& M, double c, double d);
+Matrix<double> enhancementPageRank(Matrix<double>& M, double c, double d);
 double uniform_rand(double a, double b);
 
 const int number_line = 3;
@@ -102,8 +103,10 @@ int main(int argc, char** argv) {
            while(j < nodes){
                 i = 0;
                 while(i < nodes){
-                    if(M(i, j) != 0){
+                    if(M(i, j) != 0 && nodesCount[j] != 0){
                         M(i, j) = 1/ (float)nodesCount[j];
+                    }else if(nodesCount[j] == 0){
+                        M(i, j) = 1/nodes; // dangling node
                     }
                     i++;
                 }
@@ -111,6 +114,8 @@ int main(int argc, char** argv) {
            }
            
            Matrix<double> res = pageRank(M, c, e);
+           
+           //Matrix<double> res = enhancementPageRank(M, c, e);
            
            cout << "resultado: " << endl;
            
@@ -138,30 +143,72 @@ Matrix<double> pageRank(Matrix<double>& M, double c, double d) {
     //work work work (https://en.wikipedia.org/wiki/PageRank buen codigo en matlab, es simple, el laburo esta en parsear todo)
     srand(45);
 
-    double n = M.rows();
+    int n = M.rows();
+    double dbl_n = M.rows();
+    
+    SparseMatrix<double> v(n, 1/dbl_n);
 
-    Matrix<double> E(M.rows(), M.rows(), (1 - c)*1/n); // PRE: rows == columns
+    Matrix<double> E(n, n, (1 - c)*1/dbl_n); // PRE: rows == columns
 
     Matrix<double> M_hat = M*c + E;
+    
+    M_hat.printMatrix();
 
     SparseMatrix<double> A(M_hat);
      
-    SparseMatrix<double> x(M.rows(), 1/n);
+    SparseMatrix<double> x(n, 1/dbl_n);
     
     //for (int i = 0; i < M.rows(); i++) {
     //    x(i) = uniform_rand(0, 1);
     //}    
     
-    SparseMatrix<double> last_x(M.rows());
+    SparseMatrix<double> last_x(n);
 
-    SparseMatrix<double> v(M.rows(), 1/n);
-    
     double delta = 0;
    
     do {
         last_x = x;
         x = A*x;
         delta = x.L1(last_x);
+    }while (delta > d);
+    
+    printf("delta is %f ", delta); //Deberia devolverse.
+    
+    return x.descompress();
+}
+
+Matrix<double> enhancementPageRank(Matrix<double>& M, double c, double d) {
+    srand(45);
+
+    int n = M.rows();
+    double dbl_n = M.rows();
+    
+    SparseMatrix<double> A(M);
+     
+    SparseMatrix<double> x(n, 1/dbl_n);
+    
+    //for (int i = 0; i < M.rows(); i++) {
+    //    x(i) = uniform_rand(0, 1);
+    //}    
+    
+    SparseMatrix<double> last_x(n);
+
+    SparseMatrix<double> v(n, 1/dbl_n);
+    
+    double delta = 0;
+   
+    do {
+        last_x = x;
+        
+        SparseMatrix<double> A_aux(A*c);
+          
+        x = A_aux*x;
+        
+        double w = last_x.norm1() - x.norm1();
+        
+        x = x + v*w;
+
+        delta = x.L1(last_x); // decrece?
     }while (delta > d);
     
     printf("delta is %f ", delta); //Deberia devolverse.
