@@ -1,0 +1,4 @@
+Para compilar: make clean y luego make
+Para utilizar la version mejorada de page rank, en system.cpp hacer lo siguiente:
+1) Comentar las lineas 109 a 111 y 117
+2) Descomentar la linea 118
