@@ -201,8 +201,8 @@ SparseMatrix<T> SparseMatrix<T>::operator*(const T& scalar) {
        resValues[i] = _values[i] * scalar;
     }
     
-    SparseMatrix<T> result(_values, _iValues, _jValues, _columns);
-    
+    SparseMatrix<T> result(resValues, _iValues, _jValues, _columns);
+
     return result;
 }
 
@@ -214,7 +214,7 @@ SparseMatrix<T> SparseMatrix<T>::operator/(const T& scalar) {
        resValues[i] = _values[i] / scalar;
     }
     
-    SparseMatrix<T> result(_values, _iValues, _jValues, _columns);
+    SparseMatrix<T> result(resValues, _iValues, _jValues, _columns);
     
     return result;
 }

@@ -99,14 +99,16 @@ int main(int argc, char** argv) {
                 i++;
            }
           
+           Matrix<double> M_prima(M);
+          
            int j = 0;
            while(j < nodes){
                 i = 0;
                 while(i < nodes){
                     if(M(i, j) != 0){
                         M(i, j) = 1/ (float)nodesCount[j];
-                    }
-                    else if(nodesCount[j] == 0){
+                        M_prima(i, j) = 1/ (float)nodesCount[j];
+                    }else if(nodesCount[j] == 0){
                         M(i, j) = 1/nodes; // dangling node
                     }
                     i++;
@@ -114,13 +116,17 @@ int main(int argc, char** argv) {
                 j++;
            }
            
-           Matrix<double> res = pageRank(M, c, e);
+           cout << "resultado page rank: " << endl;
            
-           //Matrix<double> res = enhancementPageRank(M, c, e);
+           Matrix<double> res_1 = pageRank(M, c, e);
            
-           cout << "resultado: " << endl;
+           res_1.printMatrix();
            
-           res.printMatrix();
+           cout << "resultado enhancement page rank: " << endl;
+           
+           Matrix<double> res_2 = enhancementPageRank(M_prima, c, e);
+           
+           res_2.printMatrix();
            
         }else{
             // group algorithm webs
@@ -152,8 +158,6 @@ Matrix<double> pageRank(Matrix<double>& M, double c, double d) {
     Matrix<double> E(n, n, (1 - c)*1/dbl_n); // PRE: rows == columns
 
     Matrix<double> M_hat = M*c + E;
-    
-    M_hat.printMatrix();
 
     SparseMatrix<double> A(M_hat);
      
@@ -200,16 +204,15 @@ Matrix<double> enhancementPageRank(Matrix<double>& M, double c, double d) {
    
     do {
         last_x = x;
-        
-        SparseMatrix<double> A_aux(A*c);
-          
-        x = A_aux*x;
-        
-        double w = last_x.norm1() - x.norm1();
-        
-        x = x + v*w;
+       
+        x = A*x;
+        x = x*c;
+ 
+        double w = last_x.norm1() - x.norm1();    
 
-        delta = x.L1(last_x); // decrece?
+        x = x +  v*w;
+        
+        delta = x.L1(last_x);
     }while (delta > d);
     
     printf("delta is %f ", delta); //Deberia devolverse.
