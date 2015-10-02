@@ -12,9 +12,16 @@
 
 using namespace std;
 
-Matrix<double> pageRank(Matrix<double>& M, double c, double d);
-Matrix<double> enhancementPageRank(Matrix<double>& M, double c, double d);
-void saveResult(FILE * pFile, SparseMatrix<double> res);
+struct dataNode {
+    int node;
+    int edgesCount;
+};
+
+Matrix<double> pageRank(Matrix<double>& M, double c, double d, vector<int>& nodesCount);
+Matrix<double> enhancementPageRank(Matrix<double>& M, double c, double d, vector<int>& nodesCount);
+void in_deg(vector<dataNode>& nodesCount);
+void saveResultPageRank(FILE * pFile, SparseMatrix<double> res);
+void saveResultInDeg(FILE * pFile, vector<dataNode> data);
 double uniform_rand(double a, double b);
 
 const int number_line = 3;
@@ -75,13 +82,14 @@ int main(int argc, char** argv) {
 	sscanf(line.c_str(),"%d %d", &nodes, &edges);
  
     cout << "nodes: " << nodes << " edges: " << edges << endl;
-    Matrix<double> M(nodes, nodes);
 
     if (inst == 0){
         if (alg == 0){
-           int nodesCount[nodes];
+           Matrix<double> M(nodes, nodes);
+        
+           vector<int> nodesCount(nodes);
            
-           for(int i = 0; i < nodes; i++){
+           for(int i = 0; i < nodes; i++) {
                 nodesCount[i] = 0;
            }
         
@@ -98,34 +106,51 @@ int main(int argc, char** argv) {
 	            M(node_to-1, node_from-1) = 1;
                 i++;
            }
-          
-           int j = 0;
-           while(j < nodes){
-                i = 0;
-                while(i < nodes){
-                    if(M(i, j) != 0){
-                        M(i, j) = 1/ (float)nodesCount[j];
-                    }
-//                    else if(nodesCount[j] == 0){
-//                        M(i, j) = 1/nodes; // dangling node
-//                    }
-                    i++;
-                }
-                j++;
-           }
-                      
-//           Matrix<double> res = pageRank(M, c, e);
-           Matrix<double> res = enhancementPageRank(M, c, e); 
+                                
+           Matrix<double> res = pageRank(M, c, e, nodesCount);
+//           Matrix<double> res = enhancementPageRank(M, c, e, nodesCount); 
  
-//           cout << "resultado page rank: " << endl;           
+           cout <<  "page rank result: \n" << endl;           
            res.printMatrix();
              
             if (argc == 7) {
-                saveResult(pFile, res);
+                saveResultPageRank(pFile, res);
             }
             
         }else{
             // group algorithm webs
+           vector<dataNode> nodesCount(nodes);
+           
+           for(int i = 0; i < nodes; i++){
+                dataNode nod;
+                nod.node = i;
+                nod.edgesCount = 0;
+                nodesCount[i] = nod;
+           }
+        
+           int i = 0;           
+           while(i < edges){
+                int node_from = 0;
+                int node_to = 0;
+                
+	            getline(inputFile, line);
+	            sscanf(line.c_str(),"%d %d", &node_from, &node_to);
+	            //cout << "node_from: " << node_from << " node_to: " << node_to << endl;
+	            
+	            dataNode nod = nodesCount[node_from-1];
+	            
+	            nod.edgesCount += 1;
+	            
+	            nodesCount[node_from-1] = nod;
+	            
+                i++;
+           }
+           
+           in_deg(nodesCount);
+           
+           if (argc == 7) {
+                saveResultInDeg(pFile, nodesCount);
+           }
         }
     }else{
         if (alg == 0){
@@ -146,11 +171,25 @@ int main(int argc, char** argv) {
 	return 0;
 }
 
-Matrix<double> pageRank(Matrix<double>& M, double c, double d) {
+Matrix<double> pageRank(Matrix<double>& M, double c, double d, vector<int>& nodesCount) {
     srand(45);
 
     int n = M.rows();
     double dbl_n = M.rows();
+
+    int j = 0;
+    while(j < n){
+        int i = 0;
+        while(i < n){
+            if(M(i, j) != 0){
+                M(i, j) = 1/ (float)nodesCount[j];
+            }else if(nodesCount[j] == 0){
+                M(i, j) = 1/dbl_n; // dangling node
+            }
+            i++;
+        }
+        j++;
+    }
     
     SparseMatrix<double> v(n, 1/dbl_n);
 
@@ -181,11 +220,23 @@ Matrix<double> pageRank(Matrix<double>& M, double c, double d) {
     return x.descompress();
 }
 
-Matrix<double> enhancementPageRank(Matrix<double>& M, double c, double d) {
+Matrix<double> enhancementPageRank(Matrix<double>& M, double c, double d, vector<int>& nodesCount) {
     srand(45);
 
     int n = M.rows();
     double dbl_n = M.rows();
+    
+    int j = 0;
+    while(j < n){
+        int i = 0;
+        while(i < n){
+            if(M(i, j) != 0){
+                M(i, j) = 1/ (float)nodesCount[j];
+            }
+            i++;
+        }
+        j++;
+    }
     
     SparseMatrix<double> A(M);
      
@@ -219,13 +270,30 @@ Matrix<double> enhancementPageRank(Matrix<double>& M, double c, double d) {
     return x.descompress();
 }
 
-void saveResult(FILE * pFile, SparseMatrix<double> res) {
+void in_deg(vector<dataNode>& nodesCount) {
+    sort(nodesCount.begin(), nodesCount.end(), [](dataNode a, dataNode b) {
+        return b.edgesCount < a.edgesCount;   
+    });
+
+    cout << "IN-DEG result \n" << endl;
+    for (dataNode a : nodesCount) {        
+        cout << "node: " << a.node << " points: " << a.edgesCount << "\n";
+    }   
+}
+
+void saveResultPageRank(FILE * pFile, SparseMatrix<double> res) {
     int n = res.rows();
     int i = 0;
     
     while(i < n){
         fprintf(pFile, "%f\r\n", res(i));
         i++;    
+    }
+}
+
+void saveResultInDeg(FILE * pFile, vector<dataNode> data) {  
+    for (dataNode a : data){
+        fprintf(pFile, "%d %d\r\n", a.node, a.edgesCount);   
     }
 }
 
