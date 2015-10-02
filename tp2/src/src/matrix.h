@@ -44,6 +44,10 @@ class Matrix {
         T& operator()(int a);
         const T& operator()(const int a) const;
         
+        //PRE are vectors
+        double L1(const Matrix<T>& other);
+        double norm1();
+        
         int rows();
         int columns();
         
@@ -239,6 +243,29 @@ template<class T>
 const T& Matrix<T>::operator ()(const int a) const {
     return _values[a][0];
 }
+
+template<class T>
+double Matrix<T>::L1(const Matrix<T>& other) {
+    Matrix<T> vectorSubs = *this - other;
+
+    double res = 0;
+    for(int i = 0; i < rows(); i++){
+        res = res + abs(vectorSubs(i));
+    }
+    
+    return res;
+}
+
+template<class T>
+double Matrix<T>::norm1() {
+    double res = 0;
+    for(int i = 0; i < rows(); i++){
+        res = res + abs(_values[i][0]);
+    }
+    
+    return res;
+}
+
 
 template<class T>
 int Matrix<T>::rows() {

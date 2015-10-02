@@ -47,6 +47,7 @@ public:
     const T& operator()(const int a) const;
     
     Matrix<T> descompress();
+    //PRE are vectors
     double L1(const SparseMatrix<T>& other);
     double norm1();
     

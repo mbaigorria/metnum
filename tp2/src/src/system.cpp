@@ -20,6 +20,7 @@ struct dataNode {
 Matrix<double> pageRank(Matrix<double>& M, double c, double d, vector<int>& nodesCount);
 Matrix<double> enhancementPageRank(Matrix<double>& M, double c, double d, vector<int>& nodesCount);
 void in_deg(vector<dataNode>& nodesCount);
+Matrix<double> gem(Matrix<double>& M, double c, double d, vector<int>& totalAbs);
 void saveResultPageRank(FILE * pFile, SparseMatrix<double> res);
 void saveResultInDeg(FILE * pFile, vector<dataNode> data);
 double uniform_rand(double a, double b);
@@ -73,17 +74,17 @@ int main(int argc, char** argv) {
 		printf("Error: Invalid tolerance.\n");
 		return 0;
 	}
-		
-    int nodes = 0;
-    int edges = 0;
-  
+		  
   	string line;
 	getline(inputFile, line);
-	sscanf(line.c_str(),"%d %d", &nodes, &edges);
- 
-    cout << "nodes: " << nodes << " edges: " << edges << endl;
 
     if (inst == 0){
+        int nodes = 0;
+        int edges = 0;
+    
+	    sscanf(line.c_str(),"%d %d", &nodes, &edges);
+        cout << "nodes: " << nodes << " edges: " << edges << endl;
+
         if (alg == 0){
            Matrix<double> M(nodes, nodes);
         
@@ -153,8 +154,48 @@ int main(int argc, char** argv) {
            }
         }
     }else{
+        int teams = 0;
+        int matches = 0;
+    
+	    sscanf(line.c_str(),"%d %d", &teams, &matches);
+        cout << "teams: " << teams << " matches: " << matches << endl;
+    
         if (alg == 0){
             // page rank sports
+           Matrix<double> M(teams, teams);
+        
+           vector<int> totalAbs(teams);
+           
+           for(int i = 0; i < teams; i++) {
+                totalAbs[i] = 0;
+           }
+        
+           int i = 0;           
+           while(i < matches){
+                int day = 0;
+                int local = 0;
+                int visitor = 0;
+                int local_score = 0;
+                int visitor_score = 0;
+                
+	            getline(inputFile, line);
+	            sscanf(line.c_str(),"%d %d %d %d %d", &day, &local, &local_score, &visitor, &visitor_score);
+	            
+	            int abs_score = abs(local_score-visitor_score);
+	            if (local_score > visitor_score) {
+	                M(local-1, visitor-1) = abs_score;
+	                totalAbs[visitor-1] += abs_score;       
+	            }else if(visitor_score > local_score) {
+	                M(visitor-1, local-1) = abs_score;
+	                totalAbs[local-1] += abs_score;
+	            }
+
+                i++;
+           }
+           
+           Matrix<double> res = gem(M, c, e, totalAbs); 
+          
+           res.printMatrix();
         }else{
             // group algorithm sports
         }
@@ -182,7 +223,7 @@ Matrix<double> pageRank(Matrix<double>& M, double c, double d, vector<int>& node
         int i = 0;
         while(i < n){
             if(M(i, j) != 0){
-                M(i, j) = 1/ (float)nodesCount[j];
+                M(i, j) = 1/ (double)nodesCount[j];
             }else if(nodesCount[j] == 0){
                 M(i, j) = 1/dbl_n; // dangling node
             }
@@ -231,7 +272,7 @@ Matrix<double> enhancementPageRank(Matrix<double>& M, double c, double d, vector
         int i = 0;
         while(i < n){
             if(M(i, j) != 0){
-                M(i, j) = 1/ (float)nodesCount[j];
+                M(i, j) = 1/ (double)nodesCount[j];
             }
             i++;
         }
@@ -279,6 +320,53 @@ void in_deg(vector<dataNode>& nodesCount) {
     for (dataNode a : nodesCount) {        
         cout << "node: " << a.node << " points: " << a.edgesCount << "\n";
     }   
+}
+
+Matrix<double> gem(Matrix<double>& M, double c, double d, vector<int>& totalAbs) {
+    srand(45);
+
+    int n = M.rows();
+    double dbl_n = M.rows();
+
+    int j = 0;
+    while(j < n){
+        int i = 0;
+        while(i < n){
+            if(M(i, j) != 0){
+                M(i, j) = M(i, j) / (double)totalAbs[j];
+            }else if(totalAbs[j] == 0){
+                M(i, j) = 1/dbl_n; // undefeated team
+            }
+            i++;
+        }
+        j++;
+    }
+    
+    Matrix<double> v(n, 1/dbl_n);
+
+    Matrix<double> E(n, n, (1 - c)*1/dbl_n); // PRE: rows == columns
+
+    Matrix<double> A = M*c + E;
+     
+    Matrix<double> x(n, 1, 1/dbl_n);
+
+    //for (int i = 0; i < M.rows(); i++) {
+    //    x(i) = uniform_rand(0, 1);
+    //}    
+    
+    Matrix<double> last_x(n);
+
+    double delta = 0;
+   
+    do {
+        last_x = x;
+        x = A*x;
+        delta = x.L1(last_x);
+    }while (delta > d);
+    
+    printf("delta is %f\r\n", delta); //Deberia devolverse.
+    
+    return x;
 }
 
 void saveResultPageRank(FILE * pFile, SparseMatrix<double> res) {
