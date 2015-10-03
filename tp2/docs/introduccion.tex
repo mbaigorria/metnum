@@ -1,0 +1,32 @@
+\section{Introduccion}
+
+El 25 de Mayo de 2015 el diario The New York Times publico un articulo titulado "Years Later for Guillermo Vilas, He’s Still Not the One", donde se repasa el rendimiento del tenista argentino durante los anios 1975/1976 y se discute el calculo del ranking de la ATP en ese momento. Aunque hoy en día Vilas es un icono del tenis argentino, nunca logro estar en la cima del ranking de la ATP.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=6]{images/nyt}
+  \caption{Guillermo Vilas after winning a tournament in Stockholm in 1975. A journalist has asserted that Vilas deserved to be ranked No. 1 during that year. }
+\end{figure}
+
+Existen precedentes donde se actualizo un ranking de tenis de forma retroactiva. Este es el caso de la WTA, que determino que Evonne Goolagong Cawley debio haber sido numero 1 por dos semanas en 1976.
+
+En 2016, un grupo de investigadores argentinos decidió analizar el ranking de la ATP en 1975 y 1976 para determinar si Vilas debio haber sido numero 1. Dado que los rankings no se actualizaban constantemente en ese momento, los investigadores mostraron que de haberse actualizado de forma periódica, Vilas hubiese sido numero 1 por durante 7 semanas en 1975 y 1976.
+
+En ese momento, el calculo del ranking de la ATP era bastante rudimentario: \say{It was a system based on an average of a player’s results, and it often rewarded top players who played fewer tournaments. Vilas was a workhorse, which is how he managed not to reach
+No. 1 in the ATP rankings in 1977, when he won the French Open, the United States Open and 14 other tournaments.} \cite{nyt}.
+
+Los métodos para calcular rankings no solo son relevantes para definir las posiciones de equipos y jugadores en eventos deportivos, sino que aparecen constantemente en todo tipo de situaciones donde se debe imponer algun tipo de orden. Este es el caso por ejemplo de los concursos docentes, donde se ponderan los diferentes antecedentes para decidir cual es el candidato \textit{idoneo} para el puesto.
+
+Otro caso sumamente relevante en cuanto algoritmos de rankeo es el de los motores de búsqueda. Los motores de búsqueda deben encontrar alguna forma de ordenar de forma relevante los sitios web que están relacionados con una consulta. El caso iconico es el de Google con su algoritmo PageRank. Los buscadores antes de 1990 eran sumamente rudimentarios, utilizaban algoritmos de rankeo vulnerables en el sentido que podían ser manipulados y no se explotaba gran parte de la estructura de la web. Esta fue una de las razones por las cuales una consulta no siempre devolvía resultados relevantes. Este fue el caso por ejemplo de algunos buscadores en ese momento como Yahoo! Search o AltaVista.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.5]{images/altavista}
+  \caption{Sitio Web de Altavista, ano 1999.}
+\end{figure}
+
+\pagebreak
+
+El presente trabajo practico tendrá como objetivo implementar el algoritmo de rankeo PageRank para luego utilizarlo para generar rankings de todo tipo. PageRank se basa en encontrar el autovector de autovalor 1 de una matriz de transiciones. Explicaremos la metodología en detalle y los métodos numéricos utilizados para encontrar este autovector. Evaluaremos diferentes criterios de calibración del algoritmo, ya en cuento al armado de la matriz de transiciones como también criterios de parada para el método numérico utilizado. Finalmente concluiremos si segun el algoritmo PageRank Vilas efectivamente debió haber estado en la punta del ATP.
+
+\textbf{EXTENDER, EXPLICAR UN POCO MAS LA METODOLOGIA POR ARRIBA. TODO DESPUES DE ESCRIBIR EL DESAROLLO, ASI ESTA PARTE SALE MAS LINDA Y COHERENTE.}
