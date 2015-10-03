@@ -116,8 +116,7 @@ int main(int argc, char** argv) {
              
             if (argc == 7) {
                 saveResultPageRank(pFile, res);
-            }
-            
+            } 
         }else{
             // group algorithm webs
            vector<dataNode> nodesCount(nodes);
@@ -183,10 +182,10 @@ int main(int argc, char** argv) {
 	            
 	            int abs_score = abs(local_score-visitor_score);
 	            if (local_score > visitor_score) {
-	                M(local-1, visitor-1) = abs_score;
+	                M(local-1, visitor-1) += abs_score;
 	                totalAbs[visitor-1] += abs_score;       
 	            }else if(visitor_score > local_score) {
-	                M(visitor-1, local-1) = abs_score;
+	                M(visitor-1, local-1) += abs_score;
 	                totalAbs[local-1] += abs_score;
 	            }
 
@@ -195,7 +194,12 @@ int main(int argc, char** argv) {
            
            Matrix<double> res = gem(M, c, e, totalAbs); 
           
+           cout <<  "gem result: \n" << endl; 
            res.printMatrix();
+           
+           if (argc == 7) {
+               saveResultPageRank(pFile, res);
+           }
         }else{
             // group algorithm sports
         }
