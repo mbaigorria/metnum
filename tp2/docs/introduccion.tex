@@ -8,9 +8,9 @@ El 25 de Mayo de 2015 el diario The New York Times publico un articulo titulado 
   \caption{Guillermo Vilas after winning a tournament in Stockholm in 1975. A journalist has asserted that Vilas deserved to be ranked No. 1 during that year. }
 \end{figure}
 
-Existen precedentes donde se actualizo un ranking de tenis de forma retroactiva. Este es el caso de la WTA, que determino que Evonne Goolagong Cawley debio haber sido numero 1 por dos semanas en 1976.
-
 En 2016, un grupo de investigadores argentinos decidió analizar el ranking de la ATP en 1975 y 1976 para determinar si Vilas debio haber sido numero 1. Dado que los rankings no se actualizaban constantemente en ese momento, los investigadores mostraron que de haberse actualizado de forma periódica, Vilas hubiese sido numero 1 por durante 7 semanas en 1975 y 1976.
+
+Existen precedentes donde se actualizo un ranking de tenis de forma retroactiva. Este es el caso de la WTA, que determino que Evonne Goolagong Cawley debió haber sido numero 1 por dos semanas en 1976. Por esta razon el grupo de investigación argentino considera que revisar estos rankings no es un esfuerzo en vano. Cuando buscábamos los datos de la ATP en el 1975/1976, uno de los investigadores de este equipo que contactamos nos comento: \say{Es interesante tu decisión de indagar sobre el tema. Tal vez no estás al tanto del trabajo y lucha que estamos realizando contra la ATP, por el ranking de los 70 en el que perjudicaron a Vilas y muchísimos otros jugadores.}.
 
 En ese momento, el calculo del ranking de la ATP era bastante rudimentario: \say{It was a system based on an average of a player’s results, and it often rewarded top players who played fewer tournaments. Vilas was a workhorse, which is how he managed not to reach
 No. 1 in the ATP rankings in 1977, when he won the French Open, the United States Open and 14 other tournaments.} \cite{nyt}.
@@ -25,8 +25,14 @@ Otro caso sumamente relevante en cuanto algoritmos de rankeo es el de los motore
   \caption{Sitio Web de Altavista, ano 1999.}
 \end{figure}
 
-\pagebreak
+El clásico paper de Brin y Page, \say{The anatomy of large-scale hypertextual Web search engine.} \cite{Brin1998} explica brevemente el origen del motor de búsqueda de Google y del algoritmo PageRank. La idea es básicamente la siguiente, en primer lugar se implementa un crawler distribuido para poder solicitar y armar el grafo de la web. Las palabras de cada sitio son indexadas y guardadas en una base de datos. Al llegar una consulta al buscador, un programa busca la consulta en los indices de paginas. De esta forma llegamos a un conjunto de paginas que están relacionadas con la consulta. Luego, antes de devolverle al usuario los resultados, estas paginas son ordenadas utilizando el famoso algoritmo PageRank. Este algoritmo se basa en la idea de que para medir la relevancia de un sitio se puede usar como proxy la cantidad de sitios que tienen un link al mismo. Para evitar que un usuario malintencionado manipule los resultados del mismo, la relevancia otorgada por un sitio web que linkea a otro es proporcional a su propia relevancia e inversamente proporcional a la cantidad de links (o grado de salida) del mismo.
 
-El presente trabajo practico tendrá como objetivo implementar el algoritmo de rankeo PageRank para luego utilizarlo para generar rankings de todo tipo. PageRank se basa en encontrar el autovector de autovalor 1 de una matriz de transiciones. Explicaremos la metodología en detalle y los métodos numéricos utilizados para encontrar este autovector. Evaluaremos diferentes criterios de calibración del algoritmo, ya en cuento al armado de la matriz de transiciones como también criterios de parada para el método numérico utilizado. Finalmente concluiremos si segun el algoritmo PageRank Vilas efectivamente debió haber estado en la punta del ATP.
+El presente trabajo practico tendrá como objetivo implementar el algoritmo PageRank para luego utilizarlo para generar rankings de todo tipo, ya sea para ordenar la relevancia de paginas webs o generar rankings deportivos. PageRank es un algoritmo que basa su ranking en encontrar el autovector de una matriz de transiciones. A priori esto puede sonar complicado, pero luego mostraremos que en realidad es bastante simple y elegante. Dado que ordenar la relevancia de millones de sitios web no es un problema trivial, en la practica este problema se resuelve utilizando álgebra lineal y métodos numéricos. Una muy buena introducción teórica se puede encontrar en el trabajo de Bryan y Leise \cite{Bryan2006}. Otros autores como Kamvar, Haveliwala, Manning, Christopher y Golub \cite{Kamvar2003} han buscado otros enfoques y métodos para poder acelerar este algoritmo. La idea es encontrar una forma eficiente de poder computar este modelo, calibrando sus diferentes parámetros de modelado y convergencia para lograr un orden relevante. 
 
-\textbf{EXTENDER, EXPLICAR UN POCO MAS LA METODOLOGIA POR ARRIBA. TODO DESPUES DE ESCRIBIR EL DESAROLLO, ASI ESTA PARTE SALE MAS LINDA Y COHERENTE.}
+Una vez planteado el procedimiento, experimentaremos con la complejidad temporal de los métodos implementados y evaluaremos los diferentes parámetros a calibrar. Finalmente concluiremos si según el algoritmo PageRank y nuestra matriz de transición Vilas efectivamente debió haber estado en la punta del ATP en 1975/1976. En caso afirmativo, sin dudas nos comunicaremos con la ATP.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.5]{images/vilasaprueba}
+  \caption{Guillermo Vilas apoya este TP.}
+\end{figure}
