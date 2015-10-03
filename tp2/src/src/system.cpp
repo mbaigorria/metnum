@@ -39,8 +39,8 @@ Matrix<double> gem(Matrix<double>& M, double c, double d, vector<int>& totalAbs)
 void basic_sort(vector<matchesStats>& stats);
 
 //out data
-void saveResultPageRank(FILE * pFile, SparseMatrix<double> data);
-void saveResultInDeg(FILE * pFile, vector<dataNode> data);
+void saveResultPageRank(FILE * pFile, Matrix<double>& data);
+void saveResultInDeg(FILE * pFile, vector<dataNode>& data);
 void saveResultBasicSort(FILE * pFile, vector<matchesStats>& data);
 
 //utils
@@ -66,6 +66,10 @@ int main(int argc, char** argv) {
     
     if (argc == 7) {
         pFile = fopen(argv[6],"w");
+        if (pFile == NULL){
+            printf("can´t open output file.\n");
+            return 0;
+        }
     }
     
     cout << "alg: " << (*argv[1] - '0') << endl;
@@ -455,17 +459,17 @@ void basic_sort(vector<matchesStats>& stats) {
     }   
 }
 
-void saveResultPageRank(FILE * pFile, SparseMatrix<double> data) {
+void saveResultPageRank(FILE * pFile, Matrix<double>& data) {
     int n = data.rows();
     int i = 0;
-    
+
     while(i < n){
         fprintf(pFile, "%f\r\n", data(i));
         i++;    
     }
 }
 
-void saveResultInDeg(FILE * pFile, vector<dataNode> data) {  
+void saveResultInDeg(FILE * pFile, vector<dataNode>& data) {  
     for (dataNode a : data){
         fprintf(pFile, "%d %d\r\n", a.node, a.edgesCount);   
     }
