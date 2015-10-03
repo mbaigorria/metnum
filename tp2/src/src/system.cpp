@@ -13,16 +13,37 @@
 using namespace std;
 
 struct dataNode {
+    //dataNode(int n) : node(n), edgesCount(0) {} // no lo pude compilar con listas de inicializacion...
+
     int node;
-    int edgesCount;
+    int edgesCount;    
 };
 
+struct matchesStats {
+    //matchesStats(int t) : team(t), matchesWin(0), matchesDefeat(0), pointsScored(0), pointsReceived(0) {}
+
+    int team;
+    int matchesWin;
+    int matchesDefeat;
+    int pointsScored;
+    int pointsReceived;
+};
+
+//webs
 Matrix<double> pageRank(Matrix<double>& M, double c, double d, vector<int>& nodesCount);
 Matrix<double> enhancementPageRank(Matrix<double>& M, double c, double d, vector<int>& nodesCount);
 void in_deg(vector<dataNode>& nodesCount);
+
+//sports
 Matrix<double> gem(Matrix<double>& M, double c, double d, vector<int>& totalAbs);
-void saveResultPageRank(FILE * pFile, SparseMatrix<double> res);
+void basic_sort(vector<matchesStats>& stats);
+
+//out data
+void saveResultPageRank(FILE * pFile, SparseMatrix<double> data);
 void saveResultInDeg(FILE * pFile, vector<dataNode> data);
+void saveResultBasicSort(FILE * pFile, vector<matchesStats>& data);
+
+//utils
 double uniform_rand(double a, double b);
 
 const int number_line = 3;
@@ -159,6 +180,12 @@ int main(int argc, char** argv) {
 	    sscanf(line.c_str(),"%d %d", &teams, &matches);
         cout << "teams: " << teams << " matches: " << matches << endl;
     
+        int day = 0;
+        int local = 0;
+        int visitor = 0;
+        int local_score = 0;
+        int visitor_score = 0;
+    
         if (alg == 0){
             // page rank sports
            Matrix<double> M(teams, teams);
@@ -171,12 +198,6 @@ int main(int argc, char** argv) {
         
            int i = 0;           
            while(i < matches){
-                int day = 0;
-                int local = 0;
-                int visitor = 0;
-                int local_score = 0;
-                int visitor_score = 0;
-                
 	            getline(inputFile, line);
 	            sscanf(line.c_str(),"%d %d %d %d %d", &day, &local, &local_score, &visitor, &visitor_score);
 	            
@@ -202,6 +223,50 @@ int main(int argc, char** argv) {
            }
         }else{
             // group algorithm sports
+            vector<matchesStats> stats(teams);
+
+            for(int i = 0; i < teams; i++){
+                matchesStats teamStats;
+                teamStats.team = i;
+                teamStats.matchesWin = 0;
+                teamStats.matchesDefeat = 0;
+                teamStats.pointsScored = 0;
+                teamStats.pointsReceived = 0;
+                stats[i] = teamStats;
+            }
+
+            int i = 0;           
+            while(i < matches){
+                getline(inputFile, line);
+                sscanf(line.c_str(),"%d %d %d %d %d", &day, &local, &local_score, &visitor, &visitor_score);
+
+                matchesStats localStats = stats[local-1];
+                matchesStats visitorStats = stats[visitor-1]; 
+
+                if (local_score > visitor_score) {
+                    localStats.matchesWin += 1;
+                    visitorStats.matchesDefeat += 1;
+                }else if(visitor_score > local_score) {
+                    localStats.matchesDefeat += 1;
+                    visitorStats.matchesWin += 1;
+                }
+                
+                localStats.pointsScored += local_score;
+                localStats.pointsReceived += visitor_score;
+                visitorStats.pointsScored += visitor_score;
+                visitorStats.pointsReceived += local_score;
+                
+                stats[local-1] = localStats;
+                stats[visitor-1] = visitorStats;
+                
+                i++;
+            }
+            
+            basic_sort(stats);
+            
+            if (argc == 7) {
+                saveResultBasicSort(pFile, stats);
+            }
         }
     }
     
@@ -373,12 +438,29 @@ Matrix<double> gem(Matrix<double>& M, double c, double d, vector<int>& totalAbs)
     return x;
 }
 
-void saveResultPageRank(FILE * pFile, SparseMatrix<double> res) {
-    int n = res.rows();
+void basic_sort(vector<matchesStats>& stats) {
+    sort(stats.begin(), stats.end(), [](matchesStats a, matchesStats b) {
+        if (a.matchesWin - a.matchesDefeat != b.matchesWin - b.matchesDefeat) {
+            return b.matchesWin - b.matchesDefeat < a.matchesWin - a.matchesDefeat;
+        }else{
+            return b.pointsScored - b.pointsReceived < a.pointsScored - a.pointsReceived;
+        }   
+    });
+
+    cout << "basic sort result \n" << endl;
+    for (matchesStats a : stats) {        
+        cout << "team: " << a.team 
+        << " matches win: " << a.matchesWin << " matches defeat: " << a.matchesDefeat 
+        << " points scored: " << a.pointsScored << " points received: " << a.pointsReceived <<"\n";
+    }   
+}
+
+void saveResultPageRank(FILE * pFile, SparseMatrix<double> data) {
+    int n = data.rows();
     int i = 0;
     
     while(i < n){
-        fprintf(pFile, "%f\r\n", res(i));
+        fprintf(pFile, "%f\r\n", data(i));
         i++;    
     }
 }
@@ -386,6 +468,12 @@ void saveResultPageRank(FILE * pFile, SparseMatrix<double> res) {
 void saveResultInDeg(FILE * pFile, vector<dataNode> data) {  
     for (dataNode a : data){
         fprintf(pFile, "%d %d\r\n", a.node, a.edgesCount);   
+    }
+}
+
+void saveResultBasicSort(FILE * pFile, vector<matchesStats>& data) {  
+    for (matchesStats a : data){
+        fprintf(pFile, "%d %d %d %d %d\r\n", a.team, a.matchesWin, a.matchesDefeat, a.pointsScored, a.pointsReceived);   
     }
 }
 
