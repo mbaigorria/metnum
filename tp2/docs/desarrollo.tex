@@ -1,2 +1,146 @@
-\section{Desarollo}
+\section{PageRank}
 
+\subsection{Modelado para paginas web}
+
+El algoritmo PageRank fue ideado en un principio para buscar de darle alguna medida de relevancia a los sitios web en internet. El mismo tiene dos interpretaciones equivalentes, que serán expuestas a continuación.
+
+El problema se modela a partir de un grafo $G(Web,Links)$ donde $Web$ es el conjunto de sitios web y $Links$ es la cantidad de conexiones entre sitios. Consideremos que toda pagina web $u \in Web$ esta representada por un vértice y la relación entre paginas por un link con una arista. Una representación posible del grafo es mediante matrices de adyacencia. Definimos la matriz de adyacencia o conectividad $W \in \{0,1\}^{n \times n}$ de forma tal que $w_{ij} = 1$ si la pagina $j$ tiene un link a la pagina $i$ y $w_{ij} = 0$ en caso contrario. Por lo tanto, la cantidad de paginas a las que la pagina $u$ apunta ($d_{out}(u)$) se puede calcular como $n_j = \sum_{i=1}^{n} w_{ij}$.
+
+\subsubsection{Propiedades}
+
+Sea $x_j$ el puntaje asignado a la pagina o vértice $j \in Web$ y otra pagina $u \in Web$. La idea es buscar una medida que cumpla con las siguientes propiedades:
+\begin{itemize}
+  \item La relevancia de todo sitio web es positiva.
+  \item La relevancia de un sitio web debe aumentar a medida que mas sitios unicos lo apuntan.
+  \item La relevancia derivada de otro sitio web debe depender de su propia relevancia. Es decir, es mas valioso que me linkee un sitio relevante que uno no relevante. En caso de no cumplirse esta propiedad, el ranking seria fácilmente manipulable al permitir que un usuario cree muchos sitios que linkeen a uno para darle relevancia.
+  \item La relevancia de todos los sitios web debe sumar uno. De esta manera estamos ante una distribución de probabilidad de los sitios. Mas adelante veremos que al interpretar esto mediante Cadenas de Markov existe una interpretación directa: la relevancia se puede ver como la proporción del tiempo total que un usuario pasa en ese sitio.
+\end{itemize} 
+
+Por lo tanto, estamos buscando una medida de relevancia tal que la importancia obtenida por la pagina $u$ obtenida por el link de la pagina $v$ sea proporcional a la relevancia de $v$ e inversamente proporcional al grado de $v$. El aporte del link de $v$ a $u$ entonces es $x_u = x_v / n_v$. Luego, sea $L_k \subseteq Web$ el conjunto de paginas que tienen un link a la pagina $k$. Por lo tanto, la relevancia total de un sitio sera:
+
+\begin{eqnarray}
+x_k = \sum_{j \in L_k} \frac{x_j}{n_j},~~~~k = 1,\dots,n. \label{eq:basicmodel}
+\end{eqnarray}
+
+Notar que esta es de cierta manera una definición recursiva. La relevancia de un sitio $u$ puede depender de la relevancia de un sitio $v$, y luego la de $v$ puede depender de la de $u$. A priori calcular la relevancia de un sitio puede parecer sumamente complicado, pero luego veremos que al plantearlo como un sistema de ecuaciones esta dificultad per se ya no se presenta.
+
+Definimos entonces una matriz de transición o adyacencia con pesos en las aristas $P \in \mathbb{R}^{n \times n}$ tal que $p_{ij} = 1 / n_j$ si $w_{ij} = 1$ y $p_{ij} = 0$ en caso contrario. Luego, el modelo planteado en (\ref{eq:basicmodel}) para toda pagina web se puede expresar $Px = x$ donde $x \in \mathbb{R}^n$. Notar que esto es equivalente a encontrar el autovector de autovalor 1 tal que $x_i > 0$ y $\sum_{n=1}^{n} x_i = 1$. Notar que si logramos probar que bajo ciertas condiciones nuestra matriz de transición tiene autovalor 1, el signo de todos los elementos de un autovector es el mismo y la dimension del autoespacio es 1 ya tenemos un ranking valido. Esto se debe a que cualquier autovector puede ser reescalado a uno de norma unitaria con $x_i \geq 0$.
+
+\pagebreak
+
+\subsubsection{Existencia y Unicidad}
+
+Bryan y Leise \cite{Bryan2006} analiza y prueba las condiciones bajo las que podemos garantizar que:
+\begin{itemize}
+\item La matriz de transición tiene autovalor 1.
+\item La dimension del autoespacio asociado al autovalor 1 es 1. Es deseable que el ranking asociado a una matriz de transición sea único.
+\item El signo de todos los elementos del autovector asociado al autovalor 1 es el mismo.
+\end{itemize}
+
+Veamos bajo que condiciones nuestra matriz de transición cumple con estas propiedades:
+
+\begin{definition}
+Una matriz cuadrada se llama estocástica por columnas si todos sus elementos son positivos y la suma de cada columna es igual a 1.
+\end{definition}
+
+A partir de esta definición se puede probar la siguiente proposición:
+\begin{proposition}
+Toda matriz estocástica por columnas tiene a 1 como autovalor.
+\end{proposition}
+
+Esto significa que si no existen \texttt{dangling nodes}, es decir, vértices con $d_{out} = 0$, podemos garantizar que nuestra matriz de transición es estocástica por columnas.
+
+Notar que bajo las condiciones actuales no podemos garantizar que si existe el autoespacio asociado al autovalor 1, el mismo tenga dimension 1. Intuitivamente, esto se debe a que el grafo de la web puede tener varias componentes conexas. Como comparamos sitios web que no están relacionados? Justamente la relación, ya sea directa o indirecta mediante transitividad me da algún tipo de relación de orden. Al no tener una relación de orden entre dos sitios web bien definida, es razonable que existan múltiples autovectores, es decir, rankings. Esto se puede ver claramente en la pagina 4 del paper de Bryan y Leise \cite{Bryan2006}.
+
+Por lo tanto, la idea es básicamente buscar algún tipo de transformación relevante de mi matriz de transición que me permita garantizar que no voy a tener \texttt{dangling nodes} y ademas que solo tenga una componente conexa, es decir, que el grafo sea conexo. Definimos la siguiente matriz de transición, donde $v \in \mathbb{R}^{n \times n}$, con $v_i = 1 / n$ y $d \in \{0,1\}^n$,  $d_i = 1$ si $n_i = 0$ y $d_i = 0$ como:
+
+\begin{eqnarray*}
+D & = & v d^t \\
+P_1 & = & P + D.
+\end{eqnarray*}
+
+De esta manera, en caso de tener una pagina web que es un \texttt{dangling node}, le asignamos un link uniforme a todos los sitios web $u \in Web$. Una interpretación equivalente es tomar a la matriz de transiciones como la matriz que describe una Cadena de Markov, donde el link pesado representa la probabilidad de dirigirse de una pagina a la otra. Por lo tanto, esta transformación se puede interpretar como que que existe una probabilidad uniforme de ir de uno de estos sitios a cualquiera de la web. Esto normalmente se conoce como el \texttt{navegante aleatorio}.
+
+Tambien podemos considerar la posibilidad de que el navegante aleatorio se dirija a una pagina web que no esta linkeada a la pagina a la que esta actualmente. Este fenómeno se conoce como teletransportación. Para incluirlo al modelo, tomemos un numero $c \in [0,1]$ y transformemos la matriz de transiciones de la siguiente manera, donde $\bar{1} \in \mathbb{R}^n$ es un vector tal que todos sus componentes valen 1:
+
+\begin{eqnarray*}
+E & = & v \bar{1}^t \\
+P_2 & = & cP_1 + (1-c)E,
+\end{eqnarray*}
+
+Notar que en caso de tener $c=1$, estamos en la matriz de transición sin teletransportación. Por otro lado, si $c=1$ estamos en el caso donde solo hay teletransportación y no importa la estructura del grafo de la web.
+
+Esta nueva matriz de transición, dado que es estocástica por columnas y no tiene \texttt{dangling nodes}, nos garantiza que la dimension del autoespacio generado por el autovector de autovalor 1 es unitaria. Solo nos falta mostrar que todo autovector tiene todos sus elementos del mismo signo. Es facil probar la siguiente proposicion:
+
+\begin{proposition}
+Si la matriz M es positiva y estocástica por columnas, entonces todo autovector en $V_1(M)$ tiene todos sus elementos positivos o negativos.
+\end{proposition}
+
+Por lo tanto, ya probamos la existencia del autovector de norma 1 asociado al autovalor 1 de la matriz de transición transformada. El siguiente lema nos garantiza su unicidad. Su respectiva demostración se encuentra nuevamente en la pagina 7 del paper de Bryan y Leise \cite{Bryan2006}.
+
+\begin{lemma}
+\item Si M es positiva y estocástica por columnas, entonces $V_1(M)$ tiene dimension 1.
+\end{lemma}
+
+\subsection{Modelado para Tenis}
+
+Hacer referencia al paper de Govan et al. Explicar existencia y unicidad haciendo referencia a las pruebas de modelado de paginas web.
+
+\subsection{Eliminacion Gausiana}
+
+Esta seccion solo la pongo para que la consideres. Se podra hacer eliminacion gausiana con pivoteo para (P-I)x = 0? Igual si es posible es de orden cubico, con la web de millones de paginas se te va al carajo. Es solo para enriquecer la discusion.
+
+\subsection{Representacion del grafo}
+
+\textbf{RODRI, SI TERMINAS DE PROGRAMAR TODO Y YA TENES LISTO TODO PARA QUE FEDE EXPERIMENTE SEGUI CON ESTO.}
+
+El grafo de la web es esparso. Es al pedo usar n*n de memoria, cuando podes representar todo en mucho menos espacio. Discutir las siguientes representaciones de matrices esparsas:
+
+\begin{itemize}
+\item Dictionary of Keys (dok)
+\item Compressed Sparse Row (CSR)
+\item Compressed Sparse Column (CSC)
+\end{itemize}
+
+Quiero una descripcion breve de cada una.
+
+Porque elejiste una? Pros and cons.
+
+\subsection{Computo: Método de la Potencia}
+
+\textbf{LO SIGUIENTE ES PARA MAURO. HACELO EN TE RO (SI ENTERO), NO SEAS PAJERO. QUIERO LA SECCION BIEN COMPLETA CON LOS PUNTOS OPCIONALES, SOLO TENES QUE HACER ESTO. IMAGINATE QUE YO ME MORFE ESCRIBIR TODO.}
+
+La pregunta mas importante del trabajo, dado la matriz de transiciones $P$ que garantiza la existencia y unicidad del autovector de norma 1 asociado al autovalor 1, como lo computamos?
+
+\subsubsection{Correctitud}
+
+La idea básicamente es generar la secuencia $x_k = Px_{k-1}$ y tomar $k\to\infty$. Se puede probar que para este caso no importa el valor inicial que asignemos a la secuencia $x_0$, el vector converge al autovector asociado al mayor autovalor de P. Se puede probar que todo autovalor $\lambda$ de $P$ satisface que $|\lambda| < 1$.
+
+Otra propiedad interesante es que el método de la potencia va a converger de forma asintotica siguiendo $\norm{Px_k - q}_1 \approx |\lambda_2| \norm{x-q}_1$ donde $\lambda_2$ es el segundo autovalor mas grande de P. \textbf{Mauro revisa esto y fijate si sirve y se puede hacer algún criterio de parada copado.}
+
+\subsubsection{Valor Inicial}
+
+Elijo uno uniforme (todos con la misma relevancia y norma 1), o uno bien contra las esquinas (obvio que no)? Con esto hay que experimentar un cachito igual.
+
+\subsubsection{Criterio de Parada}
+
+Diferencias entre normas 1 o hay algo mejor?
+
+\subsubsection{Complejidad}
+
+Cual es la complejidad? Discutir que para deportes mucho no importa, pero para paginas web si.
+
+\subsubsection{Otras propiedades}
+
+Mirar esto antes de resolver lo siguiente...
+
+Sin embargo, en Kamvar et al. se propone una forma alternativa de computar la secuencia. Este resultado debe ser utilizado para mejorar el almacenamiento de los datos.
+
+... seguir
+
+\textbf{LO SIGUIENTE ES PARA MAURO. HACELO, NO SEAS PAJERO. SI, TE LO DIGO DENUEVO PORQUE SE QUE LO VAS A TRATAR DE EVITAR. NO TE PEDI MUCHO. ESTO ES PARA EL FINAL IGUAL, CUANDO YA TERMINASTE TODO LO DE ARRIBA.}
+
+\begin{itemize}
+\item Demostrar que los pasos del Algoritmo 1 propuesto en Kamvar et a. son correctos y computan $P_2x$.
+\item Establecer una relacion con la proporción entre $\lambda_1 = 1$  y $|\lambda_2|$ para la convergencia de PageRank.
+\end{itemize}
