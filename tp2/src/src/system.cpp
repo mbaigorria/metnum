@@ -149,7 +149,7 @@ int main(int argc, char** argv) {
            
            for(int i = 0; i < nodes; i++){
                 dataNode nod;
-                nod.node = i;
+                nod.node = i+1;
                 nod.edgesCount = 0;
                 nodesCount[i] = nod;
            }
@@ -232,7 +232,7 @@ int main(int argc, char** argv) {
 
             for(int i = 0; i < teams; i++){
                 matchesStats teamStats;
-                teamStats.team = i;
+                teamStats.team = i+1;
                 teamStats.matchesWin = 0;
                 teamStats.matchesDefeat = 0;
                 teamStats.pointsScored = 0;
