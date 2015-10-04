@@ -29,13 +29,14 @@ struct matchesStats {
     int pointsReceived;
 };
 
-//webs
+//webs / sports
 Matrix<double> pageRank(Matrix<double>& M, double c, double d, vector<int>& nodesCount);
 Matrix<double> enhancementPageRank(Matrix<double>& M, double c, double d, vector<int>& nodesCount);
+
+//webs
 void in_deg(vector<dataNode>& nodesCount);
 
 //sports
-Matrix<double> gem(Matrix<double>& M, double c, double d, vector<int>& totalAbs);
 void basic_sort(vector<matchesStats>& stats);
 
 //out data
@@ -217,7 +218,7 @@ int main(int argc, char** argv) {
                 i++;
            }
            
-           Matrix<double> res = gem(M, c, e, totalAbs); 
+           Matrix<double> res = pageRank(M, c, e, totalAbs); 
           
            cout <<  "gem result: \n" << endl; 
            res.printMatrix();
@@ -296,31 +297,29 @@ Matrix<double> pageRank(Matrix<double>& M, double c, double d, vector<int>& node
         int i = 0;
         while(i < n){
             if(M(i, j) != 0){
-                M(i, j) = 1/ (double)nodesCount[j];
+                M(i, j) = M(i, j) / (double)nodesCount[j];
             }else if(nodesCount[j] == 0){
-                M(i, j) = 1/dbl_n; // dangling node
+                M(i, j) = 1/dbl_n; // dangling node / undefeated team
             }
             i++;
         }
         j++;
     }
     
-    SparseMatrix<double> v(n, 1/dbl_n);
+    Matrix<double> v(n, 1/dbl_n);
 
     Matrix<double> E(n, n, (1 - c)*1/dbl_n); // PRE: rows == columns
     
-    Matrix<double> M_hat = M*c + E; 
-
-    // Si c < 1 realmente no tiene sentido usar SparseMatrix, dado que se reemplazan los 0's por 1/n
-    SparseMatrix<double> A(M_hat);
+    //Salvo que sea c = 1 no tiene sentido usar Sparse Matrix
+    Matrix<double> A = M*c + E;
      
-    SparseMatrix<double> x(n, 1/dbl_n);
-    
+    Matrix<double> x(n, 1, 1/dbl_n);
+
     //for (int i = 0; i < M.rows(); i++) {
     //    x(i) = uniform_rand(0, 1);
     //}    
     
-    SparseMatrix<double> last_x(n);
+    Matrix<double> last_x(n);
 
     double delta = 0;
    
@@ -330,9 +329,9 @@ Matrix<double> pageRank(Matrix<double>& M, double c, double d, vector<int>& node
         delta = x.L1(last_x);
     }while (delta > d);
     
-    printf("delta is %f\r\n", delta); //Deberia devolverse.
+    printf("delta is %f\r\n", delta);
     
-    return x.descompress();
+    return x;
 }
 
 Matrix<double> enhancementPageRank(Matrix<double>& M, double c, double d, vector<int>& nodesCount) {
@@ -346,7 +345,7 @@ Matrix<double> enhancementPageRank(Matrix<double>& M, double c, double d, vector
         int i = 0;
         while(i < n){
             if(M(i, j) != 0){
-                M(i, j) = 1/ (double)nodesCount[j];
+                M(i, j) = M(i, j) / (double)nodesCount[j];
             }
             i++;
         }
@@ -394,53 +393,6 @@ void in_deg(vector<dataNode>& nodesCount) {
     for (dataNode a : nodesCount) {        
         cout << "node: " << a.node << " points: " << a.edgesCount << "\n";
     }   
-}
-
-Matrix<double> gem(Matrix<double>& M, double c, double d, vector<int>& totalAbs) {
-    srand(45);
-
-    int n = M.rows();
-    double dbl_n = M.rows();
-
-    int j = 0;
-    while(j < n){
-        int i = 0;
-        while(i < n){
-            if(M(i, j) != 0){
-                M(i, j) = M(i, j) / (double)totalAbs[j];
-            }else if(totalAbs[j] == 0){
-                M(i, j) = 1/dbl_n; // undefeated team
-            }
-            i++;
-        }
-        j++;
-    }
-    
-    Matrix<double> v(n, 1/dbl_n);
-
-    Matrix<double> E(n, n, (1 - c)*1/dbl_n); // PRE: rows == columns
-
-    Matrix<double> A = M*c + E;
-     
-    Matrix<double> x(n, 1, 1/dbl_n);
-
-    //for (int i = 0; i < M.rows(); i++) {
-    //    x(i) = uniform_rand(0, 1);
-    //}    
-    
-    Matrix<double> last_x(n);
-
-    double delta = 0;
-   
-    do {
-        last_x = x;
-        x = A*x;
-        delta = x.L1(last_x);
-    }while (delta > d);
-    
-    printf("delta is %f\r\n", delta); //Deberia devolverse.
-    
-    return x;
 }
 
 void basic_sort(vector<matchesStats>& stats) {
