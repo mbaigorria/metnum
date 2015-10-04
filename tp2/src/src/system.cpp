@@ -308,9 +308,10 @@ Matrix<double> pageRank(Matrix<double>& M, double c, double d, vector<int>& node
     SparseMatrix<double> v(n, 1/dbl_n);
 
     Matrix<double> E(n, n, (1 - c)*1/dbl_n); // PRE: rows == columns
+    
+    Matrix<double> M_hat = M*c + E; 
 
-    Matrix<double> M_hat = M*c + E;
-
+    // Si c < 1 realmente no tiene sentido usar SparseMatrix, dado que se reemplazan los 0's por 1/n
     SparseMatrix<double> A(M_hat);
      
     SparseMatrix<double> x(n, 1/dbl_n);
