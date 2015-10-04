@@ -99,12 +99,12 @@ de transiciones puede ser muy esparsa e inclusive puede suceder que una página 
 Dada esta definición, la matriz de transiciones resultante no es esparsa. 
 Para sistemas muy grandes, esto puede resultar contraproducente a la hora de obtener el autovector asociado, dado que la complejidad espacial y temporal aumenta  considerablemente con la cantidad de información representada en la matriz. Sin embargo existe un resultado que podremos utilizar para mejorar la eficiencia del algoritmo en términos de complejidad temporal y espacial. El mismo se basa en la idea de Kamvar et al. \cite[Algoritmo 1]{Kamvar2003} para el calculo del autovector. Este resultado nos permite utilizar la matriz original de transiciones sin modificar en lo absoluto, pero si cambiando su representación, valiendonos de una buena estructura para almacenar las entradas de la misma. 
 
-Las cualidades de la matriz hacen que sea razonable intentar pensar en una forma de representar solo las entradas que no sean ceros, y dado que la matriz suele ser esparsa, la misma contendra muchos ceros que podrían no ser representados. Para esto optamos por una de entre las 3 siguientes estructuras de representación:
+Las cualidades de la matriz hacen que sea razonable intentar pensar en una forma de representar solo las entradas que no sean ceros, y dado que la matriz suele ser esparsa, la misma contendrá muchos ceros que podrían no ser representados. Para esto optamos por una de entre las 3 siguientes estructuras de representación:
 
 \begin{itemize}
 \item Dictionary of Keys ($DOK$)
 
-\item Compressed Sparse Row ($CRS$)
+\item Compressed Sparse Row ($CSR$)
 
 \item Compressed Sparse Column ($CSC$)
 \end{itemize}
@@ -117,7 +117,7 @@ De todas estas representaciones posibles, para este t.p optamos por $CSR$. Aún 
 Consiste en un diccionario que mapea pares de fila-columa a la entrada. No se representan las entradas nulas. El formato es bueno para gradualmente construir una matriz esparsa en orden aleatorio, pero pobre para iterar sobre valores distintos de cero en orden lexicográfico. Uno construye típicamente una matriz en este formato y luego se convierte en otro formato más eficiente para su procesamiento.
 
 \begin{itemize}
-\item Compressed Sparse Row ($CRS$)
+\item Compressed Sparse Row ($CSR$)
 \end{itemize}
 Pone las entradas no nulas de las filas de la matriz en posiciones de memoria contiguas. Suponiendo que tenemos una matriz dispersa no simétrica, creamos vectores: uno para los números de punto flotante ($val$), y los otros dos para enteros ($col\_ind$, $row\_ptr$). El vector $val$ almacena los valores de los elementos distintos de cero de la matriz, de izquierda a derecha y de arriba hacia abajo. El vector $col\_ind$ almacena los índices de columna de los elementos en el vector $val$. Es decir, si $val(k) = a_ij$ entonces $col\_ind(k) = j$. El vector $row\_ptr$ almacena los lugares en el vector $val$ que comienza y termina una fila, es decir, si $val(k) = a_ij$ entonces $row_ptr(i) \leq k \leq row\_ptr(i+1)$. Por convención, se define $row\_ptr(n+1) = nnz$, en donde $nnz$ es el número de entradas no nulas en la matriz. Los ahorros de almacenamiento de este enfoque es significativo. En lugar de almacenar elementos $n^2$, solamente necesitamos $2nnz + n$ lugares de almacenamiento.
 
@@ -133,17 +133,17 @@ Es una matrix de 4x4 con 4 entradas no nulas. Luego:
 
 \begin{itemize}
 \item Compressed Sparse Column ($CSC$)
-La idea es analoga a $CRS$, pero la compresion se hace por columnas es decir, si $CRS$ comprime $A$, $CSC$ comprime $A^t$  
+La idea es analoga a $CSR$, pero la compresion se hace por columnas es decir, si $CSR$ comprime $A$, $CSC$ comprime $A^t$  
 \end{itemize}
 
-Sobre la matriz definida para $CRS$, con $CSC$ obtenemos lo siguiente
+Sobre la matriz definida para $CSR$, con $CSC$ obtenemos lo siguiente
 
    $val$  = [ 5 8 6 3 ]
    $col\_ptr$ = [ 0 1 3 4 4 ]   
    $row\_ind$ = [ 1 1 2 3 ]
 
 Todos los resultados anteriores permiten evitar representar valores nulos.	
-El motivo de nuestra elección se debe a que $CRS$ ofrece una buena representación de las filas de la matriz y es más eficiente a la hora de hacer operaciones del tipo A*x (matriz-vector) que es lo que nos interesa en el método de la potencia que realiza pageRank. $CSC$ en cambio, es efectiva para el producto x*A (vector-matriz) dado que la misma ofrece una mejor representación de las columnas. En contra partida, tanto $CRS$ como $CSC$, no permiten construcción incremental aleatoria, que si ofrece $DOK$, es decir, que cambios a la esparsidad de la matriz son costosos. En general están pensadas para ser estáticas, pero esto no es un inconveniente en nuestro caso, dado que no se realizaran cambios en la esparsidad de la matriz durante el proceso.
+El motivo de nuestra elección se debe a que $CSR$ ofrece una buena representación de las filas de la matriz y es más eficiente a la hora de hacer operaciones del tipo A*x (matriz-vector) que es lo que nos interesa en el método de la potencia que realiza pageRank. $CSC$ en cambio, es efectiva para el producto x*A (vector-matriz) dado que la misma ofrece una mejor representación de las columnas. En contra partida, tanto $CSR$ como $CSC$, no permiten construcción incremental aleatoria, que si ofrece $DOK$, es decir, que cambios a la esparsidad de la matriz son costosos. En general están pensadas para ser estáticas, pero esto no es un inconveniente en nuestro caso, dado que no se realizaran cambios en la esparsidad de la matriz durante el proceso.
 
 En el presente trabajo utilizaremos la idea de Kamvar et al. \cite[Algoritmo 1]{Kamvar2003} para el calculo del autovector valiendonos de nuestra estructura de representación elegida y compararemos los resultados con el algoritmo standard para mostrar que al final de cuentas, si el sistema es muy grande y esparso, puede resultar muy beneficioso en terminos de complejidad espacial y temporal.
 
