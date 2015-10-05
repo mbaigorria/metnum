@@ -23,7 +23,7 @@ template<class T>
 class SparseMatrix {
 public:
     SparseMatrix();
-    SparseMatrix(int rows); // column vector with 0´s
+    SparseMatrix(int rows); // column vector with 0's
     SparseMatrix(int rows, T value);
     SparseMatrix(vector<T>& values, vector<int>& iValues, vector<int>& jValues, int columns); // PRE: jValues::size == values::size & values of iValues[0..iValues::size-2] are indices of values & iValue[iValues::size-1] == values::size
     SparseMatrix(const SparseMatrix<T>& other); // compress matrix

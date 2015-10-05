@@ -68,7 +68,7 @@ int main(int argc, char** argv) {
     if (argc == 7) {
         pFile = fopen(argv[6],"w");
         if (pFile == NULL){
-            printf("can´t open output file.\n");
+            printf("can't open output file.\n");
             return 0;
         }
     }

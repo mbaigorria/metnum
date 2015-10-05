@@ -86,10 +86,6 @@ Por lo tanto, ya probamos la existencia del autovector de norma 1 asociado al au
 
 Hacer referencia al paper de Govan et al. Explicar existencia y unicidad haciendo referencia a las pruebas de modelado de paginas web.
 
-\subsection{Eliminacion Gausiana}
-
-Esta seccion solo la pongo para que la consideres. Se podra hacer eliminacion gausiana con pivoteo para (P-I)x = 0? Igual si es posible es de orden cubico, con la web de millones de paginas se te va al carajo. Es solo para enriquecer la discusion.
-
 \subsection{Representacion del grafo}
 
 Ya hemos demostrado las condiciones necesarias para poder obtener el autovector asociado al autovalor dominante de una matriz de Markov. 
@@ -147,11 +143,13 @@ El motivo de nuestra elección se debe a que $CSR$ ofrece una buena representaci
 
 En el presente trabajo utilizaremos la idea de Kamvar et al. \cite[Algoritmo 1]{Kamvar2003} para el calculo del autovector valiendonos de nuestra estructura de representación elegida y compararemos los resultados con el algoritmo standard para mostrar que al final de cuentas, si el sistema es muy grande y esparso, puede resultar muy beneficioso en terminos de complejidad espacial y temporal.
 
-\subsection{Computo: Método de la Potencia}
+\subsection{Computo: Método de la Potencia (MAURO)}
 
-\textbf{LO SIGUIENTE ES PARA MAURO. HACELO EN TE RO (SI ENTERO), NO SEAS PAJERO. QUIERO LA SECCION BIEN COMPLETA CON LOS PUNTOS OPCIONALES, SOLO TENES QUE HACER ESTO. IMAGINATE QUE YO ME MORFE ESCRIBIR TODO.}
+\subsubsection{Eliminacion Gausiana}
 
-La pregunta mas importante del trabajo, dado la matriz de transiciones $P$ que garantiza la existencia y unicidad del autovector de norma 1 asociado al autovalor 1, como lo computamos?
+Antes de introduciir el metodo de la potencia, en principio podriamos querer calcular este autovector utilizando el metodo de elimnacion gausiana. Sin embargo, de ser posible seria de orden cubico... blah blh blah
+
+Esta seccion solo la pongo para que la consideres. Se podra hacer eliminacion gausiana con pivoteo para (P-I)x = 0? Igual si es posible es de orden cubico, con la web de millones de paginas se te va al carajo. Es solo para enriquecer la discusion.
 
 \subsubsection{Correctitud}
 

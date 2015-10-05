@@ -9,7 +9,7 @@ Caso particular chiquito, pagina 3. Fijate el parrafo que arranca en A simple ap
 
 \subsection{Paginas Web}
 
-\subsubsection{Comparacion PageRank vs In-Deg}
+\subsubsection{Comparacion PageRank vs In-Deg (RODRI)}
 Comparar solo los rankings, nada de complejidad. Podes mencionar que In-Deg usa un algoritmo \order{n \times log(n)}, pero nada mas. Comparar top 10 con los dos y discutir diferenciias.
 
 \subsubsection{Manipulacion}
@@ -19,10 +19,10 @@ Se puede manipular entonces o no? Agarra, en el eje x pone cantidad de sitios we
 
 \subsection{Ranking ATP}
 
-\subsubsection{Ranking ATP oficial vs Ranking PageRank/In-Deg}
+\subsubsection{Ranking ATP oficial vs Ranking PageRank/In-Deg (RODRI)}
 Discutir nuevamente diferencias. Un poco de chamullo, el que yo te dije rodri, sobre el cambio de calculo en el ranking del ATP y la retroactividad, etc. Acordate de escribir en la seccion del desarollo Rodri como se arma la matriz de transicion para los deportes y cual fue la motivacion/idea.
 
-\subsubsection{Eleccion del factor de 'teletransportacion' c}
+\subsubsection{Eleccion del factor de 'teletransportacion' c (RODRI)}
 probar relevancia a medida que cambias ese valor = 0.85, creo que c.
 
 Citar paper de google, que usan 0.85. Discutir que si c es uno, ignoras la estructura del grafo al hacer el ranking, todos rankean igual.
@@ -31,7 +31,7 @@ Pagina 6.... This is the ultimately egalitarian case: the only... blah. La idea 
 
 \subsection{Metodo de la Potencia}
 
-\subsubsection{Representacion de la Matriz de Transicion}
+\subsubsection{Representacion de la Matriz de Transicion (RODRI/FEDE)}
 Este experimento lo pueden hacer directo o usando al PageRank. Si pueden, implementen todas las representaciones de matrices y luego comparen el tiempo de computo del producto N veces. Comparen la matriz normal vs el resto. Discutan que en paginas web la cantidad de vertices del grafo se va al carajo, pero para deportes es super acotada, asi que la eleccion de estructura no afecta tanto.
 
 Aca podes argumentar que lo que domina al metodo de la potencia es la cantidad de productos, asi que no hace falta probar PageRank directo. Igual si queres metelo con pagerank de una, a fin de cuentas es lo mismo.
