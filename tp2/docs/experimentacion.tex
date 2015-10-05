@@ -1,34 +1,51 @@
 \section{Experimentación}
 
-\textbf{ESTA PARTE ES DE FEDE. TENES QUE COMPLETAR TODOS LOS EXPERIMENTOS QUE LISTO A CONTINUACION, FIJATE SI SE TE OCURRE ALGUNO, LO QUE TE TIRO SON UNAS PUNTAS, EL RESTO SE TE OCURRE A VOS ;) MIENTRAS RODRI TERMINA DE IMPLEMENTAR TODO Y VER COMO CARAJO MODELAR BIEN EL TENIS, VOS DISENIA LOS EXPERIMENTOS O FIJATE QUE PODES IR HACIENDO. ACA NO HAY QUE GENERAR INSTANCIAS LOCAS!}
+\subsection{PageRank}
+\subsubsection{Complejidad}
+tiempo de computo en funcion de size del grafo, eje x, cantidad de sitios web, eje y, tiempo en ms a convergencia.
 
-Experimentos para Paginas Web
-\begin{itemize}
-\item Comparacion PageRank vs In-Deg. Tiempo de ejecucion, relevancia de los resultados.
-\item Cuanto tarda el pagerank a medida que aumenta la cantidad de vertices del grafo?
-\end{itemize}
+\subsubsection{Casos Patologicos}
+Caso particular chiquito, pagina 3. Fijate el parrafo que arranca en A simple apprroach...... y despues This approach ignores that... La idea es armar el mismo grafo y mostrar el mismo ejemplo jaja
 
-Experimentos para competencias deportivas
-\begin{itemize}
-\item GeM y algun otro metodo estandar, onda victoria 3 puntos derrota 1, lo que se te ocurra para tenis.
-\end{itemize}
+\subsection{Paginas Web}
 
-Experimentos para el PageRank en si\begin{itemize}
-\item Como va evolucionando la norma manhattan entre dos iteraciones sucesivas. Eje x, iteraciones, eje y, norma manhattan.
-\item Mostrar dos instancias, una donde arrarnco desde el valor inicial donde todos tienen 1/n y otra donde una tiene 1 y el resto 0, mostrar la cantidad de pasos y como evoluciona la norma.
-\item tiempo de computo en funcion de size del grafo
-\item probar relevancia a medida que cambias ese valor = 0.85, creo que c.
-\end{itemize}
+\subsubsection{Comparacion PageRank vs In-Deg}
+Comparar solo los rankings, nada de complejidad. Podes mencionar que In-Deg usa un algoritmo \order{n \times log(n)}, pero nada mas. Comparar top 10 con los dos y discutir diferenciias.
 
-Leer la parte de experimentos del enunciado....
+\subsubsection{Manipulacion}
+Pagina 5, ejercicio 1. La idea es que plantees un caso de un tipo que quiere manipular el ranking, mostra que aunque agregues miles de nuevas paginas apuntando no podes hacer demasiado, hacelo en funcion de la cantidad de paginas que agregas?
 
-Los siguientes exp se me ocurrieron o los saque mientras leia el paper de Bryan y Leise, te los pongo aca:
+Se puede manipular entonces o no? Agarra, en el eje x pone cantidad de sitios web que apuntan solamente al sitio u que le quiero subir el ranking, y en el eje y el ranking de ese sitio. Fijate que aumenta, y fijate si podes hacer algun tipo de curva de nivel con c (cuanto mayor c, mas manipulable es la cosa). Citar el paper de Sergei y Brin, que dicen que hacen promedios de muchas cosas en la practica para evitar este problema. Usan muchos criterios promediados.
 
-1. Caso particular chiquito, pagina 3. Fijate el parrafo que arranca en A simple apprroach...... y despues This approach ignores that... La idea es armar el mismo grafo y mostrar el mismo ejemplo jaja
-2. Pagina 5, ejercicio 1. La idea es que plantees un caso de un tipo que quiere manipular el ranking, mostra que aunque agregues miles de nuevas paginas apuntando no podes hacer demasiado, hacelo en funcion de la cantidad de paginas que agregas?
-3. Pagina 6.... This is the ultimately egalitarian case: the only... blah. La idea es jugar con c aca, como dije arriba. Es un buen exp, hay que pensar bien como graficarlo y que quede lindo, creo que es facil.
-4. Para todo $x_0$ sabes que converge, eso, analiza como funciona eso, pasos para que converja en funcion de $x_0$.
-5. Si llegamos, comparar dos versiones del metodo de la potencia! Esto seria genial.
+\subsection{Ranking ATP}
 
-\textbf{Fede, cuando leas esto no te preocupes. Lee lo que escribi arriba, los enunciados y solo el paper de Bryan and Leise. Con eso te re alcanza para hacer lo que tenes que hacer. Lo que te recomiendo es que una vez que leas eso ordenes bien mis ideas y decidas bien que queres hacer. Fijate si podes revisar el codigo de Rodri!}
+\subsubsection{Ranking ATP oficial vs Ranking PageRank/In-Deg}
+Discutir nuevamente diferencias. Un poco de chamullo, el que yo te dije rodri, sobre el cambio de calculo en el ranking del ATP y la retroactividad, etc. Acordate de escribir en la seccion del desarollo Rodri como se arma la matriz de transicion para los deportes y cual fue la motivacion/idea.
+
+\subsubsection{Eleccion del factor de 'teletransportacion' c}
+probar relevancia a medida que cambias ese valor = 0.85, creo que c.
+
+Citar paper de google, que usan 0.85. Discutir que si c es uno, ignoras la estructura del grafo al hacer el ranking, todos rankean igual.
+
+Pagina 6.... This is the ultimately egalitarian case: the only... blah. La idea es jugar con c aca, como dije arriba. Es un buen exp, hay que pensar bien como graficarlo y que quede lindo, creo que es facil.
+
+\subsection{Metodo de la Potencia}
+
+\subsubsection{Representacion de la Matriz de Transicion}
+Este experimento lo pueden hacer directo o usando al PageRank. Si pueden, implementen todas las representaciones de matrices y luego comparen el tiempo de computo del producto N veces. Comparen la matriz normal vs el resto. Discutan que en paginas web la cantidad de vertices del grafo se va al carajo, pero para deportes es super acotada, asi que la eleccion de estructura no afecta tanto.
+
+Aca podes argumentar que lo que domina al metodo de la potencia es la cantidad de productos, asi que no hace falta probar PageRank directo. Igual si queres metelo con pagerank de una, a fin de cuentas es lo mismo.
+
+\subsubsection{Evolucion de la norma entre iteraciones}
+Como va evolucionando la norma manhattan entre dos iteraciones sucesivas. Eje x, iteraciones, eje y, norma manhattan.
+
+\subsubsection{Convergencia}
+Aca tienen que calcular el vector posta, y luego tomar algun tipo de norma. En el eje x van a tener la cantidad de iteraciones, y en el eje y van a tener la norma de x* - $x_actual$.
+
+\subsubsection{Eleccion del $x_0$}
+
+Aca pongan que te conviene arrancar con una buena 'adivinanza' de la solucion, asi se acerca mas rapido. Muestren la cantidad de iteraciones a la convergencia (norma manhattan < epsilon) dependiendo de la distanciia de la solucion inicial a la solucion posta. Si arranco con la posta de una, converge de una. Si arranco con una sol asquerosa inicial, tarda mas iteraciones en cumplir nuestro epsilon.
+
+Mostrar dos instancias, una donde arrarnco desde el valor inicial donde todos tienen 1/n y otra donde una tiene 1 y el resto 0, mostrar la cantidad de pasos y como evoluciona la norma.
+
 
