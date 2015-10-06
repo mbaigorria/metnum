@@ -136,23 +136,25 @@ La elección del $\alpha$ determina la importancia de la matriz de personalizaci
 
 \subsubsection{Sistema de puntos y consideraciones}
 
-Para procesar los rankings, obtuvimos todos los partidos realizados entre 1975 y 1977 de todas las competencias a nivel internacional de tenis que sirven para clasificar al ATP \footnote{Los datos los obtuvimos de https://github.com/JeffSackmann/tennis\_atp, un repositorio con todos los rankings historicos de la ATP. La veracidad de los mismos es discutible, pero fue lo mejor que conseguimos dado que los investigadores que contactamos no nos quisierorn proveer los datos: \say{Lamentablemente, toda esa información está hoy en pleno ida y vuelta legal con la ATP y no puedo bajo ningún concepto filtrarla.}}. (Australian Open, Indianapolis, Roma, Roland Garros, US Open, Wimbledon, Davis Cup, y muchos más) junto con los rankings de cada año. Uno a mitad de año y otro a finales de año. 
+Para procesar los rankings, obtuvimos todos los partidos realizados entre 1975 y 1977 de todas las competencias a nivel internacional de tenis que sirven para clasificar al ATP \footnote{Los datos los obtuvimos de https://github.com/JeffSackmann/tennis\_atp, un repositorio con todos los rankings historicos de la ATP. La veracidad de los mismos es discutible, pero fue lo mejor que conseguimos dado que los investigadores que contactamos no nos quisieron proveer los datos: \say{Lamentablemente, toda esa información está hoy en pleno ida y vuelta legal con la ATP y no puedo bajo ningún concepto filtrarla.}}. (Australian Open, Indianapolis, Roma, Roland Garros, US Open, Wimbledon, Davis Cup, y muchos más) junto con los rankings de cada año. Uno a mitad de año y otro a finales de año. 
 
 Los datos están completos a nivel enfrentamientos y participantes, pero carecen de los puntajes que cada jugador obtuvo por cada partido ganado, por avanzar de ronda y/o ganar un torneo.
-Esta es una parte importante a aclarar del sistema de rankings de la ATP. Se obtienen puntos por cada partido ganado, ronda superada y torneo ganado, los cuales además varían por torneo en importancia, siendo los Grand Slam los de mayor jerarquía. 
+Esta es una parte importante a aclarar del sistema de rankings de la ATP. Se obtienen puntos por cada partido ganado, ronda superada y torneo ganado, los cuales además varían por torneo en importancia, siendo los Grand Slam los de mayor jerarquía. Ademas, en esa época el sistema estaba basado en el puntaje promedio obtenido por el jugador.
+
 Utiliza un sistema de defensa de puntos que fue variando con los años. En aquella época, la defensa se hacia por año. Es decir, los puntos realizados durante un año, se defienden al año siguiente. 
 
 Igualmente esto no supone una limitación grave para computar los rankings y comprobar si Guillermo Vilas fue realmente o no 1ro en al menos uno de esos años.
 
-Existe una relación directa entre sumar puntos y ganar partidos, y es que naturalmente el que más puntos tiene, más partidos ganó.
-
-Además, dada la naturaleza del comportamiento de page rank, no solo importa a cuantos contrincantes derrotó un participante dado, si no a quienes derrotó. Ésta es la primera consideración a tener en cuenta y una carta a favor que será utilizada por el algoritmo. Dado que no disponemos del sistema de puntuación real y no sabemos a priori cuantos partidos jugó exactamente cada participante, es esencial que además de la puntuación que definamos por cada partido, un jugador obtenga un extra por el rango del rival derrotado. Esto mismo se puede interpretar como que ese jugador ganó un partido importante, dado que los partidos importantes son los de instancias decisivas (cuartos, semifinales o una final), y generalmente, al que solo llegan los mejores jugadores.    
+Además, dada la naturaleza del comportamiento de PageRank, no solo importa a cuantos contrincantes derrotó un participante dado, si no a quienes derrotó. Ésta es la primera consideración a tener en cuenta y una carta a favor que será utilizada por el algoritmo. Dado que no disponemos del sistema de puntuación real y no sabemos a priori cuantos partidos jugó exactamente cada participante, es esencial que además de la puntuación que definamos por cada partido, un jugador obtenga un extra por el rango del rival derrotado. Esto mismo se puede interpretar como que ese jugador ganó un partido importante, dado que los partidos importantes son los de instancias decisivas (cuartos, semifinales o una final), y generalmente, al que solo llegan los mejores jugadores.    
 
 Dadas estas consideraciones podemos definir un sistema de puntos con el que poder computar partidos. El mismo es muy sencillo. 3 puntos al ganador y 1 punto al perdedor.
 
-Solo utilizaremos el ranking de fin de año, totalizando por los puntos acumulados en el mismo, obteniendo así 3 rankings por cada año.
+Solo utilizaremos el ranking de fin de año, totalizando por los puntos acumulados en el mismo, obteniendo así un ranking por cada año.
  
-Veremos luego en la experimentación, como este sistema resuelve el cálculo de los rankings de manera apropiada y explicaremos que es lo que sucede en cada año computado observando algunos detalles importantes y comparándolos con los rankings oficiales de la ATP para luego concluir si Vilas fue o no, nuevamente, 1ro entre 1975 y 1977.
+Veremos luego en la experimentación, como este sistema resuelve el cálculo de los rankings de manera apropiada y explicaremos que es lo que sucede en cada año computado observando algunos detalles importantes y comparándolos con los rankings oficiales de la ATP para luego concluir si Vilas fue o no 1ro en algún momento entre 1975 y 1977 según PageRank.
+
+\pagebreak
+\input{potencia}
 
 \subsection{Representación del grafo}
 
@@ -199,4 +201,4 @@ El motivo de nuestra elección se debe a que $CSR$ ofrece una buena representaci
 En el presente trabajo utilizaremos la idea de Kamvar et al. \cite[Algoritmo 1]{Kamvar2003} para el calculo del autovector valiendonos de nuestra estructura de representación elegida y compararemos los resultados con el algoritmo estandar para mostrar que al final de cuentas, si el sistema es muy grande y esparso, puede resultar muy beneficioso en términos de complejidad espacial y temporal.
 
 \subsubsection{Elección de estructura}
-De todas estas representaciones posibles, para este TP optamos por $CSR$. Aún así no haremos una elección sin una justificación apropiada del porque consideramos que es la mejor para nuestro trabajo, dado que como en toda estructura de datos, siempre existen pros y contras. Nos encargaremos en lo que sigue de exponer estos detalles para dejar en claro nuestro punto de vista. 
+En el caso de los eventos deportivos la elección de estructura no es tan relevante dado que la cantidad de equipos es acotada. Sin embargo, en el caso de las paginas web este factor es sumamente relevante dado que el uso de memoria de no representar el grafo de forma adecuada puede ser muy grande. De todas estas representaciones posibles, para este trabajo optamos por $CSR$ dado que es una representación eficiente para el producto de matrices esparsas, necesario para calcular de forma rápida el método de la potencia.
