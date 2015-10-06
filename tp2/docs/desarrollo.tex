@@ -50,9 +50,9 @@ Toda matriz estocástica por columnas tiene a 1 como autovalor.
 
 Esto significa que si no existen \texttt{dangling nodes}, es decir, vértices con $d_{out} = 0$, podemos garantizar que nuestra matriz de transición es estocástica por columnas.
 
-Notar que bajo las condiciones actuales no podemos garantizar que si existe el autoespacio asociado al autovalor 1, el mismo tenga dimension 1. Intuitivamente, esto se debe a que el grafo de la web puede tener varias componentes conexas. Como comparamos sitios web que no están relacionados? Justamente la relación, ya sea directa o indirecta mediante transitividad me da algún tipo de relación de orden. Al no tener una relación de orden entre dos sitios web bien definida, es razonable que existan múltiples autovectores, es decir, rankings. Esto se puede ver claramente en la pagina 4 del paper de Bryan y Leise \cite{Bryan2006}.
+Notar que bajo las condiciones actuales no podemos garantizar que si existe el autoespacio asociado al autovalor 1, el mismo tenga dimension 1. Intuitivamente, esto se debe a que el grafo de la web puede tener varias componentes conexas.¿Como comparamos sitios web que no están relacionados? Justamente la relación, ya sea directa o indirecta mediante transitividad me da algún tipo de relación de orden. Al no tener una relación de orden entre dos sitios web bien definida, es razonable que existan múltiples autovectores, es decir, rankings. Esto se puede ver claramente en la pagina 4 del paper de Bryan y Leise \cite{Bryan2006}.
 
-Por lo tanto, la idea es básicamente buscar algún tipo de transformación relevante de mi matriz de transición que me permita garantizar que no voy a tener \texttt{dangling nodes} y ademas que solo tenga una componente conexa, es decir, que el grafo sea conexo. Definimos la siguiente matriz de transición, donde $v \in \mathbb{R}^{n \times n}$, con $v_i = 1 / n$ y $d \in \{0,1\}^n$,  $d_i = 1$ si $n_i = 0$ y $d_i = 0$ como:
+Por lo tanto, la idea es básicamente buscar algún tipo de transformación relevante de mi matriz de transición que me permita garantizar que no voy a tener \texttt{dangling nodes} y ademas que solo tenga una componente conexa, es decir, que el grafo sea conexo. Definimos la siguiente matriz de transición, donde $v \in \mathbb{R}^{n \times n}$, con $v_i = 1 / n$ y $d \in \{0,1\}^n$,  $d_i = 1$ si $n_i = 0$ y $d_i = 0$ en caso contrario, como:
 
 \begin{eqnarray*}
 D & = & v d^t \\
@@ -82,85 +82,18 @@ Por lo tanto, ya probamos la existencia del autovector de norma 1 asociado al au
 \item Si M es positiva y estocástica por columnas, entonces $V_1(M)$ tiene dimension 1.
 \end{lemma}
 
+\begin{proposition}
+Sea M una matriz real de n x n positiva y estocástica por columnas, y V el subespacio de $\mathbb{R}^n$ que consiste de aquellos vectores v tales que la suma de sus componentes sea 0, entonces $Mv \in V$ y $||Mv||_1 \leq \alpha||v||_1$ donde $\alpha = max_{1 \leq j \leq n}|1 - 2min_{1 \leq i \leq n}| < 1$.
+\end{proposition}
+
 \subsection{Modelado para Tenis}
 
-\subsubsection{GeM Ranking Method}
+Hacer referencia al paper de Govan et al. Explicar existencia y unicidad haciendo referencia a las pruebas de modelado de paginas web.
 
-El modelo GeM Ranking Method presente en el paper de Govan et al. plantea un método alternativo para rankear ligas deportivas. Utilizaremos el mismo para analizar los rankings del ATP entre 1975 y 1977. El algoritmo está motivado en el PageRank de Page y Brin, pero con unos ligeros retoques para adaptarlo a torneos y competencias.
-En lo que sigue, explicaremos como se construye la matriz de transiciones que utiliza el algoritmo, pero antes de comenzar con las definiciones, vale aclarar que para mantener la homogeneidad haremos esta definición sobre la transpuesta de la matriz que se usa en el paper de Govan et al.
+\subsection{Eliminacion Gausiana}
 
-Se representa una temporada como un grafo directo con $n$ nodos. Cada nodo representa un participante o equipo y cada partido entre dos participantes representa una arista desde el perdedor al ganador igual a la diferencia positiva de los puntos obtenidos por cada participante en el partido.
+Esta seccion solo la pongo para que la consideres. Se podra hacer eliminacion gausiana con pivoteo para (P-I)x = 0? Igual si es posible es de orden cubico, con la web de millones de paginas se te va al carajo. Es solo para enriquecer la discusion.
 
-La matriz $A^t$ de adyacencias queda definida de la siguiente manera: 
-\\\\
-$A^t$ = \Bigg\{
-  \begin{tabular}{ccc}
-  $w_{ij}$ si el participante $j$ pierde con el participante $i$ \\
-  0 en cualquier otro caso 
-  \end{tabular}
-\\\\
-Donde cada $w_{ij}$ representa la diferencia positiva del puntaje de cada participante en ese enfrentamiento. En caso de que un equipo pierda mas de una vez en el mismo torneo, será la suma de las diferencias de cada partido entre $i$ y $j$. Esta es la mayor generalización en cuanto a PageRank.
-
-Luego se define la matriz H de la siguiente forma:
-\\\\
-H = \Bigg\{
-  \begin{tabular}{ccc}
-  $w_{ij} / \sum\limits_{k=1}^n A^t_{kj} $ si hay un link de $j$ a $k$ \\
-  0 en cualquier otro caso 
-  \end{tabular}
-\\\\
-
-(Cabe destacar que en el paper de Govan et al. hay un error de tipeo y la division se define como  $1 / \sum\limits_{k=1}^n A^t_{kj}$)
-\\\\
-Luego definimos G a la matriz resultante de:
-\\\\
-G = $\alpha$($A^t$ + $au^t$) + $(1 - \alpha)ev^t$
-\\\\
-Donde 0 $< \alpha < 1$, v es un vector de probabilidades, a es tal que $a_i$ es 1 si la fila $j$ de H es 0 y $a_i$ es 0 en cualquier otro caso y u sea un vector de probabilidad de $n$ x $1$. e se define como un vector fila con todas sus entradas igual a 1.
-\\\\
-El vector que contendrá los puntajes de cada equipo será un $\pi$ tal que:
-\\\\
-G$\pi$ = $\pi$ 
-\\\\
-Cada entrada $H_{ij}$ de H se puede interpretar como la probabilidad de que el participante $j$ pierda contra el participante $i$. Para los participantes invictos un simple ajuste que se propone es elegir un vector $u$ donde todas las entradas son $1/n$. Esto significa cambiar la probabilidad de los invictos a que puedan perder contra cualquiera de los otros participantes (incluido si mismo) con probabilidad uniforme.
-El modelo básico utiliza $\alpha$ de la misma forma que en PageRank y $v^t$ como vector de personalización del sistema. Una simple elección puede ser $v$ = $(1/n)e$. Aunque $v$ ofrece mucha mas flexibilidad. Podría usarse con el resultado de un ranking previo, aumentando así las probabilidades de que cierto participante gane el presente torneo.
-La elección del $\alpha$ determina la importancia de la matriz de personalización $ev^t$. Una buena elección en el calculo de $\alpha$ podría ser la que se menciona en la siguiente investigación de microsoft research: \href{http://research.microsoft.com/apps/pubs/default.aspx?id=118374}{
-Tracking the random surfer: Empirically measured teleportation parameters in PageRank} del cual mencionaremos la siguiente abstracción:
-
-\begin{verbatim}
-PageRank computes the importance of each page in a directed graph under a random
-surfer model governed by a teleportation parameter. Commonly denoted alpha, 
-this parameter models the probability of following an edge inside the graph or, 
-when the graph comes from a network of web pages and links, clicking a link on a 
-web page. We empirically measure the teleportation parameter based on browser 
-toolbar logs and a click trail analysis. For a particular user or machine, 
-such analysis produces a value of alpha. We find that these values nicely fit a 
-Beta distribution with mean edge-following probability between 0.3 and 0.7, 
-depending on the site. Using these distributions, we compute PageRank scores 
-where PageRank is computed with respect to a distribution as the teleportation 
-parameter, rather than a constant teleportation parameter. These new metrics are 
-evaluated on the graph of pages in Wikipedia.
-\end{verbatim}
-
-Igualmente en nuestro caso computaremos los rankings con un $\alpha$ de 0.85 que es el utilizado en Govan et al. y que a su vez fue el standard de Google en sus comienzos.	 
-
-\subsubsection{Sistema de puntos y consideraciones}
-
-Para procesar los rankings, obtuvimos todos los partidos realizados entre 1975 y 1977 de todas las competencias a nivel internacional de tenis que sirven para clasificar al ATP. (Australian Open, Indianapolis, Roma, Roland Garros, US Open, Wimbledon, Davis Cup, y muchos más) junto con los rankings de cada año. Uno a mitad de año y otro a finales de año. 
-\\
-Los datos están completos a nivel enfrentamientos y participantes, pero carecen de los puntajes que cada jugador obtuvo por cada partido ganado, por avanzar de ronda y/o ganar un torneo.
-Esta es una parte importante a aclarar del sistema de rankings de la ATP. Se obtienen puntos por cada partido ganado, ronda superada y torneo ganado, los cuales además varian por torneo en importancia, siendo los Grand Slam los de mayor jerarquía. 
-Utiliza un sistema de defensa de puntos que fué variando con los años. En aquella epoca, la defensa se hacia por año. Es decir, los puntos realizados durante un año, se defienden al año siguiente. 
-
-Igualmente esto no supone una limitación grave para computar los rankings y comprobar si Guillermo Vilas fue realmente o no 1ro al menos uno de esos años.
-\\
-Existe una relación directa entre sumar puntos y ganar partidos, y es que naturalmente el que más puntos tiene, más partidos ganó, naturalmente.
-Además, dada la naturaleza del comportamiento de page rank, no solo importa a cuantos contrincantes derrotó un participante dado, si no a quienes derrotó. Ésta es la primera consideración a tener en cuenta y una carta a favor que será utilizada por el algoritmo. Dado que no disponemos del sistema de puntuación real y no sabemos a priori cuantos partidos jugó exactamente cada participante, es escencial que además de la puntuación que definamos por cada partido, un jugador obtenga un extra por el rango del rival derrotado. Esto mismo se puede interpretar como que ese jugador ganó un partido importante, dado que los partidos importantes son los de instancias decisivas (cuartos, semifinales o una final), y generalmente, al que solo llegan los mejores jugadores.    
-\\
-Dadas estas consideraciones podemos definir un sistema de puntos con el que poder computar partidos. El mismo es muy sencillo. 3 puntos al ganador y 1 punto al perdedor. Solo utilizaremos el ranking de fin de año, totalizando por los puntos acumulados en el mismo, obteniendo así 3 rankings por cada año.
-\\
-Veremos luego en la experimentación, como este sistema resuelve el cálculo de los rankings de manera apropiada y explicaremos que es lo que sucede en cada año computado observando algunos detalles importantes y comparandolos con los rankings oficiales de la ATP para luego concluir si Vilas fue o no, nuevamente, 1ro entre 1975 y 1977.
- 		 				
 \subsection{Representacion del grafo}
 
 Ya hemos demostrado las condiciones necesarias para poder obtener el autovector asociado al autovalor dominante de una matriz de Markov. 
@@ -194,8 +127,6 @@ Pone las entradas no nulas de las filas de la matriz en posiciones de memoria co
 
 Veamos con un ejemplo como seria la representacion:
 \\\\
-
-
 $\hspace{3.2cm}\begin{pmatrix} 0 & 0 & 0 & 0 \\ 5 & 8 & 0 & 0 \\ 0 & 0 & 3 & 0 \\ 0 & 6 & 0 & 0 \\ \end{pmatrix}$
 \\\\
 Es una matrix de 4x4 con 4 entradas no nulas. Luego:
@@ -203,51 +134,51 @@ Es una matrix de 4x4 con 4 entradas no nulas. Luego:
    $val$  = [ 5 8 3 6 ]
    $row\_ptr$ = [ 0 0 2 3 4 ]
    $col\_ind$ = [ 0 1 2 1 ]
-   
 
 \begin{itemize}
 \item Compressed Sparse Column ($CSC$)
 La idea es analoga a $CSR$, pero la compresion se hace por columnas es decir, si $CSR$ comprime $A$, $CSC$ comprime $A^t$  
 \end{itemize}
 
-
 Sobre la matriz definida para $CSR$, con $CSC$ obtenemos lo siguiente
-
 
    $val$  = [ 5 8 6 3 ]
    $col\_ptr$ = [ 0 1 3 4 4 ]   
    $row\_ind$ = [ 1 1 2 3 ]
-
 
 Todos los resultados anteriores permiten evitar representar valores nulos.	
 El motivo de nuestra elección se debe a que $CSR$ ofrece una buena representación de las filas de la matriz y es más eficiente a la hora de hacer operaciones del tipo A*x (matriz-vector) que es lo que nos interesa en el método de la potencia que realiza pageRank. $CSC$ en cambio, es efectiva para el producto x*A (vector-matriz) dado que la misma ofrece una mejor representación de las columnas. En contra partida, tanto $CSR$ como $CSC$, no permiten construcción incremental aleatoria, que si ofrece $DOK$, es decir, que cambios a la esparsidad de la matriz son costosos. En general están pensadas para ser estáticas, pero esto no es un inconveniente en nuestro caso, dado que no se realizaran cambios en la esparsidad de la matriz durante el proceso.
 
 En el presente trabajo utilizaremos la idea de Kamvar et al. \cite[Algoritmo 1]{Kamvar2003} para el calculo del autovector valiendonos de nuestra estructura de representación elegida y compararemos los resultados con el algoritmo standard para mostrar que al final de cuentas, si el sistema es muy grande y esparso, puede resultar muy beneficioso en terminos de complejidad espacial y temporal.
 
-\subsection{Computo: Método de la Potencia (MAURO)}
+\subsection{Computo: Método de la Potencia}
 
-\subsubsection{Eliminacion Gausiana}
+ Habiendo definido la matriz de transiciones como la matriz $P_2$ de la sección anterior, debemos hallar el vector de relevancias $x$ que define en $x_j$ la relevancia de la $j-esima$ pagina $\forall 0 \leq j \leq n$. Debido a la definición recursiva de este vector, $x$ debe satisfacer que $P_2x=x$ o lo que es equivalente, que $x$ sea un autovector asociado al autovalor 1 (i.e $x \in V_1(P_2)$). Para este tipo de problemas es que contamos con el método de la potencia, un algortimo iterativo que nos devuelve una aproximación lineal al $x$ deseado. 
 
-Antes de introduciir el metodo de la potencia, en principio podriamos querer calcular este autovector utilizando el metodo de elimnacion gausiana. Sin embargo, de ser posible seria de orden cubico... blah blh blah
+\iffalse
+  Como ya hemos visto por las proposiciones anteriores, dado que $P_2$ es una matriz positiva y estocástica por columnas, la $dim(V_1(P_2))$ es 1 y su autovector asociado posee todas sus componentes de igual signo.   
 
-Esta seccion solo la pongo para que la consideres. Se podra hacer eliminacion gausiana con pivoteo para (P-I)x = 0? Igual si es posible es de orden cubico, con la web de millones de paginas se te va al carajo. Es solo para enriquecer la discusion.
+\textbf{LO SIGUIENTE ES PARA MAURO. HACELO EN TE RO (SI ENTERO), NO SEAS PAJERO. QUIERO LA SECCION BIEN COMPLETA CON LOS PUNTOS OPCIONALES, SOLO TENES QUE HACER ESTO. IMAGINATE QUE YO ME MORFE ESCRIBIR TODO.}
+
+La pregunta mas importante del trabajo, dado la matriz de transiciones $P$ que garantiza la existencia y unicidad del autovector de norma 1 asociado al autovalor 1, como lo computamos?
+\fi
 
 \subsubsection{Correctitud}
 
+
+La idea detras de este algoritmo consiste en generar a partir de un vector inicial $x_0$, una secuencia $x_k = \frac{P_2x_{k-1}}{||P_2x_{k-1}||}$ que aproxime al autovector $q$ (en nuestro caso el vector $x$ de relevancias) asociado al autovalor 1. Siguiendo esta propuesta elegimos nuestro $x_0$ de manera que satifaga que todas sus componetes sean positivas y $||x_0||_1 = 1$, definiendolo además como $x_0 = q + v$, en donde $q$ es el único vector unitario que satisface que $q \in V_1(P_2)$ y que posee todas sus componentes positivas; y $v$ siendo un vector tal que la suma de sus componentes sea 0. De esta menera, dado que $P_2$ es una matriz positiva y estocástica por columnas, y $x_0$ un vector unitario con todas sus componentes también positivas, resulta que $P_2x_0$ también es un vector unitario con todas sus componentes positivas. Esto nos facilita la secuencia de la siguiente forma $x_k = P_2x_{k-1} = P_2^kx_0$, pues desde un principio $x_1 = P_2x_0$ ($||P_2x_0||=1$); luego $x_k = P_2^kx_0 = P_2^kq + P_2^kv = q + P_2^kv \implies P_2^kv = P_2^kx_0 - q$. Ahora bien, por la desigualdad de la proposición 2.4, $||P_2^kx_0 - q||_1 = ||P_2^kv||_1 \leq \alpha^k||v||_1$, haciendo tender $k\to\infty$, $\alpha\to 0$, de lo que se deduce que $P_2^kx_0 - q\to 0$ o equivalentemente $P_2^kx_0 \to q$, es decir al $x$ buscado. 
+
+\iffalse
 La idea básicamente es generar la secuencia $x_k = Px_{k-1}$ y tomar $k\to\infty$. Se puede probar que para este caso no importa el valor inicial que asignemos a la secuencia $x_0$, el vector converge al autovector asociado al mayor autovalor de P. Se puede probar que todo autovalor $\lambda$ de $P$ satisface que $|\lambda| < 1$.
 
 Otra propiedad interesante es que el método de la potencia va a converger de forma asintotica siguiendo $\norm{Px_k - q}_1 \approx |\lambda_2| \norm{x-q}_1$ donde $\lambda_2$ es el segundo autovalor mas grande de P. \textbf{Mauro revisa esto y fijate si sirve y se puede hacer algún criterio de parada copado.}
-
-\subsubsection{Valor Inicial}
-
-Elijo uno uniforme (todos con la misma relevancia y norma 1), o uno bien contra las esquinas (obvio que no)? Con esto hay que experimentar un cachito igual.
-
-\subsubsection{Criterio de Parada}
-
-Diferencias entre normas 1 o hay algo mejor?
+\fi
 
 \subsubsection{Complejidad}
 
+En cuanto a complejidad temporal es evidente que el costo del algoritmo radica en cuantas operaciones elementales nos conlleva calcular $P_2^kx$, en especial si se requiere realizar una gran cantidad de iteraciones. Recordando como la definimos, $P_2 = cP_1 + (1-c)E$ donde $E$ es la matriz con todos sus elementos iguales a $\frac{1}{n}$ y $P_1$ es una matriz positiva y estocástica por columnas, de lo que podemos concluir que todos los elementos de $P_2$ son estrictamente positivos (si $c\in(0.1)$). Esta conclusión no es muy alentadora, pues sólo tener que hacer $P_2x$ tiene una complejidad espacial y temporal de $\Theta(n^2)$. No obstante, sabiendo que $||x||_1=1$, resulta que $P_2x = (cP_1 + (1-c)E)x = cP_1x + (1-c)Ex = cP_1x + (1-c)e$ en donde $e$ ahora es un vector con todos sus elementos iguales a $\frac{1}{n}$, luego la atención se concentra en el costo de $P_1x$. Esta última matriz ya no sólo no tiene todos sus elementos estrictamente positivos, sino que suele tratarse de una matriz esparsa, ahorrandonos varias multiplicaciones (las que corresponderian a los elementos iguales a cero) aventajando en velocidad a la anterior situación; a su ves podremos aprovechar la redundancia de ceros para utilizar alguna estructura más eficiente a la hora de almacenar la matriz de la actual iteración. En conclusión dandonos una complejidad temporal total de \order{k*n^2}, pero un caso promedio notablemente menor.
+
+\iffalse
 Cual es la complejidad? Discutir que para deportes mucho no importa, pero para paginas web si.
 
 \subsubsection{Otras propiedades}
@@ -264,3 +195,4 @@ Sin embargo, en Kamvar et al. se propone una forma alternativa de computar la se
 \item Demostrar que los pasos del Algoritmo 1 propuesto en Kamvar et a. son correctos y computan $P_2x$.
 \item Establecer una relacion con la proporción entre $\lambda_1 = 1$  y $|\lambda_2|$ para la convergencia de PageRank.
 \end{itemize}
+\fi
