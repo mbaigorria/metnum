@@ -1,0 +1,46 @@
+\subsection{Computo: Método de la Potencia}
+
+ Habiendo definido la matriz de transiciones como la matriz $P_2$ de la sección anterior, debemos hallar el vector de relevancias $x$ que define en $x_j$ la relevancia de la $j-esima$ pagina $\forall 0 \leq j \leq n$. Debido a la definición recursiva de este vector, $x$ debe satisfacer que $P_2x=x$ o lo que es equivalente, que $x$ sea un autovector asociado al autovalor 1 (i.e $x \in V_1(P_2)$). Para este tipo de problemas es que contamos con el método de la potencia, un algortimo iterativo que nos devuelve una aproximación lineal al $x$ deseado. 
+
+\iffalse
+  Como ya hemos visto por las proposiciones anteriores, dado que $P_2$ es una matriz positiva y estocástica por columnas, la $dim(V_1(P_2))$ es 1 y su autovector asociado posee todas sus componentes de igual signo.   
+
+\textbf{LO SIGUIENTE ES PARA MAURO. HACELO EN TE RO (SI ENTERO), NO SEAS PAJERO. QUIERO LA SECCION BIEN COMPLETA CON LOS PUNTOS OPCIONALES, SOLO TENES QUE HACER ESTO. IMAGINATE QUE YO ME MORFE ESCRIBIR TODO.}
+
+La pregunta mas importante del trabajo, dado la matriz de transiciones $P$ que garantiza la existencia y unicidad del autovector de norma 1 asociado al autovalor 1, como lo computamos?
+\fi
+
+\subsubsection{Correctitud}
+
+
+La idea detras de este algoritmo consiste en generar a partir de un vector inicial $x_0$, una secuencia $x_k = \frac{P_2x_{k-1}}{||P_2x_{k-1}||}$ que aproxime al autovector $q$ (en nuestro caso el vector $x$ de relevancias) asociado al autovalor 1. Siguiendo esta propuesta elegimos nuestro $x_0$ de manera que satifaga que todas sus componetes sean positivas y $||x_0||_1 = 1$, definiendolo además como $x_0 = q + v$, en donde $q$ es el único vector unitario que satisface que $q \in V_1(P_2)$ y que posee todas sus componentes positivas; y $v$ siendo un vector tal que la suma de sus componentes sea 0. De esta menera, dado que $P_2$ es una matriz positiva y estocástica por columnas, y $x_0$ un vector unitario con todas sus componentes también positivas, resulta que $P_2x_0$ también es un vector unitario con todas sus componentes positivas. Esto nos facilita la secuencia de la siguiente forma $x_k = P_2x_{k-1} = P_2^kx_0$, pues desde un principio $x_1 = P_2x_0$ ($||P_2x_0||=1$); luego $x_k = P_2^kx_0 = P_2^kq + P_2^kv = q + P_2^kv \implies P_2^kv = P_2^kx_0 - q$. Ahora bien, por la desigualdad de la proposición 2.4, $||P_2^kx_0 - q||_1 = ||P_2^kv||_1 \leq \alpha^k||v||_1$, haciendo tender $k\to\infty$, $\alpha\to 0$, de lo que se deduce que $P_2^kx_0 - q\to 0$ o equivalentemente $P_2^kx_0 \to q$, es decir al $x$ buscado. 
+
+\iffalse
+La idea básicamente es generar la secuencia $x_k = Px_{k-1}$ y tomar $k\to\infty$. Se puede probar que para este caso no importa el valor inicial que asignemos a la secuencia $x_0$, el vector converge al autovector asociado al mayor autovalor de P. Se puede probar que todo autovalor $\lambda$ de $P$ satisface que $|\lambda| < 1$.
+
+Otra propiedad interesante es que el método de la potencia va a converger de forma asintotica siguiendo $\norm{Px_k - q}_1 \approx |\lambda_2| \norm{x-q}_1$ donde $\lambda_2$ es el segundo autovalor mas grande de P. \textbf{Mauro revisa esto y fijate si sirve y se puede hacer algún criterio de parada copado.}
+\fi
+
+\subsubsection{Complejidad}
+
+En cuanto a complejidad temporal es evidente que el costo del algoritmo radica en cuantas operaciones elementales nos conlleva calcular $P_2^kx$, en especial si se requiere realizar una gran cantidad de iteraciones. Recordando como la definimos, $P_2 = cP_1 + (1-c)E$ donde $E$ es la matriz con todos sus elementos iguales a $\frac{1}{n}$ y $P_1$ es una matriz positiva y estocástica por columnas, de lo que podemos concluir que todos los elementos de $P_2$ son estrictamente positivos (si $c\in(0.1)$). Esta conclusión no es muy alentadora, pues sólo tener que hacer $P_2x$ tiene una complejidad espacial y temporal de $\Theta(n^2)$. No obstante, sabiendo que $||x||_1=1$, resulta que $P_2x = (cP_1 + (1-c)E)x = cP_1x + (1-c)Ex = cP_1x + (1-c)e$ en donde $e$ ahora es un vector con todos sus elementos iguales a $\frac{1}{n}$, luego la atención se concentra en el costo de $P_1x$. Esta última matriz ya no sólo no tiene todos sus elementos estrictamente positivos, sino que suele tratarse de una matriz esparsa, ahorrandonos varias multiplicaciones (las que corresponderian a los elementos iguales a cero) aventajando en velocidad a la anterior situación; a su ves podremos aprovechar la redundancia de ceros para utilizar alguna estructura más eficiente a la hora de almacenar la matriz de la actual iteración. En conclusión dandonos una complejidad temporal total de \order{k*n^2}, pero un caso promedio notablemente menor.
+
+\iffalse
+Cual es la complejidad? Discutir que para deportes mucho no importa, pero para paginas web si.
+
+\subsubsection{Otras propiedades}
+
+Mirar esto antes de resolver lo siguiente...
+
+Sin embargo, en Kamvar et al. se propone una forma alternativa de computar la secuencia. Este resultado debe ser utilizado para mejorar el almacenamiento de los datos. Esta relacionado con el punto de representacion del grafo esto? Ni idea.
+
+... seguir
+
+\textbf{LO SIGUIENTE ES PARA MAURO. HACELO, NO SEAS PAJERO. SI, TE LO DIGO DENUEVO PORQUE SE QUE LO VAS A TRATAR DE EVITAR. NO TE PEDI MUCHO. ESTO ES PARA EL FINAL IGUAL, CUANDO YA TERMINASTE TODO LO DE ARRIBA.}
+
+\begin{itemize}
+\item Demostrar que los pasos del Algoritmo 1 propuesto en Kamvar et a. son correctos y computan $P_2x$.
+\item Establecer una relacion con la proporción entre $\lambda_1 = 1$  y $|\lambda_2|$ para la convergencia de PageRank.
+\end{itemize}
+\fi
+

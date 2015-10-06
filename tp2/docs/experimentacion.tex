@@ -22,64 +22,113 @@ Se puede manipular entonces o no? Agarra, en el eje x pone cantidad de sitios we
 Empezemos con el apartado que seguro el lector más esperaba de todo el t.p..Vilas fue o no 1ro entre 1975 y 1977? Esta pregunta podemos contestarla. Pero previo a esto, necesitamos poner al lector al tanto de la situación. Empecemos viendo el ranking oficial de la época.
 
 
-Entre 1975 y 1976 Vilas logró apenas las semifinales en Roland Garros y cuartos de final en el US Open del 1975 y el tercer puesto en Wimbledon de 1976.
+En 1975, Vilas llegó a la primera final de un Grand Slam, el Roland Garros, en donde fue derrotado por el sueco Björn Borg por 2-6 3-6 4-6
+y cuartos de final de Wimbledon.
 
 
 Este es el top 10 para 1975 segun la ATP, donde Guillermo Vilas se hubica 2do:
 
 \begin{eqnarray*}
-173 & Jimmy Connors \\
-127 & Guillermo Vilas \\
-34 & Bjorn Borg \\
-19 & Arthur Ashe \\
-225 & Manuel Orantes \\
-210 & Ken Rosewall \\
-144 & Ilie Nastase \\
-180 & John Alexander \\
-318 & Roscoe Tanner \\
-309 & Rod Laver 
+173 & Jimmy & Connors \\
+127 & Guillermo & Vilas \\
+34 & Bjorn & Borg \\
+19 & Arthur & Ashe \\
+225 & Manuel & Orantes \\
+210 & Ken & Rosewall \\
+144 & Ilie & Nastase \\
+180 & John & Alexander \\
+318 & Roscoe & Tanner \\
+309 & Rod & Laver 
 \end{eqnarray*}
-
-(el numero a la izquierda representa el id del jugador ese año)\\
-
 
 En 1976 la ATP hubica a Vilas 6to dentro del top 10:
 
 \begin{eqnarray*}
-173 & Jimmy Connors \\
-34 & Bjorn Borg \\
-144 & Ilie Nastase \\
-225 & Manuel Orantes \\
-288 & Raul Ramirez \\
-127 & Guillermo Vilas \\
-1 & Adriano Panatta \\
-134 & Harold Solomon \\
-87 & Eddie Dibbs \\
-41 & Brian Gottfried 
+173 & Jimmy & Connors \\
+34 & Bjorn & Borg \\
+144 & Ilie & Nastase \\
+225 & Manuel & Orantes \\
+288 & Raul & Ramirez \\
+127 & Guillermo & Vilas \\
+1 & Adriano & Panatta \\
+134 & Harold & Solomon \\
+87 & Eddie & Dibbs \\
+41 & Brian & Gottfried 
 \end{eqnarray*}
 
-En 1977 Vilas conquistó 17 torneos (récord todavía vigente), se consagró en Roland Garros y el US Open, fue finalista de Australia, logró una seguidilla de 50 partidos consecutivos sin conocer la derrota y, durante esos doce meses, ganó 145 de los 159 encuentros que jugó (91,1\%) hubicandose como 2do en el ranking de la ATP de finales de ese año.
+En 1977 Vilas conquistó 17 torneos (récord todavía vigente), se consagró en Roland Garros frente a Brian Gottfried por 6-0 6-3 6-0 y el US Open frente a Jimmy Connors por 2-6 6-3 7-6 6-0, fue finalista de Australia donde cayó frente a Roscoe Tanner por 3-6 3-6 3-6, logró una seguidilla de 50 partidos consecutivos sin conocer la derrota y, durante esos doce meses, ganó 145 de los 159 encuentros que jugó (91,1\%) hubicandose como 2do en el ranking de la ATP de finales de ese año.
 Según el ranking de la ATP, el mejor del año fue el norteamericano Jimmy Connors, batido por Vilas en la final del US Open (detalle a tener en cuenta), que en ese 1977 no obtuvo ningún torneo de Grand Slam y ganó ocho torneos, menos de la mitad de los logrados por Vilas.  
-
 
 Veamos el top 10 oficial para este año:
 
 \begin{eqnarray*}
-173 & Jimmy Connors \\
-127 & Guillermo Vilas \\
-34 & Bjorn Borg \\
-371 & Vitas Gerulaitis \\
-41 & Brian Gottfried \\
-87 & Eddie Dibbs \\
-225 & Manuel Orantes \\
-288 & Raul Ramirez \\
-144 & Ilie Nastase \\
-81 & Dick Stockton 
+173 & Jimmy & Connors \\
+127 & Guillermo & Vilas \\
+34 & Bjorn & Borg \\
+371 & Vitas & Gerulaitis \\
+41 & Brian & Gottfried \\
+87 & Eddie & Dibbs \\
+225 & Manuel & Orantes \\
+288 & Raul & Ramirez \\
+144 & Ilie & Nastase \\
+81 & Dick & Stockton 
 \end{eqnarray*}
 
 Todos los años tienen como lider indiscutido al estadounidense Jimmy Connors.
 
 \subsubsection{Ranking ATP oficial vs. Ranking PageRank vs. Sort por diferencia de victorias/derrotas}
+
+Introducimos aquí un algoritmo de rankeo con un criterio de ordenamiento basado en victorias/derrotas Además, si hay empate, define por diferencia de puntos, pero para el caso de tenis y como esta definido el sistema de puntos del mismo no tiene ninguna relevancia. Solo nos servirá para poder hacer un análisis cualitativo de las virtudes de pagerank sobre algoritmos más básicos.
+
+Veamos que obtuvimos en cada año con este algoritmo, empezando por 1975:
+
+\begin{eqnarray*}
+19 & 96 & 18 \\
+225 & 90  & 20 \\
+127 & 86 & 18 \\
+173 & 79 & 11 \\
+144 & 88 & 22 \\
+34 & 82 & 17 \\
+288 & 70 & 28 \\
+180 & 65 & 23 \\
+318 & 64 & 24 \\
+155 & 60 & 21 \\
+\end{eqnarray*}
+
+Podemos ver que Vilas no aparece segundo, si no tercero. Connors fue desplazado al 4to lugar y en primer lugar aparece Arthur Ashe quien ocupaba el lugar que Connors ocupa ahora. Podemos ver varios cambios relacionados al top 10 oficial. Todos ellos particularmente relacionados al hecho de que como se habia anticipado la cantidad de victorias sobre derrotas conformaria otro ranking diferente en el cual no importa exactamente que clase de victorias a conseguido o derrotas sufrido un determinado participante. Podemos ver que Vilas con más victorias sobre derrotas que Connors, se encontraba por debajo de él en el ranking oficial. Esto se debe al sistema de puntos manejados por el ATP donde se suma más puntaje cuanto mas avancemos en un torneo y cuantas más finales ganemos y por la jerarquía de ese torneo. 
+
+Observemos el ranking de 1976:
+
+\begin{eqnarray*}
+173 & 86 & 9 \\
+127 & 83 & 20 \\
+144 & 73 & 15 \\
+288 & 91 & 33 \\
+225 & 76 & 19 \\
+87 & 83 & 28 \\
+34 & 57 & 12 \\
+318 & 71 & 27 \\
+380 & 75 & 32 \\
+134 & 70 & 27 \\
+\end{eqnarray*}
+
+
+Vemos que Vilas avanzó del 6to lugar al 2do puesto!! que era ocupado por una bestia como Bjorn Borg y que fue desplazado al 7mo. Si analizamos un poco los partidos veremos que Vilas fué derrotado por Bjorn Borg 3 veces (Winbledon, Dallas WCT, Sao Paulo WCT) mientras que Vilas nunca pudo derrotarlo, Contra Connors se enfrentó una vez y fue derrotado (US Open) al igual que Bjorn Borg que se enfrentó en 3 ocaciones y cayó en la misma cantidad...esto nuevamente es un indicador de que determinadas victorias son más importantes que otras.
+
+Veamos que sucede en 1977:
+
+\begin{eqnarray*}
+127 126 14 
+41 105 22 
+34 71 8 
+173 69 15 
+87 77 28 
+371 60 15 
+225 65 25 
+134 64 27 
+288 61 24 
+380 66 30 
+\end{eqnarray*}
 
 
 ...humo humo humo. mostrar que vilas en 1975 y 1976 no le gano a nadie groso y por eso no esta primero, eso en consecuencia es que perdio en instancias mas o menos decisivas contra esos rivales grosos y por eso mantiene un lugar alto en el ranking..ademas todos ellos le ganaron a muchos que a su vez le ganaron muchos. 
