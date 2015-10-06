@@ -2,10 +2,39 @@
 
 \subsection{PageRank}
 \subsubsection{Complejidad}
-tiempo de computo en funcion de size del grafo, eje x, cantidad de sitios web, eje y, tiempo en ms a convergencia.
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.7]{images/complejidad.pdf}
+\caption{Tiempos de ejecución según cantidad de webs.}
+\label{timePageRank}
+\end{figure}
 
 \subsubsection{Casos Patologicos}
 Caso particular chiquito, pagina 3. Fijate el parrafo que arranca en A simple apprroach...... y despues This approach ignores that... La idea es armar el mismo grafo y mostrar el mismo ejemplo jaja
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.7]{images/drawing.pdf}
+\caption{Caso de estudio}
+\label{casoEst}
+\end{figure}
+
+\begin{table}[]
+\centering
+\caption{My caption}
+\label{my-label}
+\begin{tabular}{lll}
+\hline
+Nro. Web & PageRank & Por grado \\ \hline
+1        & 0.164204 & 3         \\
+2        & 0.172456 & 2         \\
+3        & 0.237500 & 2         \\
+4        & 0.172456 & 2         \\
+5        & 0.098296 & 1         \\
+6        &          & 2         \\ \hline
+\end{tabular}
+\end{table}
 
 \subsection{Paginas Web}
 
