@@ -47,63 +47,42 @@ void saveResultBasicSort(FILE * pFile, vector<matchesStats>& data);
 //utils
 double uniform_rand(double a, double b);
 
-const int number_line = 3;
-
 int main(int argc, char** argv) {
 
-	if (argc < 6) {
-		printf("Usage: %s algorithm: 0 (pageRank) 1 (alternative) / teletransportation probability / instance type: 0 (web pages) 1 (deportes) / input file / tolerance / result (optional)\n", argv[0]);
+	if (argc < 3) {
+		printf("Usage %s: parametros.in salida.out \n", argv[0]);
 		return 0;
 	}
 	
-	ifstream inputFile(argv[4]);
+	ifstream inputFile(argv[1]);
 
 	if (!inputFile.good()) {
-		printf("Non-existant input file.\n");
+		printf("can't open input file.\n");
 		return 0;
 	}
 
-    FILE * pFile = NULL;
-    
-    if (argc == 7) {
-        pFile = fopen(argv[6],"w");
-        if (pFile == NULL){
-            printf("can't open output file.\n");
-            return 0;
-        }
+    FILE * outputFile = NULL;
+     
+    outputFile = fopen(argv[2],"w");
+    if (outputFile == NULL){
+        printf("can't open output file.\n");
+        return 0;
     }
-    
-    cout << "alg: " << (*argv[1] - '0') << endl;
-	int alg = (int) (*argv[1] - '0');
-	if (alg != 0 && alg != 1) {
-		printf("Error: Invalid algorithm.\n");
-		return 0;
-	}
 	
-	cout << "c: " << atof(argv[2]) << endl;
-	double c = (double) atof(argv[2]);
-	if (c <= 0 || c > 1) {
-		printf("Error: Invalid teletransportation probability.\n");
-		return 0;
-	}
+	int alg = 0;
+	double c = 0;
+	int inst = 0;
+	double e = 0;
+	char testFileName[100];
 	
-	cout << "inst: " << (*argv[3] - '0') << endl;
-	int inst = (int) (*argv[3] - '0');
-	if (inst != 0 && inst != 1) {
-		printf("Error: Invalid instance type.\n");
-		return 0;
-	}
-
-	cout << "tolerance: " << atof(argv[5]) << endl;
-	double e = (double) atof(argv[5]);
-	if (e <= 0 || e > 1) {
-		printf("Error: Invalid tolerance.\n");
-		return 0;
-	}
-		  
-  	string line;
+	string line;
 	getline(inputFile, line);
 
+	sscanf(line.c_str(),"%d %lf %d %s %lf", &alg, &c, &inst, testFileName, &e);
+			
+	ifstream testFile(testFileName);
+	getline(testFile, line);	  
+  	
     if (inst == 0){
         int nodes = 0;
         int edges = 0;
@@ -125,7 +104,7 @@ int main(int argc, char** argv) {
                 int node_from = 0;
                 int node_to = 0;
                 
-	            getline(inputFile, line);
+	            getline(testFile, line);
 	            sscanf(line.c_str(),"%d %d", &node_from, &node_to);
 	            //cout << "node_from: " << node_from << " node_to: " << node_to << endl;
 	            
@@ -139,10 +118,8 @@ int main(int argc, char** argv) {
  
            cout <<  "page rank result: \n" << endl;           
            res.printMatrix();
-             
-            if (argc == 7) {
-                saveResultPageRank(pFile, res);
-            } 
+
+           saveResultPageRank(outputFile, res);
         }else{
             // group algorithm webs
            vector<dataNode> nodesCount(nodes);
@@ -159,7 +136,7 @@ int main(int argc, char** argv) {
                 int node_from = 0;
                 int node_to = 0;
                 
-	            getline(inputFile, line);
+	            getline(testFile, line);
 	            sscanf(line.c_str(),"%d %d", &node_from, &node_to);
 	            //cout << "node_from: " << node_from << " node_to: " << node_to << endl;
 	            
@@ -173,10 +150,8 @@ int main(int argc, char** argv) {
            }
            
            in_deg(nodesCount);
-           
-           if (argc == 7) {
-                saveResultInDeg(pFile, nodesCount);
-           }
+
+           saveResultInDeg(outputFile, nodesCount);
         }
     }else{
         int teams = 0;
@@ -203,7 +178,7 @@ int main(int argc, char** argv) {
         
            int i = 0;           
            while(i < matches){
-	            getline(inputFile, line);
+	            getline(testFile, line);
 	            sscanf(line.c_str(),"%d %d %d %d %d", &day, &local, &local_score, &visitor, &visitor_score);
 	            
 	            int abs_score = abs(local_score-visitor_score);
@@ -223,9 +198,7 @@ int main(int argc, char** argv) {
            cout <<  "gem result: \n" << endl; 
            res.printMatrix();
            
-           if (argc == 7) {
-               saveResultPageRank(pFile, res);
-           }
+           saveResultPageRank(outputFile, res);
         }else{
             // group algorithm sports
             vector<matchesStats> stats(teams);
@@ -242,7 +215,7 @@ int main(int argc, char** argv) {
 
             int i = 0;           
             while(i < matches){
-                getline(inputFile, line);
+                getline(testFile, line);
                 sscanf(line.c_str(),"%d %d %d %d %d", &day, &local, &local_score, &visitor, &visitor_score);
 
                 matchesStats localStats = stats[local-1];
@@ -268,16 +241,16 @@ int main(int argc, char** argv) {
             }
             
             basic_sort(stats);
-            
-            if (argc == 7) {
-                saveResultBasicSort(pFile, stats);
-            }
+
+            saveResultBasicSort(outputFile, stats);
         }
     }
     
+    testFile.close();
+    
     inputFile.close();
 
-	if (pFile != NULL) fclose(pFile);
+	if (outputFile != NULL) fclose(outputFile);
     
     //M.printMatrix();
     
