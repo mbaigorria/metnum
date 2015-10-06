@@ -110,10 +110,7 @@ H = \Bigg\{
   $w_{ij} / \sum\limits_{k=1}^n A^t_{kj} $ si hay un link de $j$ a $k$ \\
   0 en cualquier otro caso 
   \end{tabular}
-\\\\
 
-(Cabe destacar que en el paper de Govan et al. hay un error de tipeo y la division se define como  $1 / \sum\limits_{k=1}^n A^t_{kj}$)
-\\\\
 Luego definimos G a la matriz resultante de:
 \\\\
 G = $\alpha$($A^t$ + $au^t$) + $(1 - \alpha)ev^t$
@@ -125,7 +122,7 @@ El vector que contendrá los puntajes de cada equipo será un $\pi$ tal que:
 G$\pi$ = $\pi$ 
 \\\\
 Cada entrada $H_{ij}$ de H se puede interpretar como la probabilidad de que el participante $j$ pierda contra el participante $i$. Para los participantes invictos un simple ajuste que se propone es elegir un vector $u$ donde todas las entradas son $1/n$. Esto significa cambiar la probabilidad de los invictos a que puedan perder contra cualquiera de los otros participantes (incluido si mismo) con probabilidad uniforme.
-El modelo básico utiliza $\alpha$ de la misma forma que en PageRank y $v^t$ como vector de personalización del sistema. Una simple elección puede ser $v$ = $(1/n)e$. Aunque $v$ ofrece mucha mas flexibilidad. Podría usarse con el resultado de un ranking previo, aumentando así las probabilidades de que cierto participante gane el presente torneo.
+El modelo básico utiliza $\alpha$ de la misma forma que en PageRank y $v^t$ como vector de personalización del sistema. Una simple elección puede ser $v$ = $(1/n)e$. Aunque $v$ ofrece mucha mas flexibilidad. Podría usarse con el resultado estadistico de un ranking previo, aumentando así las probabilidades de que cierto participante gane el presente torneo.
 La elección del $\alpha$ determina la importancia de la matriz de personalización $ev^t$. Una buena elección en el calculo de $\alpha$ podría ser la que se menciona en la siguiente investigación de microsoft research: \href{http://research.microsoft.com/apps/pubs/default.aspx?id=118374}{
 Tracking the random surfer: Empirically measured teleportation parameters in PageRank} del cual mencionaremos la siguiente abstracción:
 
