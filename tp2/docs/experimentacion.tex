@@ -2,47 +2,18 @@
 
 \subsection{PageRank}
 \subsubsection{Complejidad}
-
-\begin{figure}[h]
-\centering
-\includegraphics[scale=0.7]{images/complejidad.pdf}
-\caption{Tiempos de ejecución según cantidad de webs.}
-\label{timePageRank}
-\end{figure}
+tiempo de computo en funcion de size del grafo, eje x, cantidad de sitios web, eje y, tiempo en ms a convergencia.
 
 \subsubsection{Casos Patologicos}
-Caso particular chiquito, pagina 3. Fijate el parrafo que arranca en A simple apprroach...... y despues This approach ignores that... La idea es armar el mismo grafo y mostrar el mismo ejemplo jaja
+Caso particular chiquito, página 3. Fijate el parrafo que arranca en A simple apprroach...... y despues This approach ignores that... La idea es armar el mismo grafo y mostrar el mismo ejemplo jaja
 
-\begin{figure}[h]
-\centering
-\includegraphics[scale=0.7]{images/drawing.pdf}
-\caption{Caso de estudio}
-\label{casoEst}
-\end{figure}
-
-\begin{table}[]
-\centering
-\caption{My caption}
-\label{my-label}
-\begin{tabular}{lll}
-\hline
-Nro. Web & PageRank & Por grado \\ \hline
-1        & 0.164204 & 3         \\
-2        & 0.172456 & 2         \\
-3        & 0.237500 & 2         \\
-4        & 0.172456 & 2         \\
-5        & 0.098296 & 1         \\
-6        &          & 2         \\ \hline
-\end{tabular}
-\end{table}
-
-\subsection{Paginas Web}
+\subsection{páginas Web}
 
 \subsubsection{Comparacion PageRank vs In-Deg (RODRI)}
 Comparar solo los rankings, nada de complejidad. Podes mencionar que In-Deg usa un algoritmo \order{n \times log(n)}, pero nada mas. Comparar top 10 con los dos y discutir diferenciias.
 
 \subsubsection{Manipulacion}
-Pagina 5, ejercicio 1. La idea es que plantees un caso de un tipo que quiere manipular el ranking, mostra que aunque agregues miles de nuevas paginas apuntando no podes hacer demasiado, hacelo en funcion de la cantidad de paginas que agregas?
+página 5, ejercicio 1. La idea es que plantees un caso de un tipo que quiere manipular el ranking, mostra que aunque agregues miles de nuevas páginas apuntando no podes hacer demasiado, hacelo en funcion de la cantidad de páginas que agregas?
 
 Se puede manipular entonces o no? Agarra, en el eje x pone cantidad de sitios web que apuntan solamente al sitio u que le quiero subir el ranking, y en el eje y el ranking de ese sitio. Fijate que aumenta, y fijate si podes hacer algun tipo de curva de nivel con c (cuanto mayor c, mas manipulable es la cosa). Citar el paper de Sergei y Brin, que dicen que hacen promedios de muchas cosas en la practica para evitar este problema. Usan muchos criterios promediados.
 
@@ -249,12 +220,12 @@ probar relevancia a medida que cambias ese valor = 0.85, creo que c.
 
 Citar paper de google, que usan 0.85. Discutir que si c es uno, ignoras la estructura del grafo al hacer el ranking, todos rankean igual.
 
-Pagina 6.... This is the ultimately egalitarian case: the only... blah. La idea es jugar con c aca, como dije arriba. Es un buen exp, hay que pensar bien como graficarlo y que quede lindo, creo que es facil.
+página 6.... This is the ultimately egalitarian case: the only... blah. La idea es jugar con c aca, como dije arriba. Es un buen exp, hay que pensar bien como graficarlo y que quede lindo, creo que es facil.
 
 \subsection{Metodo de la Potencia}
 
 \subsubsection{Representacion de la Matriz de Transicion (RODRI/FEDE)}
-Este experimento lo pueden hacer directo o usando al PageRank. Si pueden, implementen todas las representaciones de matrices y luego comparen el tiempo de computo del producto N veces. Comparen la matriz normal vs el resto. Discutan que en paginas web la cantidad de vertices del grafo se va al carajo, pero para deportes es super acotada, asi que la eleccion de estructura no afecta tanto.
+Este experimento lo pueden hacer directo o usando al PageRank. Si pueden, implementen todas las representaciones de matrices y luego comparen el tiempo de computo del producto N veces. Comparen la matriz normal vs el resto. Discutan que en páginas web la cantidad de vertices del grafo se va al carajo, pero para deportes es super acotada, asi que la eleccion de estructura no afecta tanto.
 
 Aca podes argumentar que lo que domina al metodo de la potencia es la cantidad de productos, asi que no hace falta probar PageRank directo. Igual si queres metelo con pagerank de una, a fin de cuentas es lo mismo.
 
