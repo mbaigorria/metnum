@@ -1,8 +1,10 @@
 \section{PageRank}
 
-\subsection{Modelado para páginas web}
+\subsection{La motivación original: páginas web}
 
 El algoritmo PageRank fue ideado en un principio para buscar una medida de relevancia con el objetivo de ordenar consultas sobre el grafo de la web. El mismo explota la estructura de este grafo, y como veremos mas adelante luego de explicar la idea general del algoritmo, se calcula buscando el autovector de norma unitaria que resuelve un sistema de la forma $Px = x$ con $P\in \mathbb{R}^{n \times n}$, es decir, el autovector asociado al autovalor 1. A su vez, existen dos interpretaciones equivalentes de este modelo, que serán expuestas a continuación.
+
+\subsubsection{Modelado}
 
 El problema se modela a partir de un grafo $G(Web,Links)$ donde $Web$ es el conjunto de sitios web y $Links$ es la cantidad de conexiones entre sitios. Consideremos que toda página web $u \in Web$ esta representada por un vértice y la relación entre páginas por un link con una arista. Una representación posible del grafo es mediante matrices de adyacencia. Definimos la matriz de adyacencia o conectividad $W \in \{0,1\}^{n \times n}$ de forma tal que $w_{ij} = 1$ si la página $j$ tiene un link a la página $i$ y $w_{ij} = 0$ en caso contrario. Por lo tanto, la cantidad de páginas a las que la página $u$ apunta ($d_{out}(u)$) se puede calcular como $n_j = \sum_{i=1}^{n} w_{ij}$.
 
@@ -90,7 +92,9 @@ Por lo tanto, ya probamos la existencia del autovector de norma 1 asociado al au
 Sea M una matriz real de n x n positiva y estocástica por columnas, y V el subespacio de $\mathbb{R}^n$ que consiste de aquellos vectores v tales que la suma de sus componentes sea 0, entonces $Mv \in V$ y $||Mv||_1 \leq \alpha||v||_1$ donde $\alpha = max_{1 \leq j \leq n}|1 - 2min_{1 \leq i \leq n}| < 1$.
 \end{proposition}
 
-\subsection{Modelado para Tenis}
+\subsection{Tenis}
+
+\subsubsection{Modelado}
 
 El modelo GeM es un método de rankeo basado en PageRank para rankear equipos en ligas deportivas planteado por Govan et al. en "Generalizing Google's PageRank to Rank National Football League Teams" \cite{Govan2008}. Utilizaremos el mismo para analizar los rankings del ATP entre 1975 y 1977.
 A continuación explicaremos como los autores modelan la matriz de transiciones que utiliza el algoritmo. Antes de comenzar con las definiciones, vale aclarar que para mantener la consistencia de la notación utilizada en este paper trabajaremos sobre la transpuesta de la matriz que se usa en el paper de Govan et al.
