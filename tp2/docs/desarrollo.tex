@@ -129,22 +129,22 @@ Veamos con un ejemplo como seria la representacion:
 \\\\
 $\hspace{3.2cm}\begin{pmatrix} 0 & 0 & 0 & 0 \\ 5 & 8 & 0 & 0 \\ 0 & 0 & 3 & 0 \\ 0 & 6 & 0 & 0 \\ \end{pmatrix}$
 \\\\
-Es una matrix de 4x4 con 4 entradas no nulas. Luego:
-
-   $val$  = [ 5 8 3 6 ]
-   $row\_ptr$ = [ 0 0 2 3 4 ]
-   $col\_ind$ = [ 0 1 2 1 ]
+Es una matrix de 4x4 con 4 entradas no nulas. Luego:\\
+   
+   $val$  = [ 5 8 3 6 ] \\
+   $row\_ptr$ = [ 0 0 2 3 4 ] \\
+   $col\_ind$ = [ 0 1 2 1 ] \\
 
 \begin{itemize}
 \item Compressed Sparse Column ($CSC$)
 La idea es analoga a $CSR$, pero la compresion se hace por columnas es decir, si $CSR$ comprime $A$, $CSC$ comprime $A^t$  
 \end{itemize}
 
-Sobre la matriz definida para $CSR$, con $CSC$ obtenemos lo siguiente
+Sobre la matriz definida para $CSR$, con $CSC$ obtenemos lo siguiente: \\
 
-   $val$  = [ 5 8 6 3 ]
-   $col\_ptr$ = [ 0 1 3 4 4 ]   
-   $row\_ind$ = [ 1 1 2 3 ]
+   $val$  = [ 5 8 6 3 ] \\
+   $col\_ptr$ = [ 0 1 3 4 4 ] \\   
+   $row\_ind$ = [ 1 1 2 3 ] \\
 
 Todos los resultados anteriores permiten evitar representar valores nulos.	
 El motivo de nuestra elección se debe a que $CSR$ ofrece una buena representación de las filas de la matriz y es más eficiente a la hora de hacer operaciones del tipo A*x (matriz-vector) que es lo que nos interesa en el método de la potencia que realiza pageRank. $CSC$ en cambio, es efectiva para el producto x*A (vector-matriz) dado que la misma ofrece una mejor representación de las columnas. En contra partida, tanto $CSR$ como $CSC$, no permiten construcción incremental aleatoria, que si ofrece $DOK$, es decir, que cambios a la esparsidad de la matriz son costosos. En general están pensadas para ser estáticas, pero esto no es un inconveniente en nuestro caso, dado que no se realizaran cambios en la esparsidad de la matriz durante el proceso.
