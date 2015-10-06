@@ -70,6 +70,10 @@ P_2 & = & cP_1 + (1-c)E,
 
 Notar que en caso de tener $c=1$, estamos en la matriz de transición sin teletransportación. Por otro lado, si $c=0$ estamos en el caso donde solo hay teletransportación y no importa la estructura del grafo de la web al momento de calcular el ranking.
 
+Notar que la elección de este parámetro $c$ no es trivial. En general, este parámetro se calcula haciendo análisis empíricos sobre los datos de navegadores y toolbars. Un trabajo interesante sobre este tema es el de Constantine et al. de Microsoft Research, donde utilizando los registros del toolbar de Internet Explorer y un modelo basado en la distribución Beta generalizan la matriz de transiciones para poder modelar un parámetro de teletransportación variable \cite{TeleParam}. Para este trabajo, simplemente utilizaremos la elección original constante del trabajo de Page \& Brin \cite{Brin1998} y fijaremos $\alpha = 0.85$.
+
+\pagebreak
+
 Esta nueva matriz de transición, dado que es estocástica por columnas y no tiene \texttt{dangling nodes}, nos garantiza que la dimension del autoespacio generado por el autovector de autovalor 1 es unitaria. Solo nos falta mostrar que todo autovector tiene todos sus elementos del mismo signo. Es facil probar la siguiente proposicion:
 
 \begin{proposition}
@@ -88,112 +92,81 @@ Sea M una matriz real de n x n positiva y estocástica por columnas, y V el sube
 
 \subsection{Modelado para Tenis}
 
-El modelo GeM Ranking Method presente en el paper de Govan et al. plantea un método alternativo para rankear ligas deportivas. Utilizaremos el mismo para analizar los rankings del ATP entre 1975 y 1977. El algoritmo está motivado en el PageRank de Page y Brin, pero con unos ligeros retoques para adaptarlo a torneos y competencias.
-En lo que sigue, explicaremos como se construye la matriz de transiciones que utiliza el algoritmo, pero antes de comenzar con las definiciones, vale aclarar que para mantener la homogeneidad haremos esta definición sobre la transpuesta de la matriz que se usa en el paper de Govan et al.
+El modelo GeM es un método de rankeo basado en PageRank para rankear equipos en ligas deportivas planteado por Govan et al. en "Generalizing Google's PageRank to Rank National Football League Teams" \cite{Govan2008}. Utilizaremos el mismo para analizar los rankings del ATP entre 1975 y 1977.
+A continuación explicaremos como los autores modelan la matriz de transiciones que utiliza el algoritmo. Antes de comenzar con las definiciones, vale aclarar que para mantener la consistencia de la notación utilizada en este paper trabajaremos sobre la transpuesta de la matriz que se usa en el paper de Govan et al.
 
-Se representa una temporada como un grafo directo con $n$ nodos. Cada nodo representa un participante o equipo y cada partido entre dos participantes representa una arista desde el perdedor al ganador igual a la diferencia positiva de los puntos obtenidos por cada participante en el partido.
+Se representa una temporada como un grafo dirigido con $n$ nodos. Cada nodo representa un participante o equipo y cada partido entre dos participantes representa una arista desde el perdedor al ganador igual a la diferencia de puntos obtenidos por cada participante en el partido.
 
-La matriz $A^t$ de adyacencias queda definida de la siguiente manera: 
-\\\\
-$A^t$ = \Bigg\{
+La matriz $A^t$ de adyacencias queda definida de la siguiente manera, donde cada $w_{ij}$ representa la diferencia positiva del puntaje de cada participante en ese enfrentamiento.
+
+\begin{equation}
+A^t = \Bigg\{
   \begin{tabular}{ccc}
   $w_{ij}$ si el participante $j$ pierde con el participante $i$ \\
-  0 en cualquier otro caso 
+  $0$ en cualquier otro caso 
   \end{tabular}
-\\\\
-Donde cada $w_{ij}$ representa la diferencia positiva del puntaje de cada participante en ese enfrentamiento. En caso de que un equipo pierda mas de una vez en el mismo torneo, será la suma de las diferencias de cada partido entre $i$ y $j$. Esta es la mayor generalización en cuanto a PageRank.
+\end{equation}
+
+En caso de que un equipo pierda mas de una vez en el mismo torneo, será la suma de las diferencias de cada partido entre $i$ y $j$. Esta es la mayor generalización en cuanto a PageRank.
 
 Luego se define la matriz H de la siguiente forma:
-\\\\
+\begin{equation}
 H = \Bigg\{
   \begin{tabular}{ccc}
   $w_{ij} / \sum\limits_{k=1}^n A^t_{kj} $ si hay un link de $j$ a $k$ \\
   0 en cualquier otro caso 
   \end{tabular}
+\end{equation}
 
-Luego definimos G a la matriz resultante de:
-\\\\
-G = $\alpha$($A^t$ + $au^t$) + $(1 - \alpha)ev^t$
-\\\\
-Donde 0 $< \alpha < 1$, v es un vector de probabilidades, a es tal que $a_i$ es 1 si la fila $j$ de H es 0 y $a_i$ es 0 en cualquier otro caso y u sea un vector de probabilidad de $n$ x $1$. e se define como un vector fila con todas sus entradas igual a 1.
-\\\\
-El vector que contendrá los puntajes de cada equipo será un $\pi$ tal que:
-\\\\
-G$\pi$ = $\pi$ 
-\\\\
+Finalmente definimos G a la matriz resultante de:
+
+\begin{equation}
+G = \alpha(A^t + au^t) + (1 - \alpha)ev^t
+\end{equation}
+
+Donde 0 $< \alpha < 1$, v es un vector de probabilidades, a es tal que $a_i$ es 1 si la fila $j$ de H es 0 y $a_i$ es 0 en cualquier otro caso y u sea un vector de probabilidad de $n$ x $1$. e se define como un vector fila con todas sus entradas igual a 1. Luego, el vector que contendrá los puntajes de cada equipo será un $\pi$ tal que: G$\pi$ = $\pi$.
+
 Cada entrada $H_{ij}$ de H se puede interpretar como la probabilidad de que el participante $j$ pierda contra el participante $i$. Para los participantes invictos un simple ajuste que se propone es elegir un vector $u$ donde todas las entradas son $1/n$. Esto significa cambiar la probabilidad de los invictos a que puedan perder contra cualquiera de los otros participantes (incluido si mismo) con probabilidad uniforme.
 El modelo básico utiliza $\alpha$ de la misma forma que en PageRank y $v^t$ como vector de personalización del sistema. Una simple elección puede ser $v$ = $(1/n)e$. Aunque $v$ ofrece mucha mas flexibilidad. Podría usarse con el resultado estadistico de un ranking previo, aumentando así las probabilidades de que cierto participante gane el presente torneo.
-La elección del $\alpha$ determina la importancia de la matriz de personalización $ev^t$. Una buena elección en el calculo de $\alpha$ podría ser la que se menciona en la siguiente investigación de microsoft research: \href{http://research.microsoft.com/apps/pubs/default.aspx?id=118374}{
-Tracking the random surfer: Empirically measured teleportation parameters in PageRank} del cual mencionaremos la siguiente abstracción:
-
-\begin{verbatim}
-PageRank computes the importance of each page in a directed graph under a random
-surfer model governed by a teleportation parameter. Commonly denoted alpha, 
-this parameter models the probability of following an edge inside the graph or, 
-when the graph comes from a network of web pages and links, clicking a link on a 
-web page. We empirically measure the teleportation parameter based on browser 
-toolbar logs and a click trail analysis. For a particular user or machine, 
-such analysis produces a value of alpha. We find that these values nicely fit a 
-Beta distribution with mean edge-following probability between 0.3 and 0.7, 
-depending on the site. Using these distributions, we compute PageRank scores 
-where PageRank is computed with respect to a distribution as the teleportation 
-parameter, rather than a constant teleportation parameter. These new metrics are 
-evaluated on the graph of pages in Wikipedia.
-\end{verbatim}
-
-Igualmente en nuestro caso computaremos los rankings con un $\alpha$ de 0.85 que es el utilizado en Govan et al. y que a su vez fue el standard de Google en sus comienzos.	 
+La elección del $\alpha$ determina la importancia de la matriz de personalización $ev^t$. A diferencia del caso de las paginas web, la elección de este parámetro puede ser difícil de medir empíricamente y en ultima instancia debe ser elegida por el organizador del torneo. En nuestro caso, decidimos elegir $\alpha = 0.85$.	 
 
 \subsubsection{Sistema de puntos y consideraciones}
 
-Para procesar los rankings, obtuvimos todos los partidos realizados entre 1975 y 1977 de todas las competencias a nivel internacional de tenis que sirven para clasificar al ATP. (Australian Open, Indianapolis, Roma, Roland Garros, US Open, Wimbledon, Davis Cup, y muchos más) junto con los rankings de cada año. Uno a mitad de año y otro a finales de año. 
-\\
+Para procesar los rankings, obtuvimos todos los partidos realizados entre 1975 y 1977 de todas las competencias a nivel internacional de tenis que sirven para clasificar al ATP \footnote{Los datos los obtuvimos de https://github.com/JeffSackmann/tennis\_atp, un repositorio con todos los rankings historicos de la ATP. La veracidad de los mismos es discutible, pero fue lo mejor que conseguimos dado que los investigadores que contactamos no nos quisierorn proveer los datos: \say{Lamentablemente, toda esa información está hoy en pleno ida y vuelta legal con la ATP y no puedo bajo ningún concepto filtrarla.}}. (Australian Open, Indianapolis, Roma, Roland Garros, US Open, Wimbledon, Davis Cup, y muchos más) junto con los rankings de cada año. Uno a mitad de año y otro a finales de año. 
+
 Los datos están completos a nivel enfrentamientos y participantes, pero carecen de los puntajes que cada jugador obtuvo por cada partido ganado, por avanzar de ronda y/o ganar un torneo.
-Esta es una parte importante a aclarar del sistema de rankings de la ATP. Se obtienen puntos por cada partido ganado, ronda superada y torneo ganado, los cuales además varian por torneo en importancia, siendo los Grand Slam los de mayor jerarquía. 
-Utiliza un sistema de defensa de puntos que fué variando con los años. En aquella epoca, la defensa se hacia por año. Es decir, los puntos realizados durante un año, se defienden al año siguiente. 
+Esta es una parte importante a aclarar del sistema de rankings de la ATP. Se obtienen puntos por cada partido ganado, ronda superada y torneo ganado, los cuales además varían por torneo en importancia, siendo los Grand Slam los de mayor jerarquía. 
+Utiliza un sistema de defensa de puntos que fue variando con los años. En aquella época, la defensa se hacia por año. Es decir, los puntos realizados durante un año, se defienden al año siguiente. 
 
-Igualmente esto no supone una limitación grave para computar los rankings y comprobar si Guillermo Vilas fue realmente o no 1ro al menos uno de esos años.
-\\
-Existe una relación directa entre sumar puntos y ganar partidos, y es que naturalmente el que más puntos tiene, más partidos ganó, naturalmente.
-Además, dada la naturaleza del comportamiento de page rank, no solo importa a cuantos contrincantes derrotó un participante dado, si no a quienes derrotó. Ésta es la primera consideración a tener en cuenta y una carta a favor que será utilizada por el algoritmo. Dado que no disponemos del sistema de puntuación real y no sabemos a priori cuantos partidos jugó exactamente cada participante, es escencial que además de la puntuación que definamos por cada partido, un jugador obtenga un extra por el rango del rival derrotado. Esto mismo se puede interpretar como que ese jugador ganó un partido importante, dado que los partidos importantes son los de instancias decisivas (cuartos, semifinales o una final), y generalmente, al que solo llegan los mejores jugadores.    
-\\
+Igualmente esto no supone una limitación grave para computar los rankings y comprobar si Guillermo Vilas fue realmente o no 1ro en al menos uno de esos años.
+
+Existe una relación directa entre sumar puntos y ganar partidos, y es que naturalmente el que más puntos tiene, más partidos ganó.
+
+Además, dada la naturaleza del comportamiento de page rank, no solo importa a cuantos contrincantes derrotó un participante dado, si no a quienes derrotó. Ésta es la primera consideración a tener en cuenta y una carta a favor que será utilizada por el algoritmo. Dado que no disponemos del sistema de puntuación real y no sabemos a priori cuantos partidos jugó exactamente cada participante, es esencial que además de la puntuación que definamos por cada partido, un jugador obtenga un extra por el rango del rival derrotado. Esto mismo se puede interpretar como que ese jugador ganó un partido importante, dado que los partidos importantes son los de instancias decisivas (cuartos, semifinales o una final), y generalmente, al que solo llegan los mejores jugadores.    
+
 Dadas estas consideraciones podemos definir un sistema de puntos con el que poder computar partidos. El mismo es muy sencillo. 3 puntos al ganador y 1 punto al perdedor.
- Solo utilizaremos el ranking de fin de año, totalizando por los puntos acumulados en el mismo, obteniendo así 3 rankings por cada año.
-\\
-Veremos luego en la experimentación, como este sistema resuelve el cálculo de los rankings de manera apropiada y explicaremos que es lo que sucede en cada año computado observando algunos detalles importantes y comparandolos con los rankings oficiales de la ATP para luego concluir si Vilas fue o no, nuevamente, 1ro entre 1975 y 1977.
 
-\subsection{Eliminacion Gausiana}
+Solo utilizaremos el ranking de fin de año, totalizando por los puntos acumulados en el mismo, obteniendo así 3 rankings por cada año.
+ 
+Veremos luego en la experimentación, como este sistema resuelve el cálculo de los rankings de manera apropiada y explicaremos que es lo que sucede en cada año computado observando algunos detalles importantes y comparándolos con los rankings oficiales de la ATP para luego concluir si Vilas fue o no, nuevamente, 1ro entre 1975 y 1977.
 
-Esta seccion solo la pongo para que la consideres. Se podra hacer eliminacion gausiana con pivoteo para (P-I)x = 0? Igual si es posible es de orden cubico, con la web de millones de páginas se te va al carajo. Es solo para enriquecer la discusion.
-
-\subsection{Representacion del grafo}
+\subsection{Representación del grafo}
 
 Ya hemos demostrado las condiciones necesarias para poder obtener el autovector asociado al autovalor dominante de una matriz de Markov. 
-Ahora debemos proceder a calcular el mismo. Para esto, tenemos que tener en cuenta las cualidades del sistema y el método de resolución del algoritmo. Recordemos que en general, el grafo que representa la web tenderá a ser desconexo y muy grande, es decir, que podrán existir dos o mas rankings diferentes. Por lo tanto la matriz 
+Ahora debemos proceder a calcular el mismo. Para esto, tenemos que tener en cuenta las cualidades del sistema y el método de resolución del algoritmo. Recordemos que en general, el grafo que representa la web tenderá a ser disconexo y muy grande, es decir, que podrán existir dos o mas rankings diferentes. Por lo tanto la matriz 
 de transiciones puede ser muy esparsa e inclusive puede suceder que una página no tenga links de salida, dando lugar a dangling nodes. Para solucionar estos inconvenientes, con lo visto anteriormente disponemos de dos soluciones. Para los dangling nodes, la solución consiste en sumar una columna con probabilidad 1/n a la columna de ceros, esto en si, se puede interpretar como la probalidad de navegación aleatoria que previamente describimos. Aunque con esto no solucionamos el problema de la esparsidad de la matriz en si y el de poder tener mas de un ranking diferente. Para esto último, se agregó la matriz de probabilidad de teletransportación.
 
 Dada esta definición, la matriz de transiciones resultante no es esparsa. 
 Para sistemas muy grandes, esto puede resultar contraproducente a la hora de obtener el autovector asociado, dado que la complejidad espacial y temporal aumenta  considerablemente con la cantidad de información representada en la matriz. Sin embargo existe un resultado que podremos utilizar para mejorar la eficiencia del algoritmo en términos de complejidad temporal y espacial. El mismo se basa en la idea de Kamvar et al. \cite[Algoritmo 1]{Kamvar2003} para el calculo del autovector. Este resultado nos permite utilizar la matriz original de transiciones sin modificar en lo absoluto, pero si cambiando su representación, valiendonos de una buena estructura para almacenar las entradas de la misma. 
 
-Las cualidades de la matriz hacen que sea razonable intentar pensar en una forma de representar solo las entradas que no sean ceros, y dado que la matriz suele ser esparsa, la misma contendrá muchos ceros que podrían no ser representados. Para esto optamos por una de entre las 3 siguientes estructuras de representación:
+Las cualidades de la matriz hacen que sea razonable intentar pensar en una forma de representar solo las entradas que no sean ceros, y dado que la matriz suele ser esparsa, la misma contendrá muchos ceros que podrían no ser representados. Para esto optamos por una entre las 3 siguientes estructuras de representación:
 
-\begin{itemize}
-\item Dictionary of Keys ($DOK$)
+\subsubsection{Dictionary of Keys ($DOK$)}
 
-\item Compressed Sparse Row ($CSR$)
-
-\item Compressed Sparse Column ($CSC$)
-\end{itemize}
-
-De todas estas representaciones posibles, para este t.p optamos por $CSR$. Aún así no haremos una elección sin una justificación apropiada del porque consideramos que es la mejor para nuestro trabajo, dado que como en toda estructura de datos, siempre existen pros y contras. Nos encargaremos en lo que sigue de exponer estos detalles para dejar en claro nuestro punto de vista. 
-
-\begin{itemize}
-\item Dictionary of Keys ($DOK$)
-\end{itemize}
 Consiste en un diccionario que mapea pares de fila-columa a la entrada. No se representan las entradas nulas. El formato es bueno para gradualmente construir una matriz esparsa en orden aleatorio, pero pobre para iterar sobre valores distintos de cero en orden lexicográfico. Uno construye típicamente una matriz en este formato y luego se convierte en otro formato más eficiente para su procesamiento.
 
-\begin{itemize}
-\item Compressed Sparse Row ($CSR$)
-\end{itemize}
+\subsubsection{Compressed Sparse Row ($CSR$)}
+
 Pone las entradas no nulas de las filas de la matriz en posiciones de memoria contiguas. Suponiendo que tenemos una matriz dispersa no simétrica, creamos vectores: uno para los números de punto flotante ($val$), y los otros dos para enteros ($col\_ind$, $row\_ptr$). El vector $val$ almacena los valores de los elementos distintos de cero de la matriz, de izquierda a derecha y de arriba hacia abajo. El vector $col\_ind$ almacena los índices de columna de los elementos en el vector $val$. Es decir, si $val(k) = a_ij$ entonces $col\_ind(k) = j$. El vector $row\_ptr$ almacena los lugares en el vector $val$ que comienza y termina una fila, es decir, si $val(k) = a_ij$ entonces $row_ptr(i) \leq k \leq row\_ptr(i+1)$. Por convención, se define $row\_ptr(n+1) = nnz$, en donde $nnz$ es el número de entradas no nulas en la matriz. Los ahorros de almacenamiento de este enfoque es significativo. En lugar de almacenar elementos $n^2$, solamente necesitamos $2nnz + n$ lugares de almacenamiento.
 
 Veamos con un ejemplo como seria la representacion:
@@ -206,10 +179,9 @@ Es una matrix de 4x4 con 4 entradas no nulas. Luego:\\
    $row\_ptr$ = [ 0 0 2 3 4 ] \\
    $col\_ind$ = [ 0 1 2 1 ] \\
 
-\begin{itemize}
-\item Compressed Sparse Column ($CSC$)
-La idea es analoga a $CSR$, pero la compresion se hace por columnas es decir, si $CSR$ comprime $A$, $CSC$ comprime $A^t$  
-\end{itemize}
+\subsubsection{Compressed Sparse Column ($CSC$)}
+
+La idea es análoga a $CSR$, pero la compresión se hace por columnas es decir, si $CSR$ comprime $A$, $CSC$ comprime $A^t$  
 
 Sobre la matriz definida para $CSR$, con $CSC$ obtenemos lo siguiente: \\
 
@@ -218,6 +190,9 @@ Sobre la matriz definida para $CSR$, con $CSC$ obtenemos lo siguiente: \\
    $row\_ind$ = [ 1 1 2 3 ] \\
 
 Todos los resultados anteriores permiten evitar representar valores nulos.	
-El motivo de nuestra elección se debe a que $CSR$ ofrece una buena representación de las filas de la matriz y es más eficiente a la hora de hacer operaciones del tipo A*x (matriz-vector) que es lo que nos interesa en el método de la potencia que realiza pageRank. $CSC$ en cambio, es efectiva para el producto x*A (vector-matriz) dado que la misma ofrece una mejor representación de las columnas. En contra partida, tanto $CSR$ como $CSC$, no permiten construcción incremental aleatoria, que si ofrece $DOK$, es decir, que cambios a la esparsidad de la matriz son costosos. En general están pensadas para ser estáticas, pero esto no es un inconveniente en nuestro caso, dado que no se realizaran cambios en la esparsidad de la matriz durante el proceso.
+El motivo de nuestra elección se debe a que $CSR$ ofrece una buena representación de las filas de la matriz y es más eficiente a la hora de hacer operaciones del tipo A*x (matriz-vector) que es lo que nos interesa en el método de la potencia que realiza PageRank. $CSC$ en cambio, es efectiva para el producto x*A (vector-matriz) dado que la misma ofrece una mejor representación de las columnas. En contra partida, tanto $CSR$ como $CSC$, no permiten construcción incremental aleatoria, que si ofrece $DOK$, es decir, que cambios a la esparsidad de la matriz son costosos. En general están pensadas para ser estáticas, pero esto no es un inconveniente en nuestro caso, dado que no se realizaran cambios en la esparsidad de la matriz durante el proceso.
 
-En el presente trabajo utilizaremos la idea de Kamvar et al. \cite[Algoritmo 1]{Kamvar2003} para el calculo del autovector valiendonos de nuestra estructura de representación elegida y compararemos los resultados con el algoritmo standard para mostrar que al final de cuentas, si el sistema es muy grande y esparso, puede resultar muy beneficioso en terminos de complejidad espacial y temporal.
+En el presente trabajo utilizaremos la idea de Kamvar et al. \cite[Algoritmo 1]{Kamvar2003} para el calculo del autovector valiendonos de nuestra estructura de representación elegida y compararemos los resultados con el algoritmo estandar para mostrar que al final de cuentas, si el sistema es muy grande y esparso, puede resultar muy beneficioso en términos de complejidad espacial y temporal.
+
+\subsubsection{Elección de estructura}
+De todas estas representaciones posibles, para este TP optamos por $CSR$. Aún así no haremos una elección sin una justificación apropiada del porque consideramos que es la mejor para nuestro trabajo, dado que como en toda estructura de datos, siempre existen pros y contras. Nos encargaremos en lo que sigue de exponer estos detalles para dejar en claro nuestro punto de vista. 
