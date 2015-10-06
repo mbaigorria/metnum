@@ -88,7 +88,80 @@ Sea M una matriz real de n x n positiva y estocástica por columnas, y V el sube
 
 \subsection{Modelado para Tenis}
 
-Hacer referencia al paper de Govan et al. Explicar existencia y unicidad haciendo referencia a las pruebas de modelado de paginas web.
+El modelo GeM Ranking Method presente en el paper de Govan et al. plantea un método alternativo para rankear ligas deportivas. Utilizaremos el mismo para analizar los rankings del ATP entre 1975 y 1977. El algoritmo está motivado en el PageRank de Page y Brin, pero con unos ligeros retoques para adaptarlo a torneos y competencias.
+En lo que sigue, explicaremos como se construye la matriz de transiciones que utiliza el algoritmo, pero antes de comenzar con las definiciones, vale aclarar que para mantener la homogeneidad haremos esta definición sobre la transpuesta de la matriz que se usa en el paper de Govan et al.
+
+Se representa una temporada como un grafo directo con $n$ nodos. Cada nodo representa un participante o equipo y cada partido entre dos participantes representa una arista desde el perdedor al ganador igual a la diferencia positiva de los puntos obtenidos por cada participante en el partido.
+
+La matriz $A^t$ de adyacencias queda definida de la siguiente manera: 
+\\\\
+$A^t$ = \Bigg\{
+  \begin{tabular}{ccc}
+  $w_{ij}$ si el participante $j$ pierde con el participante $i$ \\
+  0 en cualquier otro caso 
+  \end{tabular}
+\\\\
+Donde cada $w_{ij}$ representa la diferencia positiva del puntaje de cada participante en ese enfrentamiento. En caso de que un equipo pierda mas de una vez en el mismo torneo, será la suma de las diferencias de cada partido entre $i$ y $j$. Esta es la mayor generalización en cuanto a PageRank.
+
+Luego se define la matriz H de la siguiente forma:
+\\\\
+H = \Bigg\{
+  \begin{tabular}{ccc}
+  $w_{ij} / \sum\limits_{k=1}^n A^t_{kj} $ si hay un link de $j$ a $k$ \\
+  0 en cualquier otro caso 
+  \end{tabular}
+\\\\
+
+(Cabe destacar que en el paper de Govan et al. hay un error de tipeo y la division se define como  $1 / \sum\limits_{k=1}^n A^t_{kj}$)
+\\\\
+Luego definimos G a la matriz resultante de:
+\\\\
+G = $\alpha$($A^t$ + $au^t$) + $(1 - \alpha)ev^t$
+\\\\
+Donde 0 $< \alpha < 1$, v es un vector de probabilidades, a es tal que $a_i$ es 1 si la fila $j$ de H es 0 y $a_i$ es 0 en cualquier otro caso y u sea un vector de probabilidad de $n$ x $1$. e se define como un vector fila con todas sus entradas igual a 1.
+\\\\
+El vector que contendrá los puntajes de cada equipo será un $\pi$ tal que:
+\\\\
+G$\pi$ = $\pi$ 
+\\\\
+Cada entrada $H_{ij}$ de H se puede interpretar como la probabilidad de que el participante $j$ pierda contra el participante $i$. Para los participantes invictos un simple ajuste que se propone es elegir un vector $u$ donde todas las entradas son $1/n$. Esto significa cambiar la probabilidad de los invictos a que puedan perder contra cualquiera de los otros participantes (incluido si mismo) con probabilidad uniforme.
+El modelo básico utiliza $\alpha$ de la misma forma que en PageRank y $v^t$ como vector de personalización del sistema. Una simple elección puede ser $v$ = $(1/n)e$. Aunque $v$ ofrece mucha mas flexibilidad. Podría usarse con el resultado de un ranking previo, aumentando así las probabilidades de que cierto participante gane el presente torneo.
+La elección del $\alpha$ determina la importancia de la matriz de personalización $ev^t$. Una buena elección en el calculo de $\alpha$ podría ser la que se menciona en la siguiente investigación de microsoft research: \href{http://research.microsoft.com/apps/pubs/default.aspx?id=118374}{
+Tracking the random surfer: Empirically measured teleportation parameters in PageRank} del cual mencionaremos la siguiente abstracción:
+
+\begin{verbatim}
+PageRank computes the importance of each page in a directed graph under a random
+surfer model governed by a teleportation parameter. Commonly denoted alpha, 
+this parameter models the probability of following an edge inside the graph or, 
+when the graph comes from a network of web pages and links, clicking a link on a 
+web page. We empirically measure the teleportation parameter based on browser 
+toolbar logs and a click trail analysis. For a particular user or machine, 
+such analysis produces a value of alpha. We find that these values nicely fit a 
+Beta distribution with mean edge-following probability between 0.3 and 0.7, 
+depending on the site. Using these distributions, we compute PageRank scores 
+where PageRank is computed with respect to a distribution as the teleportation 
+parameter, rather than a constant teleportation parameter. These new metrics are 
+evaluated on the graph of pages in Wikipedia.
+\end{verbatim}
+
+Igualmente en nuestro caso computaremos los rankings con un $\alpha$ de 0.85 que es el utilizado en Govan et al. y que a su vez fue el standard de Google en sus comienzos.	 
+
+\subsubsection{Sistema de puntos y consideraciones}
+
+Para procesar los rankings, obtuvimos todos los partidos realizados entre 1975 y 1977 de todas las competencias a nivel internacional de tenis que sirven para clasificar al ATP. (Australian Open, Indianapolis, Roma, Roland Garros, US Open, Wimbledon, Davis Cup, y muchos más) junto con los rankings de cada año. Uno a mitad de año y otro a finales de año. 
+\\
+Los datos están completos a nivel enfrentamientos y participantes, pero carecen de los puntajes que cada jugador obtuvo por cada partido ganado, por avanzar de ronda y/o ganar un torneo.
+Esta es una parte importante a aclarar del sistema de rankings de la ATP. Se obtienen puntos por cada partido ganado, ronda superada y torneo ganado, los cuales además varian por torneo en importancia, siendo los Grand Slam los de mayor jerarquía. 
+Utiliza un sistema de defensa de puntos que fué variando con los años. En aquella epoca, la defensa se hacia por año. Es decir, los puntos realizados durante un año, se defienden al año siguiente. 
+
+Igualmente esto no supone una limitación grave para computar los rankings y comprobar si Guillermo Vilas fue realmente o no 1ro al menos uno de esos años.
+\\
+Existe una relación directa entre sumar puntos y ganar partidos, y es que naturalmente el que más puntos tiene, más partidos ganó, naturalmente.
+Además, dada la naturaleza del comportamiento de page rank, no solo importa a cuantos contrincantes derrotó un participante dado, si no a quienes derrotó. Ésta es la primera consideración a tener en cuenta y una carta a favor que será utilizada por el algoritmo. Dado que no disponemos del sistema de puntuación real y no sabemos a priori cuantos partidos jugó exactamente cada participante, es escencial que además de la puntuación que definamos por cada partido, un jugador obtenga un extra por el rango del rival derrotado. Esto mismo se puede interpretar como que ese jugador ganó un partido importante, dado que los partidos importantes son los de instancias decisivas (cuartos, semifinales o una final), y generalmente, al que solo llegan los mejores jugadores.    
+\\
+Dadas estas consideraciones podemos definir un sistema de puntos con el que poder computar partidos. El mismo es muy sencillo. 3 puntos al ganador y 1 punto al perdedor. Solo utilizaremos el ranking de fin de año, totalizando por los puntos acumulados en el mismo, obteniendo así 3 rankings por cada año.
+\\
+Veremos luego en la experimentación, como este sistema resuelve el cálculo de los rankings de manera apropiada y explicaremos que es lo que sucede en cada año computado observando algunos detalles importantes y comparandolos con los rankings oficiales de la ATP para luego concluir si Vilas fue o no, nuevamente, 1ro entre 1975 y 1977.
 
 \subsection{Eliminacion Gausiana}
 
