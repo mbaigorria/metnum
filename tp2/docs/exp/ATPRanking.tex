@@ -22,7 +22,7 @@ Este es el top 10 para 1975 segun la ATP, donde Guillermo Vilas se hubica 2do:
 309 & Rod & Laver 
 \end{eqnarray*}
 
-En 1976 la ATP hubica a Vilas 6to dentro del top 10:
+En 1976 la ATP ubica a Vilas 6to dentro del top 10:
 
 \begin{eqnarray*}
 173 & Jimmy & Connors \\
@@ -77,7 +77,7 @@ id & PG & PP \\
 
 Podemos ver que Vilas no aparece segundo, si no tercero. Connors fue desplazado al 4to lugar y en primer lugar aparece Arthur Ashe quien ocupaba el lugar que Connors ocupa ahora. Podemos ver varios cambios relacionados al top 10 oficial. 
 
-Todos ellos particularmente relacionados al hecho de que como se habia anticipado la cantidad de victorias sobre derrotas conformaria otro ranking diferente en el cual no importa exactamente que clase de victorias a conseguido o derrotas sufrido un determinado participante. Podemos ver que Vilas con más victorias sobre derrotas que Connors, se encontraba por debajo de él en el ranking oficial. Esto se debe al sistema de puntos manejados por el ATP donde se suma más puntaje cuanto mas avancemos en un torneo y cuantas más finales ganemos y por la jerarquía de ese torneo. Claramente no alcanza con ganar un solo torneo importante. Debemos tener continuidad y participación.
+Todos ellos particularmente relacionados al hecho de que como se habia anticipado la cantidad de victorias sobre derrotas conformaria otro ranking diferente en el cual no importa exactamente que clase de victorias ha conseguido o derrotas sufrido un determinado participante. Podemos ver que Vilas con más victorias sobre derrotas que Connors, se encontraba por debajo de él en el ranking oficial. Esto se debe al sistema de puntos manejados por el ATP donde se suma más puntaje cuanto mas avancemos en un torneo y cuantas más finales ganemos y por la jerarquía de ese torneo. Claramente no alcanza con ganar un solo torneo importante. Debemos tener continuidad y participación.
 
 Observemos el ranking de 1976:
 
@@ -95,9 +95,7 @@ id & PG & PP \\
 134 & 70 & 27 \\
 \end{eqnarray*}
 
-Vemos que Vilas avanzó del 6to lugar al 2do puesto que era ocupado por  Bjorn Borg y que fue desplazado al 7mo. 
-
-Si analizamos un poco los partidos veremos que Vilas fué derrotado por Bjorn Borg 3 veces (Winbledon, Dallas WCT, Sao Paulo WCT) mientras que Vilas nunca pudo derrotarlo. Contra Connors se enfrentó una vez y fue derrotado (US Open) al igual que Bjorn Borg, que se enfrentó en 3 ocaciones contra Connors y cayó en la misma cantidad...esto nuevamente es un indicador de que determinadas victorias son más importantes que otras.
+Vemos que Vilas avanzó del 6to lugar al 2do puesto que era ocupado por Bjorn Borg, que a su vez, fue desplazado a la 7ma posición. 
 
 Veamos que sucede en 1977:
 
@@ -119,9 +117,7 @@ Ok. Tomemoslo con calma. Vilas aparece primero..pero esto no es indicador absolu
 
 La diferencia de partidos ganados sobre perdidos con respecto a cualquier otro competidor es bastante significativa. Podemos ver que Connors fué desplazado al 4to lugar. Segundo se ubica Brian Gottfried, que durante ese año tuvo un gran desempeño, entre los que se encuentra su victoria sobre Vilas en la final del Roland Garros. 
 
-Todos estos datos nos permiten dar una idea de hacia donde vamos..las posiciones parecen estar relacionadas con el desempeño del competidor durante ese año, es decir, cuantas finales disputó o que tan lejos avanzó en un torneo y a que rivales venció.
-
-A priori..cantidad de victorias está relacionado con cantidad de puntos..pero esto no es una regla general y depende como mencionamos del sistema de puntajes. Para poder asemejar a la relevancia que la ATP le da a los torneos tenemos que utilizar un algoritmo que aproveche esa carácteristica lo mejor posible. Para esto haremos uso del modelo GeM y analizaremos sus resultados. Esperariamos que los mismos se parezcan al ranking oficial con ciertas variaciones, pero como minimo se mantengan los mismos en el top 10 que el ranking oficial. 
+A priori..cantidad de victorias está relacionada con cantidad de puntos..pero esto no es una regla general y depende como mencionamos del sistema de puntajes. Para poder asemejar a la relevancia que la ATP le da a los torneos tenemos que utilizar un algoritmo que aproveche esa carácteristica lo mejor posible. Para esto haremos uso del modelo GeM y analizaremos sus resultados. Esperamos que los mismos se parezcan al ranking oficial, obviamente, con ciertas variaciones.
 
 Utilizaremos los siguientes parámetros para generar los 3 rankings:
 
@@ -152,7 +148,7 @@ Si analizamos los partidos vemos que Ashe se enfrentó en una sola oportunidad a
 
 Borg obtuvo la final de Roland Garros frente a Vilas como máximo logro. 
 
-Mientras tanto Manuel Orantes hizo lo propio para obtener el 3er lugar contra Vilas derrotandolo en las 4 oportunidades que se encontraron y derrotando a Connors en su único enfrentamiento. 
+Mientras tanto Manuel Orantes hizo lo propio para obtener el 3er lugar derrotando a Vilas en las 4 oportunidades que se encontraron y derrotando a Connors en su único enfrentamiento. 
 No es una tarea fácil determinar todas estas congruencias pero con un simple vistazo a los partidos jugados y los torneos en los que se enfrentaron parece claro que el ranking es elocuente.
 
 Veamos el ranking de 1976:
@@ -171,7 +167,8 @@ id & puntaje \\
 1 & 0.014804 \\
 \end{eqnarray*}
 
-No parace haber mucho que analizar con respecto al ranking oficial. Vilas se encuentra una posición mas abajo. Connors sigue siendo lider indiscutido y la otras posiciones relativas no han cambiado demasiado. Podriamos resaltar el caso particular de Borg que no tuvo malos resultados, destacando su final ganada contra Ilie Nastase en Wimbledon, una final perdida en el US Open contra Connors y Cuartos de final en un Roland Garros. Pero si miramos el mismo ranking pero por diferencia de ganados/perdidos veremos que Borg se encuentra casi en la misma posición debido a la poca cantidad de partidos ganados con respecto a los perdidos. 
+No parace haber mucho que analizar con respecto al ranking oficial. Vilas se encuentra una posición más abajo. Connors sigue siendo lider indiscutido y la otras posiciones relativas no han cambiado demasiado. Podriamos resaltar el caso particular de Borg que no tuvo malos resultados durante ese año, destacando su final ganada contra Ilie Nastase en Wimbledon, una final perdida en el US Open contra Connors y Cuartos de final en un Roland Garros. Pero si miramos el mismo ranking pero por diferencia de ganados/perdidos veremos que Borg se encuentra casi en la misma posición debido a la baja diferencia de partidos ganados sobre perdidos.
+
 
 Concluyamos con el análisis de 1977: 
 
