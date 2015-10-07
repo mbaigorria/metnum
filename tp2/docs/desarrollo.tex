@@ -113,7 +113,7 @@ A^t = \Bigg\{
 
 En caso de que un equipo pierda mas de una vez en el mismo torneo, será la suma de las diferencias de cada partido entre $i$ y $j$. Esta es la mayor generalización en cuanto a PageRank.
 
-Luego se define la matriz H de la siguiente forma:
+Luego se define la matriz $H$ de la siguiente forma:
 \begin{equation}
 H = \Bigg\{
   \begin{tabular}{ccc}
@@ -125,14 +125,14 @@ H = \Bigg\{
 Finalmente definimos G a la matriz resultante de:
 
 \begin{equation}
-G = \alpha(A^t + au^t) + (1 - \alpha)ev^t
+G = \alpha(A^t + ua^t) + (1 - \alpha)ev^t
 \end{equation}
 
-Donde 0 $< \alpha < 1$, v es un vector de probabilidades, a es tal que $a_i$ es 1 si la fila $j$ de H es 0 y $a_i$ es 0 en cualquier otro caso y u sea un vector de probabilidad de $n$ x $1$. e se define como un vector fila con todas sus entradas igual a 1. Luego, el vector que contendrá los puntajes de cada equipo será un $\pi$ tal que: G$\pi$ = $\pi$.
+Donde 0 $< \alpha < 1$, $v$ es un vector de probabilidades, $a$ es tal que $a_j$ es 1 si la columna $j$ de $H$ es el vector nulo y $a_j$ es 0 en en cualquier otro caso. $u$ es un vector de probabilidad de $n$ x $1$. $e$ se define como un vector de $n$ x $1$ con todas sus entradas igual a 1. Luego, el vector que contendrá los puntajes de cada equipo será $\pi$ tal que: $G\pi$ = $\pi$.
 
-Cada entrada $H_{ij}$ de H se puede interpretar como la probabilidad de que el participante $j$ pierda contra el participante $i$. Para los participantes invictos un simple ajuste que se propone es elegir un vector $u$ donde todas las entradas son $1/n$. Esto significa cambiar la probabilidad de los invictos a que puedan perder contra cualquiera de los otros participantes (incluido si mismo) con probabilidad uniforme.
-El modelo básico utiliza $\alpha$ de la misma forma que en PageRank y $v^t$ como vector de personalización del sistema. Una simple elección puede ser $v$ = $(1/n)e$. Aunque $v$ ofrece mucha mas flexibilidad. Podría usarse con el resultado estadistico de un ranking previo, aumentando así las probabilidades de que cierto participante gane el presente torneo.
-La elección del $\alpha$ determina la importancia de la matriz de personalización $ev^t$. A diferencia del caso de las paginas web, la elección de este parámetro puede ser difícil de medir empíricamente y en ultima instancia debe ser elegida por el organizador del torneo. En nuestro caso, decidimos elegir $\alpha = 0.85$.	 
+Cada entrada $H_{ij}$ de $H$ se puede interpretar como la probabilidad de que el participante $j$ pierda contra el participante $i$. Para los participantes invictos un simple ajuste que se propone es elegir un vector $u$ donde todas las entradas son $1/n$. Esto significa cambiar la probabilidad de los invictos a que puedan perder contra cualquiera de los otros participantes (incluido si mismo) con probabilidad uniforme.
+El modelo básico utiliza $\alpha$ de la misma forma que en PageRank y $v$ como vector de personalización del sistema. Una simple elección puede ser $v$ = $(1/n)e$. Aunque $v$ ofrece mucha más flexibilidad. Podría usarse con el resultado estadistico de un ranking previo, aumentando así las probabilidades de que cierto participante gane el presente torneo.
+La elección del $\alpha$ determina la importancia de la matriz de personalización $ev^t$. A diferencia del caso de las paginas web, la elección de este parámetro puede ser difícil de medir empíricamente y en última instancia debe ser elegida por el organizador del torneo. En nuestro caso, decidimos elegir $\alpha = 0.85$.	 
 
 \subsubsection{Sistema de puntos y consideraciones}
 
