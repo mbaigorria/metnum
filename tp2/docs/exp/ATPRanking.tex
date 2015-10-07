@@ -1,6 +1,6 @@
 \subsection{Ranking ATP}
 
-Empezemos con el apartado que seguro el lector más esperaba de todo el t.p..Vilas fue o no 1ro entre 1975 y 1977? Esta pregunta podemos contestarla. Pero previo a esto, necesitamos poner al lector al tanto de la situación. Empecemos viendo los rankings oficiales de la época.
+Empezemos con el apartado que seguro el lector más esperaba de todo el trabajo: ¿Vilas fue o no 1ro entre 1975 y 1977? Esta pregunta podemos contestarla. Pero previo a esto, necesitamos poner al lector al tanto de la situación. Empecemos viendo los rankings oficiales de la época.
 
 En 1975, Vilas llegó a la primera final de un Grand Slam, el Roland Garros, en donde fue derrotado por el sueco Björn Borg
 y cuartos de final de Wimbledon.
@@ -9,19 +9,19 @@ Este es el top 10 para 1975 segun la ATP, donde Guillermo Vilas se hubica 2do:
 
 \begin{table}[H]
 \label{my-label}
-\begin{tabular}{ll}
+\begin{tabular}{l}
 \hline
-id  & nombre \\ \hline
-173 & Jimmy Connors \\
-127 & Guillermo Vilas \\
-34  & Bjorn Borg \\
-19  & Arthur Ashe \\
-225 & Manuel Orantes \\
-210 & Ken Rosewall \\
-144 & Ilie Nastase \\
-180 & John Alexander \\
-318 & Roscoe Tanner \\
-309 & Rod Laver \\ \hline
+Nombre \\ \hline
+Jimmy Connors \\
+Guillermo Vilas \\
+Bjorn Borg \\
+Arthur Ashe \\
+Manuel Orantes \\
+Ken Rosewall \\
+Ilie Nastase \\
+John Alexander \\
+Roscoe Tanner \\
+Rod Laver \\ \hline
 \end{tabular}
 \centering
 \caption{Ranking ATP 1975}
@@ -31,19 +31,19 @@ En 1976 la ATP ubica a Vilas 6to dentro del top 10:
 
 \begin{table}[H]
 \label{my-label}
-\begin{tabular}{ll}
+\begin{tabular}{l}
 \hline
-id  & nombre \\ \hline
-173 & Jimmy Connors \\
-34  & Bjorn Borg \\
-144 & Ilie Nastase \\
-225 & Manuel Orantes \\
-288 & Raul Ramirez \\
-127 & Guillermo Vilas \\
-1   & Adriano Panatta \\
-134 & Harold Solomon \\
-87  & Eddie Dibbs \\
-41  & Brian Gottfried \\ \hline 
+Nombre \\ \hline
+Jimmy Connors \\
+Bjorn Borg \\
+Ilie Nastase \\
+Manuel Orantes \\
+Raul Ramirez \\
+Guillermo Vilas \\
+Adriano Panatta \\
+Harold Solomon \\
+Eddie Dibbs \\
+Brian Gottfried \\ \hline 
 \end{tabular}
 \centering
 \caption{Ranking ATP 1976}
@@ -54,19 +54,19 @@ Veamos el top 10 oficial para este año:
 
 \begin{table}[H]
 \label{my-label}
-\begin{tabular}{ll}
+\begin{tabular}{l}
 \hline
-id  & nombre \\ \hline
-173 & Jimmy Connors \\
-127 & Guillermo Vilas \\
-34  & Bjorn Borg \\
-371 & Vitas Gerulaitis \\
-41  & Brian Gottfried \\
-87  & Eddie Dibbs \\
-225 & Manuel Orantes \\
-288 & Raul Ramirez \\
-144 & Ilie Nastase \\
-81  & Dick Stockton \\ \hline 
+Nombre \\ \hline
+Jimmy Connors \\
+Guillermo Vilas \\
+Bjorn Borg \\
+Vitas Gerulaitis \\
+Brian Gottfried \\
+Eddie Dibbs \\
+Manuel Orantes \\
+Raul Ramirez \\
+Ilie Nastase \\
+Dick Stockton \\ \hline 
 \end{tabular}
 \centering
 \caption{Ranking ATP 1977}
@@ -74,7 +74,7 @@ id  & nombre \\ \hline
 
 Todos los años tienen como lider indiscutido al estadounidense Jimmy Connors.
 
-\subsubsection{Ranking ATP oficial vs. Ranking PageRank vs. Sort por diferencia de victorias/derrotas}
+\subsection{Ranking ATP oficial vs. Ranking PageRank vs. Sort por diferencia de victorias/derrotas}
 
 Introducimos aquí un algoritmo de rankeo con un criterio de ordenamiento basado en victorias/derrotas, que además, si hay empate define por diferencia de puntos, aunque para el caso de tenis y por como esta definido el sistema de puntos del mismo no tiene ninguna relevancia. Nos servirá para poder hacer un análisis cualitativo de las virtudes de PageRank sobre algoritmos más básicos y comparar estos resultados con el ranking oficial y poder obtener así alguna conclusión sobre los mótivos principales de la investigación.
 
@@ -84,17 +84,17 @@ Veamos que obtuvimos en cada año con este algoritmo, empezando por 1975:
 \label{my-label}
 \begin{tabular}{lll}
 \hline
-id  & PG & PP \\ \hline
-19  & 96 & 18 \\
-225 & 90 & 20 \\
-127 & 86 & 18 \\
-173 & 79 & 11 \\
-144 & 88 & 22 \\
-34  & 82 & 17 \\
-288 & 70 & 28 \\
-180 & 65 & 23 \\
-318 & 64 & 24 \\
-155 & 60 & 21 \\ \hline 
+Nombre  & PG & PP \\ \hline
+Arthur Ashe & 96 & 18 \\
+Manuel Orantes & 90 & 20 \\
+Guillermo Vilas & 86 & 18 \\
+Jimmy Connors & 79 & 11 \\
+Ilie Nastase & 88 & 22 \\
+Bjorn Borg & 82 & 17 \\
+Raul Ramirez & 70 & 28 \\
+John Alexander & 65 & 23 \\
+Roscoe Tanner & 64 & 24 \\
+Jan Kodes & 60 & 21 \\ \hline 
 \end{tabular}
 \centering
 \caption{Ranking 1975 PG(partidos ganados) / PP(partidos perdidos)}
@@ -110,17 +110,17 @@ Observemos el ranking de 1976:
 \label{my-label}
 \begin{tabular}{lll}
 \hline
-id  & PG & PP \\ \hline
-173 & 86 & 9 \\
-127 & 83 & 20 \\
-144 & 73 & 15 \\
-288 & 91 & 33 \\
-225 & 76 & 19 \\
-87  & 83 & 28 \\
-34  & 57 & 12 \\
-318 & 71 & 27 \\
-380 & 75 & 32 \\
-134 & 70 & 27 \\ \hline 
+Nombre & PG & PP \\ \hline
+Jimmy Connors & 86 & 9 \\
+Guillermo Vilas & 83 & 20 \\
+Ilie Nastase & 73 & 15 \\
+Raul Ramirez & 91 & 33 \\
+Manuel Orantes & 76 & 19 \\
+Eddie Dibbs  & 83 & 28 \\
+Bjorn Borg  & 57 & 12 \\
+Roscoe Tanner & 71 & 27 \\
+Wojtek Fibak & 75 & 32 \\
+Harold Solomon & 70 & 27 \\ \hline 
 \end{tabular}
 \centering
 \caption{Ranking 1976 PG(partidos ganados) / PP(partidos perdidos)}
@@ -134,17 +134,17 @@ Veamos que sucede en 1977:
 \label{my-label}
 \begin{tabular}{lll}
 \hline
-id  & PG & PP \\ \hline
-127 & 126 & 14 \\
-41 & 105 & 22 \\
-34 & 71 & 8 \\
-173 & 69 & 15 \\
-87 & 77 & 28 \\
-371 & 60 & 15 \\
-225 & 65 & 25 \\
-134 & 64 & 27 \\
-288 & 61 & 24 \\
-380 & 66 & 30 \\ \hline 
+Nombre  & PG & PP \\ \hline
+Guillermo Vilas & 126 & 14 \\
+Brian Gottfried & 105 & 22 \\
+Bjorn Borg & 71 & 8 \\
+Jimmy Connors & 69 & 15 \\
+Eddie Dibbs & 77 & 28 \\
+Vitas Gerulaitis & 60 & 15 \\
+Manuel Orantes & 65 & 25 \\
+Horold Solomon & 64 & 27 \\
+Raul Ramirez & 61 & 24 \\
+Wojtek Fibak & 66 & 30 \\ \hline 
 \end{tabular}
 \centering
 \caption{Ranking 1977 PG(partidos ganados) / PP(partidos perdidos)}
@@ -169,17 +169,17 @@ Avancemos sobre los resultados, comenzando con 1975:
 \label{my-label}
 \begin{tabular}{ll}
 \hline
-id  & puntaje \\ \hline
-19  & 0.033172 \\
-34  & 0.030089 \\
-225 & 0.026483 \\
-144 & 0.026254 \\
-127 & 0.023572 \\
-173 & 0.021918 \\
-180 & 0.017379 \\
-318 & 0.015914 \\
-309 & 0.011614 \\
-210 & 0.011055 \\ \hline 
+Nombre  & Puntaje \\ \hline
+Arthur Ashe  & 0.033172 \\
+Bjorn Borg  & 0.030089 \\
+Manuel Orantes & 0.026483 \\
+Ilie Nastase & 0.026254 \\
+Guilermo Vilas & 0.023572 \\
+Jimmy Connors & 0.021918 \\
+John Alexander & 0.017379 \\
+Roscoe Tanner & 0.015914 \\
+Brian Gottfried & 0.011614 \\
+Ken Rosewall & 0.011055 \\ \hline 
 \end{tabular}
 \centering
 \caption{Ranking 1975 GeM}
@@ -200,17 +200,17 @@ Veamos el ranking de 1976:
 \label{my-label}
 \begin{tabular}{ll}
 \hline
-id  & puntaje \\ \hline
-173 & 0.033300 \\
-144 & 0.031773 \\
-288 & 0.029343 \\
-87  & 0.026328 \\
-41  & 0.025002 \\
-134 & 0.024189 \\
-127 & 0.024006 \\
-34  & 0.023806 \\
-225 & 0.020587 \\
-1   & 0.014804 \\ \hline 
+Nombre  & Puntaje \\ \hline
+Jimmy Connors & 0.033300 \\
+Ilie Nastase & 0.031773 \\
+Raul Ramirez & 0.029343 \\
+Eddie Dibbs  & 0.026328 \\
+Brian Gottfried  & 0.025002 \\
+Harold Solomon & 0.024189 \\
+Guillermo Vilas & 0.024006 \\
+Bjorn Borg  & 0.023806 \\
+Manuel Orantes & 0.020587 \\
+Adriano Panatta & 0.014804 \\ \hline 
 \end{tabular}
 \centering
 \caption{Ranking 1976 GeM}
@@ -224,17 +224,17 @@ Concluyamos con el análisis de 1977:
 \label{my-label}
 \begin{tabular}{ll}
 \hline
-id  & puntaje \\ \hline
-127 & 0.037046 \\
-41  & 0.035463 \\
-34  & 0.029461 \\
-173 & 0.027319 \\
-134 & 0.024189 \\
-87  & 0.023230 \\
-81  & 0.021816 \\
-371 & 0.017483 \\
-288 & 0.016667 \\
-225 & 0.016318 \\ \hline 
+Nombre  & Puntaje \\ \hline
+Guillermo Vilas & 0.037046 \\
+Brian Gottfried  & 0.035463 \\
+Bjorn Borg  & 0.029461 \\
+Jimmy Connors & 0.027319 \\
+Harold Solomon & 0.024189 \\
+Eddie Dibbs  & 0.023230 \\
+Dick Stockton  & 0.021816 \\
+Vitas Gerulaitis & 0.017483 \\
+Raul Ramirez & 0.016667 \\
+Manuel Orantes & 0.016318 \\ \hline 
 \end{tabular}
 \centering
 \caption{Ranking 1977 GeM}
