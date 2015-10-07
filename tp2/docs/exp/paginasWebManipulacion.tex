@@ -1,15 +1,11 @@
-\subsection{Manipulacion}
+\pagebreak
+\subsection{Manipulación}
+
+A continuación vamos a experimentar con que tan manipulable es el algoritmo PageRank a medida que va cambiando el factor de teletransportacion. La idea es la siguiente, un algoritmo con un factor de teletransportacion bajo pondera menos en la matriz de transición el componente de la estructura del grafo. Por lo tanto, un Search Engine que tenga este factor de teletransportacion bajo va a ser sumamente manipulable, dado que puedo crear muchisimos nodos e inflar el ranking de cualquier sitio. Cuanto mayor es este factor, conjeturamos que vamos a observar que inflar cualquier sitio sera mucho mas costoso en termino de cantidad de sitios únicos que debo crear. De hecho, Page \& Brin en su paper consideran esto y mencionan que en Google se ponderan muchos factores para evitar lo que hoy se conoce como SEO (Search Engine Optimization).
 
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.7]{images/complejidad.pdf}
-\caption{Tiempos de ejecución según cantidad de webs.}
+\caption{A medida que aumenta c, muestra como cambia el ranking.}
 \label{timePageRank}
 \end{figure}
-
-
-
-
-página 5, ejercicio 1. La idea es que plantees un caso de un tipo que quiere manipular el ranking, mostra que aunque agregues miles de nuevas páginas apuntando no podes hacer demasiado, hacelo en funcion de la cantidad de páginas que agregas?
-
-Se puede manipular entonces o no? Agarra, en el eje x pone cantidad de sitios web que apuntan solamente al sitio u que le quiero subir el ranking, y en el eje y el ranking de ese sitio. Fijate que aumenta, y fijate si podes hacer algun tipo de curva de nivel con c (cuanto mayor c, mas manipulable es la cosa). Citar el paper de Sergei y Brin, que dicen que hacen promedios de muchas cosas en la practica para evitar este problema. Usan muchos criterios promediados.
