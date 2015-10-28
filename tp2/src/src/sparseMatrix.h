@@ -14,10 +14,26 @@
 #include <stdio.h>
 #include <cmath>
 #include "matrix.h"
+#include <map>
 
 using namespace std;
 
 //CSR implementation for sparse matrix. For more information check the next link: https://en.wikipedia.org/wiki/Sparse_matrix#Compressed_row_Storage_.28CRS_or_CSR.29
+
+typedef pair<int, int> rowCol;
+
+struct comparator {
+    bool operator() (const rowCol p1, const rowCol p2) const
+    {
+        if (p1.first == p2.first) {
+            return p1.second < p2.second;
+        }
+        
+        return p1.first < p2.first;
+    }
+};
+
+typedef map< rowCol, double, comparator > dok;
 
 template<class T>
 class SparseMatrix {
@@ -28,6 +44,7 @@ public:
     SparseMatrix(vector<T>& values, vector<int>& iValues, vector<int>& jValues, int columns); // PRE: jValues::size == values::size & values of iValues[0..iValues::size-2] are indices of values & iValue[iValues::size-1] == values::size
     SparseMatrix(const SparseMatrix<T>& other); // compress matrix
     SparseMatrix(const Matrix<T>& other);
+    SparseMatrix(const dok, int num_rows, int num_cols); //create sparse matrix from a dok map
     ~SparseMatrix();
     
     SparseMatrix<T>& operator=(const SparseMatrix<T>& other);
@@ -118,6 +135,34 @@ SparseMatrix<T>::SparseMatrix(const Matrix<T>& other)
         }
     }
     _iValues.resize(_iValues.size()+1, _values.size());
+}
+
+template<class T>
+SparseMatrix<T>::SparseMatrix(const dok dicc, int num_rows, int num_cols)
+: _values(0), _iValues(0), _jValues(0), _columns(num_cols)
+{
+    //int new_rows = num_rows;
+    //int new_columns = num_cols;
+    
+    int actual_row = -1;
+    
+    //Rows in dicc must be sequentially, because a not existant row means row of zeros. zeros are not represented.
+    for (dok::const_iterator it= dicc.begin(); it!=dicc.end(); ++it) {
+        //cout << "(" << it->first.first << ", " << it->first.second << ")" << " => " << it->second << endl;
+        
+        if (actual_row != it->first.first) {
+            _iValues.resize(_iValues.size()+1, _values.size());
+            actual_row = it->first.first;
+        }
+        
+        if (it->second != 0) {
+            _values.resize(_values.size()+1, it->second);
+            _jValues.resize(_jValues.size()+1, it->first.second);
+        }
+    }
+    
+    _iValues.resize(_iValues.size()+1, _values.size());
+
 }
 
 template<class T>
