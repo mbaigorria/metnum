@@ -85,6 +85,7 @@ Matrix<T>::Matrix(int rows, int col)
 {
     for(int i = 0; i < rows; i++) {
         _values[i].resize(col);
+        //cout << "row " << i << endl;
     }
 }
 

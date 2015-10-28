@@ -92,20 +92,29 @@ int main(int argc, char** argv) {
 
         if (alg == 0){
            Matrix<double> M(nodes, nodes);
-        
+
            vector<int> nodesCount(nodes);
            
            for(int i = 0; i < nodes; i++) {
                 nodesCount[i] = 0;
            }
-        
+           
            int i = 0;           
-           while(i < edges){
+           while(i < 5){
                 int node_from = 0;
                 int node_to = 0;
                 
 	            getline(testFile, line);
-	            sscanf(line.c_str(),"%d %d", &node_from, &node_to);
+                
+                char * cstr = new char [line.length()+1];
+                strcpy(cstr, line.c_str());
+
+                char * p = strtok(cstr," ");
+                  
+                node_from = atoi(p);  
+                p = strtok(NULL," ");
+                node_to = atoi(p);
+
 	            //cout << "node_from: " << node_from << " node_to: " << node_to << endl;
 	            
 	            nodesCount[node_from-1] += 1;
@@ -137,7 +146,16 @@ int main(int argc, char** argv) {
                 int node_to = 0;
                 
 	            getline(testFile, line);
-	            sscanf(line.c_str(),"%d %d", &node_from, &node_to);
+	            
+	            char * cstr = new char [line.length()+1];
+                strcpy(cstr, line.c_str());
+
+                char * p = strtok(cstr," ");
+                  
+                node_from = atoi(p);  
+                p = strtok(NULL," ");
+                node_to = atoi(p);
+	            
 	            //cout << "node_from: " << node_from << " node_to: " << node_to << endl;
 	            
 	            dataNode nod = nodesCount[node_from-1];
