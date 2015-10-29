@@ -87,8 +87,8 @@ int main(int argc, char** argv) {
         cout << "nodes: " << nodes << " edges: " << edges << endl;
 
       if (alg == 0){
-            //Matrix<double> M(nodes, nodes); //uncomment if no use dok
-            dok diccMatrix; //comment if use Matrix
+            //Matrix<double> M(nodes, nodes); //with A
+            dok diccMatrix; //with B
 
             vector<int> nodesCount(nodes);
 
@@ -116,9 +116,9 @@ int main(int argc, char** argv) {
                 
                 nodesCount[node_from-1] += 1;
                 
-                //M(node_to-1, node_from-1) = 1; //uncomment if no use dok
-                rowCol p(node_to-1,node_from-1); //comment if use Matrix
-                diccMatrix.insert(dok::value_type(p,1)); //comment if use Matrix
+                //M(node_to-1, node_from-1) = 1; //with A
+                rowCol p(node_to-1,node_from-1); //with B
+                diccMatrix.insert(dok::value_type(p,1)); //with B
                 i++;
             }
            
