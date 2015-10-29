@@ -92,7 +92,7 @@ int main(int argc, char** argv) {
 
       if (alg == 0){
           
-          /*dok diccMatrix;
+          dok diccMatrix;
           
           rowCol p1(0,0);
           rowCol p2(0,1);
@@ -101,14 +101,14 @@ int main(int argc, char** argv) {
           
           diccMatrix.insert(dok::value_type(p2, 42));
           diccMatrix.insert(dok::value_type(p1, 55));
-          diccMatrix.insert(dok::value_type(p4, 78));
-          diccMatrix.insert(dok::value_type(p3, 100));
+          //diccMatrix.insert(dok::value_type(p4, 78));
+          //diccMatrix.insert(dok::value_type(p3, 100));
           
           SparseMatrix<double> B(diccMatrix, 2, 2);
           
-          B.printSparseMatrix();*/
+          B.printSparseMatrix();
           
-          
+          /*
            Matrix<double> M(nodes, nodes);
 
            vector<int> nodesCount(nodes);
@@ -147,7 +147,7 @@ int main(int argc, char** argv) {
            res.printMatrix();
 
            saveResultPageRank(outputFile, res);
-        
+        */
         }else{
             // group algorithm webs
            vector<dataNode> nodesCount(nodes);

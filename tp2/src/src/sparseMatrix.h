@@ -41,7 +41,7 @@ public:
     SparseMatrix();
     SparseMatrix(int rows); // column vector with 0's
     SparseMatrix(int rows, T value);
-    SparseMatrix(vector<T>& values, vector<int>& iValues, vector<int>& jValues, int columns); // PRE: jValues::size == values::size & values of iValues[0..iValues::size-2] are indices of values & iValue[iValues::size-1] == values::size
+    SparseMatrix(vector<T>& values, vector<int>& iValues, vector<int>& jValues, int rows, int columns); // PRE: jValues::size == values::size & values of iValues[0..iValues::size-2] are indices of values & iValue[iValues::size-1] == values::size
     SparseMatrix(const SparseMatrix<T>& other); // compress matrix
     SparseMatrix(const Matrix<T>& other);
     SparseMatrix(const dok, int num_rows, int num_cols); //create sparse matrix from a dok map
@@ -79,6 +79,7 @@ private:
     vector<int> _iValues;
     vector<int> _jValues;
     
+    int _rows;
     int _columns;
 };
 
@@ -89,7 +90,7 @@ SparseMatrix<T>::SparseMatrix()
 
 template<class T>
 SparseMatrix<T>::SparseMatrix(int rows)
-: _values(rows), _iValues(1), _jValues(rows), _columns(1)
+: _values(rows), _iValues(1), _jValues(rows), _rows(rows), _columns(1)
 {
     for(int i = 0; i <= rows; i++){
         _iValues.resize(i+1, i);
@@ -98,7 +99,7 @@ SparseMatrix<T>::SparseMatrix(int rows)
 
 template<class T>
 SparseMatrix<T>::SparseMatrix(int rows, T value)
-: _values(rows), _iValues(1), _jValues(rows), _columns(1)
+: _values(rows), _iValues(1), _jValues(rows), _rows(rows), _columns(1)
 {
     for(int i = 0; i <= rows; i++){
         _iValues.resize(i+1, i);
@@ -109,25 +110,22 @@ SparseMatrix<T>::SparseMatrix(int rows, T value)
 }
 
 template<class T>
-SparseMatrix<T>::SparseMatrix(vector<T>& values, vector<int>& iValues, vector<int>& jValues, int columns)
-: _values(values), _iValues(iValues), _jValues(jValues), _columns(columns)
+SparseMatrix<T>::SparseMatrix(vector<T>& values, vector<int>& iValues, vector<int>& jValues, int rows, int columns)
+: _values(values), _iValues(iValues), _jValues(jValues), _rows(rows), _columns(columns)
 {}
 
 template<class T>
 SparseMatrix<T>::SparseMatrix(const SparseMatrix<T>& other)
-: _values(other._values), _iValues(other._iValues), _jValues(other._jValues), _columns(other._columns)
+: _values(other._values), _iValues(other._iValues), _jValues(other._jValues), _rows(other.rows()), _columns(other.columns())
 {}
 
 template<class T>
 SparseMatrix<T>::SparseMatrix(const Matrix<T>& other)
-: _values(0), _iValues(0), _jValues(0), _columns(other.columns())
+: _values(0), _iValues(0), _jValues(0), _rows(other.rows()), _columns(other.columns())
 {
-    int new_rows = other.rows();
-    int new_columns = other.columns();
-    
-    for(int i = 0; i < new_rows; i++) {
+    for(int i = 0; i < _rows; i++) {
         _iValues.resize(_iValues.size()+1, _values.size());
-        for(int j = 0; j < new_columns; j++) {
+        for(int j = 0; j < _columns; j++) {
             if (other(i, j) != 0) {
                 _values.resize(_values.size()+1, other(i, j));
                 _jValues.resize(_jValues.size()+1, j);
@@ -139,14 +137,10 @@ SparseMatrix<T>::SparseMatrix(const Matrix<T>& other)
 
 template<class T>
 SparseMatrix<T>::SparseMatrix(const dok dicc, int num_rows, int num_cols)
-: _values(0), _iValues(0), _jValues(0), _columns(num_cols)
+: _values(0), _iValues(0), _jValues(0), _rows(num_rows), _columns(num_cols)
 {
-    //int new_rows = num_rows;
-    //int new_columns = num_cols;
-    
     int actual_row = -1;
     
-    //Rows in dicc must be sequentially, because a not existant row means row of zeros. zeros are not represented.
     for (dok::const_iterator it= dicc.begin(); it!=dicc.end(); ++it) {
         //cout << "(" << it->first.first << ", " << it->first.second << ")" << " => " << it->second << endl;
         
@@ -162,7 +156,6 @@ SparseMatrix<T>::SparseMatrix(const dok dicc, int num_rows, int num_cols)
     }
     
     _iValues.resize(_iValues.size()+1, _values.size());
-
 }
 
 template<class T>
@@ -247,7 +240,7 @@ SparseMatrix<T> SparseMatrix<T>::operator*(const T& scalar) {
        resValues[i] = _values[i] * scalar;
     }
     
-    SparseMatrix<T> result(resValues, _iValues, _jValues, _columns);
+    SparseMatrix<T> result(resValues, _iValues, _jValues, _rows, _columns);
 
     return result;
 }
@@ -310,7 +303,7 @@ double SparseMatrix<T>::norm1() {
 
 template<class T>
 int SparseMatrix<T>::rows() {
-    return _iValues.size()-1;
+    return _rows;
 }
 
 template<class T>
@@ -320,7 +313,7 @@ int SparseMatrix<T>::columns() {
 
 template<class T>
 int SparseMatrix<T>::rows() const{
-    return _iValues.size()-1;
+    return _rows;
 }
 
 template<class T>
