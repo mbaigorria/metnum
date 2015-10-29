@@ -13,15 +13,11 @@
 using namespace std;
 
 struct dataNode {
-    //dataNode(int n) : node(n), edgesCount(0) {} // no lo pude compilar con listas de inicializacion...
-
     int node;
     int edgesCount;    
 };
 
 struct matchesStats {
-    //matchesStats(int t) : team(t), matchesWin(0), matchesDefeat(0), pointsScored(0), pointsReceived(0) {}
-
     int team;
     int matchesWin;
     int matchesDefeat;
@@ -31,7 +27,7 @@ struct matchesStats {
 
 //webs / sports
 Matrix<double> pageRank(Matrix<double>& M, double c, double d, vector<int>& nodesCount);
-Matrix<double> enhancementPageRank(Matrix<double>& M, double c, double d, vector<int>& nodesCount);
+Matrix<double> enhancementPageRank(dok& diccMatrix, double c, double d, vector<int>& nodesCount);
 
 //webs
 void in_deg(vector<dataNode>& nodesCount);
@@ -91,65 +87,48 @@ int main(int argc, char** argv) {
         cout << "nodes: " << nodes << " edges: " << edges << endl;
 
       if (alg == 0){
-          
-          dok diccMatrix;
-          
-          rowCol p1(0,0);
-          rowCol p2(0,1);
-          rowCol p3(1,0);
-          rowCol p4(1,1);
-          
-          diccMatrix.insert(dok::value_type(p2, 42));
-          diccMatrix.insert(dok::value_type(p1, 55));
-          //diccMatrix.insert(dok::value_type(p4, 78));
-          //diccMatrix.insert(dok::value_type(p3, 100));
-          
-          SparseMatrix<double> B(diccMatrix, 2, 2);
-          
-          B.printSparseMatrix();
-          
-          /*
-           Matrix<double> M(nodes, nodes);
+            //Matrix<double> M(nodes, nodes); //uncomment if no use dok
+            dok diccMatrix; //comment if use Matrix
 
-           vector<int> nodesCount(nodes);
-           
-           for(int i = 0; i < nodes; i++) {
+            vector<int> nodesCount(nodes);
+
+            for(int i = 0; i < nodes; i++) {
                 nodesCount[i] = 0;
-           }
-           
-           int i = 0;           
-           while(i < 5){
+            }
+
+            int i = 0;           
+            while(i < edges){
                 int node_from = 0;
                 int node_to = 0;
                 
-	            getline(testFile, line);
+                getline(testFile, line);
                 
                 char * cstr = new char [line.length()+1];
                 strcpy(cstr, line.c_str());
 
-                char * p = strtok(cstr," ");
+                char * chr_num = strtok(cstr," ");
                   
-                node_from = atoi(p);  
-                p = strtok(NULL," ");
-                node_to = atoi(p);
-
-	            //cout << "node_from: " << node_from << " node_to: " << node_to << endl;
-	            
-	            nodesCount[node_from-1] += 1;
-	            M(node_to-1, node_from-1) = 1;
+                node_from = atoi(chr_num);  
+                chr_num = strtok(NULL," ");
+                node_to = atoi(chr_num);
+                
+                nodesCount[node_from-1] += 1;
+                
+                //M(node_to-1, node_from-1) = 1; //uncomment if no use dok
+                rowCol p(node_to-1,node_from-1); //comment if use Matrix
+                diccMatrix.insert(dok::value_type(p,1)); //comment if use Matrix
                 i++;
-           }
-                                
-           Matrix<double> res = pageRank(M, c, e, nodesCount);
-//           Matrix<double> res = enhancementPageRank(M, c, e, nodesCount); 
- 
-           cout <<  "page rank result: \n" << endl;           
-           res.printMatrix();
+            }
+                                  
+            //Matrix<double> res = pageRank(M, c, e, nodesCount);
+            Matrix<double> res = enhancementPageRank(diccMatrix, c, e, nodesCount); 
 
-           saveResultPageRank(outputFile, res);
-        */
+            cout << "page rank result: \n" << endl;           
+            res.printMatrix();
+
+            saveResultPageRank(outputFile, res);
         }else{
-            // group algorithm webs
+           // group algorithm webs
            vector<dataNode> nodesCount(nodes);
            
            for(int i = 0; i < nodes; i++){
@@ -174,9 +153,7 @@ int main(int argc, char** argv) {
                 node_from = atoi(p);  
                 p = strtok(NULL," ");
                 node_to = atoi(p);
-	            
-	            //cout << "node_from: " << node_from << " node_to: " << node_to << endl;
-	            
+
 	            dataNode nod = nodesCount[node_from-1];
 	            
 	            nod.edgesCount += 1;
@@ -204,7 +181,7 @@ int main(int argc, char** argv) {
         int visitor_score = 0;
     
         if (alg == 0){
-            // page rank sports
+           // page rank sports
            Matrix<double> M(teams, teams);
         
            vector<int> totalAbs(teams);
@@ -289,10 +266,6 @@ int main(int argc, char** argv) {
 
 	if (outputFile != NULL) fclose(outputFile);
     
-    //M.printMatrix();
-    
-    //Depending on input data, create a matrix with the input file and call rank with matrix a values
-
 	return 0;
 }
 
@@ -325,10 +298,6 @@ Matrix<double> pageRank(Matrix<double>& M, double c, double d, vector<int>& node
      
     Matrix<double> x(n, 1, 1/dbl_n);
 
-    //for (int i = 0; i < M.rows(); i++) {
-    //    x(i) = uniform_rand(0, 1);
-    //}    
-    
     Matrix<double> last_x(n);
 
     double delta = 0;
@@ -344,31 +313,28 @@ Matrix<double> pageRank(Matrix<double>& M, double c, double d, vector<int>& node
     return x;
 }
 
-Matrix<double> enhancementPageRank(Matrix<double>& M, double c, double d, vector<int>& nodesCount) {
+Matrix<double> enhancementPageRank(dok& diccMatrix, double c, double d, vector<int>& nodesCount) {
     srand(45);
 
-    int n = M.rows();
-    double dbl_n = M.rows();
+    int n = nodesCount.size();
+    double dbl_n = nodesCount.size();
     
     int j = 0;
     while(j < n){
         int i = 0;
         while(i < n){
-            if(M(i, j) != 0){
-                M(i, j) = M(i, j) / (double)nodesCount[j];
+            rowCol p(i, j);
+            if (diccMatrix.count(p) > 0){
+                diccMatrix.at(p) = diccMatrix.at(p) / (double)nodesCount[j];
             }
             i++;
         }
         j++;
     }
     
-    SparseMatrix<double> A(M);
+    SparseMatrix<double> A(diccMatrix, n, n);
      
-    SparseMatrix<double> x(n, 1/dbl_n);
-    
-    //for (int i = 0; i < M.rows(); i++) {
-    //    x(i) = uniform_rand(0, 1);
-    //}    
+    SparseMatrix<double> x(n, 1/dbl_n); 
     
     SparseMatrix<double> last_x(n);
 
