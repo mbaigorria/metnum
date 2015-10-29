@@ -142,10 +142,13 @@ SparseMatrix<T>::SparseMatrix(const dok dicc, int num_rows, int num_cols)
     int actual_row = -1;
     
     for (dok::const_iterator it= dicc.begin(); it!=dicc.end(); ++it) {
-        //cout << "(" << it->first.first << ", " << it->first.second << ")" << " => " << it->second << endl;
-        
+
         if (actual_row != it->first.first) {
-            _iValues.resize(_iValues.size()+1, _values.size());
+            //this is because csr need to represent empty rows
+            while (actual_row < it->first.first) {
+                _iValues.resize(_iValues.size()+1, _values.size());
+                actual_row++;
+            }
             actual_row = it->first.first;
         }
         

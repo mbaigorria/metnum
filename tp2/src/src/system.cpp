@@ -106,11 +106,13 @@ int main(int argc, char** argv) {
                 char * cstr = new char [line.length()+1];
                 strcpy(cstr, line.c_str());
 
-                char * chr_num = strtok(cstr," ");
-                  
+                char * chr_num = strtok(cstr," \t");
+                   
                 node_from = atoi(chr_num);  
-                chr_num = strtok(NULL," ");
+                chr_num = strtok(NULL," \t");
                 node_to = atoi(chr_num);
+                
+                //cout << "node from " << node_from << " node to " << node_to << endl;
                 
                 nodesCount[node_from-1] += 1;
                 
@@ -119,12 +121,12 @@ int main(int argc, char** argv) {
                 diccMatrix.insert(dok::value_type(p,1)); //comment if use Matrix
                 i++;
             }
-                                  
+           
             //Matrix<double> res = pageRank(M, c, e, nodesCount);
             Matrix<double> res = enhancementPageRank(diccMatrix, c, e, nodesCount); 
 
             cout << "page rank result: \n" << endl;           
-            res.printMatrix();
+            /*res.printMatrix();*/
 
             saveResultPageRank(outputFile, res);
         }else{
@@ -148,10 +150,10 @@ int main(int argc, char** argv) {
 	            char * cstr = new char [line.length()+1];
                 strcpy(cstr, line.c_str());
 
-                char * p = strtok(cstr," ");
+                char * p = strtok(cstr," \t");
                   
                 node_from = atoi(p);  
-                p = strtok(NULL," ");
+                p = strtok(NULL," \t");
                 node_to = atoi(p);
 
 	            dataNode nod = nodesCount[node_from-1];
@@ -318,22 +320,17 @@ Matrix<double> enhancementPageRank(dok& diccMatrix, double c, double d, vector<i
 
     int n = nodesCount.size();
     double dbl_n = nodesCount.size();
-    
-    int j = 0;
-    while(j < n){
-        int i = 0;
-        while(i < n){
-            rowCol p(i, j);
-            if (diccMatrix.count(p) > 0){
-                diccMatrix.at(p) = diccMatrix.at(p) / (double)nodesCount[j];
-            }
-            i++;
+
+    for (dok::iterator it= diccMatrix.begin(); it!=diccMatrix.end(); ++it) {
+        if (it->second > 0) {
+            it->second = it->second / (double)nodesCount[it->first.second];
+        }else if (nodesCount[it->first.second] == 0) {
+            it->second = 1/dbl_n; // dangling node / undefeated team
         }
-        j++;
     }
     
     SparseMatrix<double> A(diccMatrix, n, n);
-     
+    
     SparseMatrix<double> x(n, 1/dbl_n); 
     
     SparseMatrix<double> last_x(n);
@@ -341,13 +338,13 @@ Matrix<double> enhancementPageRank(dok& diccMatrix, double c, double d, vector<i
     SparseMatrix<double> v(n, 1/dbl_n);
     
     double delta = 0;
-   
+
     do {
         last_x = x;
        
         x = A*x;
         x = x*c;
- 
+
         double w = last_x.norm1() - x.norm1();    
 
         x = x +  v*w;
