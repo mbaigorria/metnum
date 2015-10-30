@@ -14,7 +14,7 @@ Sea $x_j$ el puntaje asignado a la página o vértice $j \in Web$ y sea otra pá
 \begin{itemize}
   \item La relevancia de todo sitio web es positiva.
   \item La relevancia de un sitio web debe aumentar a medida que mas sitios únicos lo apuntan.
-  \item La relevancia derivada de otro sitio web debe depender de su propia relevancia. Es decir, es mas valioso que me linkee un sitio relevante que uno no relevante. En caso de no cumplirse esta propiedad, el ranking seria fácilmente manipulable al permitir que un usuario cree muchos sitios que linkeen a uno para darle relevancia.
+  \item La relevancia derivada de otro sitio web debe depender de su propia relevancia. Es decir, es mas valioso que nos linkee un sitio relevante que uno no relevante. En caso de no cumplirse esta propiedad, el ranking seria fácilmente manipulable al permitir que un usuario cree muchos sitios que linkeen a uno para darle relevancia.
   \item La relevancia de todos los sitios web debe sumar uno. De esta manera estamos ante una distribución de probabilidad de los sitios. Esto nos permite a su vez utilizar muchos teoremas estudiados en procesos estocásticos. Mas adelante veremos que al interpretar esto mediante Cadenas de Markov existe una interpretación directa: la relevancia se puede ver como la proporción del tiempo total que un usuario pasa en ese sitio.
 \end{itemize} 
 
@@ -26,7 +26,7 @@ x_k = \sum_{j \in L_k} \frac{x_j}{n_j},~~~~k = 1,\dots,n. \label{eq:basicmodel}
 
 Notar que esta es de cierta manera una definición autoreferencial. La relevancia de un sitio $u$ puede depender de la relevancia de un sitio $v$, y luego la de $v$ puede depender de la de $u$. A priori calcular la relevancia de un sitio puede parecer sumamente complicado, pero luego veremos que al plantearlo como un sistema de ecuaciones esta dificultad per se ya no se presenta.
 
-Definimos entonces una matriz de transición o adyacencia con pesos en las aristas $P \in \mathbb{R}^{n \times n}$ tal que $p_{ij} = 1 / n_j$ si $w_{ij} = 1$ y $p_{ij} = 0$ en caso contrario. Luego, el modelo planteado en (\ref{eq:basicmodel}) para toda página web se puede expresar $Px = x$ donde $x \in \mathbb{R}^n$. Notar que esto es equivalente a encontrar el autovector de autovalor 1 tal que $x_i > 0$ y $\sum_{i=1}^{n} x_i = 1$. Notar que si logramos probar que bajo ciertas condiciones nuestra matriz de transición tiene autovalor 1, el signo de todos los elementos de un autovector es el mismo y la dimension del autoespacio es 1 ya tenemos un ranking valido. Esto se debe a que cualquier autovector que cumple con estas propiedades puede ser reescalado a uno de norma unitaria con $x_i \geq 0$.
+Definimos entonces una matriz de transición o adyacencia con pesos en las aristas $P \in \mathbb{R}^{n \times n}$ tal que $p_{ij} = 1 / n_j$ si $w_{ij} = 1$ y $p_{ij} = 0$ en caso contrario. Luego, el modelo planteado en (\ref{eq:basicmodel}) para toda página web se puede expresar $Px = x$ donde $x \in \mathbb{R}^n$. Notar que esto es equivalente a encontrar el autovector de autovalor 1 tal que $x_i \geq 0$ y $\sum_{i=1}^{n} x_i = 1$. Notar que si logramos probar que bajo ciertas condiciones nuestra matriz de transición tiene autovalor 1, el signo de todos los elementos de un autovector es el mismo y la dimension del autoespacio es 1 ya tenemos un ranking valido. Esto se debe a que cualquier autovector que cumple con estas propiedades puede ser reescalado a uno de norma unitaria con $x_i \geq 0$.
 
 \pagebreak
 
@@ -52,7 +52,7 @@ Toda matriz estocástica por columnas tiene a 1 como autovalor.
 
 Esto significa que si no existen \texttt{dangling nodes}, es decir, vértices con $d_{out} = 0$, podemos garantizar que nuestra matriz de transición es estocástica por columnas.
 
-Notar que bajo las condiciones actuales no podemos garantizar que si existe el autoespacio asociado al autovalor 1, el mismo tenga dimension 1. Intuitivamente, esto se debe a que el grafo de la web puede tener varias componentes conexas. ¿Como comparamos sitios web que no están relacionados? Justamente la relación, ya sea directa o indirecta mediante transitividad me da algún tipo de relación de orden. Al no tener una relación de orden entre dos sitios web bien definida, es razonable que existan múltiples autovectores, es decir, rankings. Esto se puede ver claramente en la página 4 del paper de Bryan y Leise \cite{Bryan2006}.
+Notar que bajo las condiciones actuales no podemos garantizar que si existe el autoespacio asociado al autovalor 1, el mismo tenga dimension 1. Intuitivamente, esto se debe a que el grafo de la web puede tener varias componentes conexas. ¿Como comparamos sitios web que no están relacionados? Justamente la relación, ya sea directa o indirecta mediante transitividad nos da algún tipo de relación de orden. Al no tener una relación de orden entre dos sitios web bien definida, es razonable que existan múltiples autovectores, es decir, rankings. Esto se puede ver claramente en la página 4 del paper de Bryan y Leise \cite{Bryan2006}.
 
 Por lo tanto, la idea es básicamente buscar algún tipo de transformación relevante de la matriz de transición que me permita garantizar que no voy a tener \texttt{dangling nodes} y ademas que solo tenga una componente conexa, es decir, que el grafo resultante sea conexo. Definimos la siguiente matriz de transición, donde $v \in \mathbb{R}^{n \times n}$, con $v_i = 1 / n$ y $d \in \{0,1\}^n$,  $d_i = 1$ si $n_i = 0$ y $d_i = 0$ en caso contrario, como:
 
@@ -63,7 +63,7 @@ P_1 & = & P + D.
 
 De esta manera, en caso de tener una página web que es un \texttt{dangling node}, le asignamos un link con probabilidad o peso uniforme a todos los otros sitios web $u \in Web$. Una interpretación equivalente es tomar a la matriz de transiciones como la matriz que describe una Cadena de Markov, donde el link pesado representa la probabilidad de dirigirse de una página a la otra. Por lo tanto, esta transformación se puede interpretar como que que existe una probabilidad uniforme de ir de uno de estos sitios a cualquiera de la web. Luego el famoso \texttt{navegante aleatorio} simplemente recorre el grafo utilizando estas probabiblidades.
 
-Tambien podemos considerar la posibilidad de que el navegante aleatorio se dirija a una página web que no esta linkeada a la página a la que esta actualmente. Este fenómeno se conoce como teletransportación. Para incluirlo al modelo, tomemos un numero $c \in [0,1]$ y transformemos la matriz de transiciones de la siguiente manera, donde $\bar{1} \in \mathbb{R}^n$ es un vector tal que todos sus componentes valen 1:
+Tambien podemos considerar la posibilidad de que el navegante aleatorio se dirija a una página web que no está linkeada a la página a la que esta actualmente. Este fenómeno se conoce como teletransportación. Para incluirlo al modelo, tomemos un numero $c \in [0,1]$ y transformemos la matriz de transiciones de la siguiente manera, donde $\bar{1} \in \mathbb{R}^n$ es un vector tal que todos sus componentes valen 1:
 
 \begin{eqnarray*}
 E & = & v \bar{1}^t \\
@@ -72,7 +72,7 @@ P_2 & = & cP_1 + (1-c)E,
 
 Notar que en caso de tener $c=1$, estamos en la matriz de transición sin teletransportación. Por otro lado, si $c=0$ estamos en el caso donde solo hay teletransportación y no importa la estructura del grafo de la web al momento de calcular el ranking.
 
-Notar que la elección de este parámetro $c$ no es trivial. En general, este parámetro se calcula haciendo análisis empíricos sobre los datos de navegadores y toolbars. Un trabajo interesante sobre este tema es el de Constantine et al. de Microsoft Research, donde utilizando los registros del toolbar de Internet Explorer y un modelo basado en la distribución Beta generalizan la matriz de transiciones para poder modelar un parámetro de teletransportación variable \cite{TeleParam}. Para este trabajo, simplemente utilizaremos la elección original constante del trabajo de Page \& Brin \cite{Brin1998} y fijaremos $\alpha = 0.85$.
+Observar además que la elección de este parámetro $c$ no es trivial. En general, este parámetro se calcula haciendo análisis empíricos sobre los datos de navegadores y toolbars. Un trabajo interesante sobre este tema es el de Constantine et al. de Microsoft Research, donde utilizando los registros del toolbar de Internet Explorer y un modelo basado en la distribución Beta generalizan la matriz de transiciones para poder modelar un parámetro de teletransportación variable \cite{TeleParam}. Para este trabajo, simplemente utilizaremos la elección original constante del trabajo de Page \& Brin \cite{Brin1998} y fijaremos $\alpha = 0.85$.
 
 \pagebreak
 
@@ -89,7 +89,7 @@ Por lo tanto, ya probamos la existencia del autovector de norma 1 asociado al au
 \end{lemma}
 
 \begin{proposition}
-Sea M una matriz real de n x n positiva y estocástica por columnas, y V el subespacio de $\mathbb{R}^n$ que consiste de aquellos vectores v tales que la suma de sus componentes sea 0, entonces $Mv \in V$ y $||Mv||_1 \leq \alpha||v||_1$ donde $\alpha = max_{1 \leq j \leq n}|1 - 2min_{1 \leq i \leq n}| < 1$.
+Sea M una matriz real de n x n positiva y estocástica por columnas, y V el subespacio de $\mathbb{R}^n$ que consiste de aquellos vectores v tales que la suma de sus componentes sea 0, entonces $Mv \in V$ y $||Mv||_1 \leq \alpha||v||_1$ donde $\alpha = max_{1 \leq j \leq n}|1 - 2min_{1 \leq i \leq n}M_{ij}| < 1$.
 \end{proposition}
 
 \subsection{Tenis}
@@ -131,7 +131,7 @@ G = \alpha(A^t + ua^t) + (1 - \alpha)ev^t
 Donde 0 $< \alpha < 1$, $v$ es un vector de probabilidades, $a$ es tal que $a_j$ es 1 si la columna $j$ de $H$ es el vector nulo y $a_j$ es 0 en en cualquier otro caso. $u$ es un vector de probabilidad de $n$ x $1$. $e$ se define como un vector de $n$ x $1$ con todas sus entradas igual a 1. Luego, el vector que contendrá los puntajes de cada equipo será $\pi$ tal que: $G\pi$ = $\pi$.
 
 Cada entrada $H_{ij}$ de $H$ se puede interpretar como la probabilidad de que el participante $j$ pierda contra el participante $i$. Para los participantes invictos un simple ajuste que se propone es elegir un vector $u$ donde todas las entradas son $1/n$. Esto significa cambiar la probabilidad de los invictos a que puedan perder contra cualquiera de los otros participantes (incluido si mismo) con probabilidad uniforme.
-El modelo básico utiliza $\alpha$ de la misma forma que en PageRank y $v$ como vector de personalización del sistema. Una simple elección puede ser $v$ = $(1/n)e$. Aunque $v$ ofrece mucha más flexibilidad. Podría usarse con el resultado estadistico de un ranking previo, aumentando así las probabilidades de que cierto participante gane el presente torneo.
+El modelo básico utiliza $\alpha$ de la misma forma que en PageRank y $v$ como vector de personalización del sistema. Una simple elección puede ser $v$ = $(1/n)e$, con $e$ al igual que antes, como un vector de $n$ x $1$ con todas sus entradas igual a 1. Aunque $v$ ofrece mucha más flexibilidad. Podría usarse con el resultado estadistico de un ranking previo, aumentando así las probabilidades de que cierto participante gane el presente torneo.
 La elección del $\alpha$ determina la importancia de la matriz de personalización $ev^t$. A diferencia del caso de las paginas web, la elección de este parámetro puede ser difícil de medir empíricamente y en última instancia debe ser elegida por el organizador del torneo. En nuestro caso, decidimos elegir $\alpha = 0.85$.	 
 
 \subsubsection{Sistema de puntos y consideraciones}
@@ -173,7 +173,7 @@ Consiste en un diccionario que mapea pares de fila-columa a la entrada. No se re
 
 \subsubsection{Compressed Sparse Row ($CSR$)}
 
-Pone las entradas no nulas de las filas de la matriz en posiciones de memoria contiguas. Suponiendo que tenemos una matriz dispersa no simétrica, creamos vectores: uno para los números de punto flotante ($val$), y los otros dos para enteros ($col\_ind$, $row\_ptr$). El vector $val$ almacena los valores de los elementos distintos de cero de la matriz, de izquierda a derecha y de arriba hacia abajo. El vector $col\_ind$ almacena los índices de columna de los elementos en el vector $val$. Es decir, si $val(k) = a_ij$ entonces $col\_ind(k) = j$. El vector $row\_ptr$ almacena los lugares en el vector $val$ que comienza y termina una fila, es decir, si $val(k) = a_ij$ entonces $row_ptr(i) \leq k \leq row\_ptr(i+1)$. Por convención, se define $row\_ptr(n+1) = nnz$, en donde $nnz$ es el número de entradas no nulas en la matriz. Los ahorros de almacenamiento de este enfoque es significativo. En lugar de almacenar elementos $n^2$, solamente necesitamos $2nnz + n$ lugares de almacenamiento.
+Pone las entradas no nulas de las filas de la matriz en posiciones de memoria contiguas. Suponiendo que tenemos una matriz esparsa no simétrica, creamos vectores: uno para los números de punto flotante ($val$), y los otros dos para enteros ($col\_ind$, $row\_ptr$). El vector $val$ almacena los valores de los elementos distintos de cero de la matriz, de izquierda a derecha y de arriba hacia abajo. El vector $col\_ind$ almacena los índices de columna de los elementos en el vector $val$. Es decir, si $val(k) = a_ij$ entonces $col\_ind(k) = j$. El vector $row\_ptr$ almacena los lugares en el vector $val$ que comienza y termina una fila, es decir, si $val(k) = a_ij$ entonces $row_ptr(i) \leq k \leq row\_ptr(i+1)$. Por convención, se define $row\_ptr(n+1) = nnz$, en donde $nnz$ es el número de entradas no nulas en la matriz. Los ahorros de almacenamiento de este enfoque es significativo. En lugar de almacenar elementos $n^2$, solamente necesitamos $2nnz + n$ lugares de almacenamiento.
 
 Veamos con un ejemplo como seria la representacion:
 \\\\

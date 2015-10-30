@@ -2,18 +2,18 @@
 
 Los algoritmos de rankeo son sumamente relevantes. Se utilizan en todo tipo de situaciones donde es necesario asignar un orden, ya sea entre personas, equipos o países. En el presente trabajo se decidió analizar el algoritmo PageRank. Este algoritmo fue un algoritmo icónico que marco el inicio de lo que hoy conocemos como Google en 1998. Hoy en día se sigue utilizando el algoritmo original y muchas variantes del mismo en la practica.
 
-Como ya hemos mostrado, computar el algoritmo PageRank se reduce a encontrar un autovector de norma unitaria correspondiente al autovalor 1 del sistema, es decir, buscamos $x$ tal que $Ax = x$, donde $A$ es la matriz de transición y $x$ representa un ranking valido. Una de las primeras cuestiones que nos encontramos al tener que aplicar el algoritmo en la practica es el modelado de la matriz de transiciones. Se debe demostrar que nuestro modelado cumple con que la matriz es estocástica positiva por columnas. De esta manera mostramos que el Método de la Potencia el cual utilizamos para encontrar un autovector valido converge y ademas resulta en un ranking valido.
+Como ya hemos mostrado, computar el algoritmo PageRank se reduce a encontrar un autovector de norma unitaria correspondiente al autovalor 1 del sistema, es decir, buscamos $x$ tal que $Ax = x$, donde $A$ es la matriz de transición y $x$ representa un ranking valido. Una de las primeras cuestiones que nos encontramos al tener que aplicar el algoritmo en la práctica es el modelado de la matriz de transiciones. Se debe demostrar que nuestro modelado cumple con que la matriz es estocástica positiva por columnas. De esta manera mostramos que el Método de la Potencia el cual utilizamos para encontrar un autovector válido converge y además resulta en un ranking válido.
 
 Un factor sumamente relevante antes de considerar computar el problema es la representación de la matriz de transición. Esto es sumamente importante, dado que en problemas con un grafo de gran tamaño la matriz de transición puede ocupar mucho espacio en memoria. Aquí es donde entran las representaciones alternativas de matrices esparsas, que nos permiten superar este inconveniente en casos como el de los sitios web. Este problema no surge al modelar competencias deportivas, dado que en general el tamaño de la matriz de transición esta acotado. 
 
-Uno de los experimentos mas interesantes que llevamos a cabo fue el de la manipulacion del PageRank. Como era de esperar, notamos que a medida que el factor de teletransportacion es mas bajo, mas facil es para un usuario malintencionado manipular el ranking. A su vez, observamos que el ranking se puede manipular pero hasta cierto punto. Hay un momento que marginalmente agregar mas sitios web que apuntan a uno que queremos inflar ya no tiene efecto.
+Uno de los experimentos mas interesantes que llevamos a cabo fue el de la manipulacion del PageRank. Como era de esperar, notamos que a medida que el factor de teletransportación es más bajo, más fácil es para un usuario malintencionado manipular el ranking. A su vez, observamos que el ranking se puede manipular pero hasta cierto punto. Hay un momento que marginalmente agregar mas sitios web que apuntan a uno que queremos inflar ya no tiene efecto.
 
 Sin embargo, mostramos que el algoritmo PageRank se comporta mucho mejor que otros métodos 'naive', como lo es ordenar vertices por grado de entrada. Este tipo de métodos son sumamente manipulables y no capturan la relevancia relativa al computar los rankings.
 
-Finalmente, la pregunta mas importante del trabajo. ¿Fue Vilas líder del ranking de la ATP entre 1975 y 1977?
+Finalmente, la pregunta más importante del trabajo. ¿Fue Vilas líder del ranking de la ATP entre 1975 y 1977?
 
 \begin{center}
 \includegraphics[scale=1]{images/vilas2.jpg}
 \end{center}
 
-Concluimos que si la ATP hubiese utilizado PageRank, \textbf{EFECTIVAMENTE} Vilas hubiese sido líder del ranking de la ATP en el año 1977, convirtiéndose en el primer argentino en lograr semejante hazaña. Ya estamos haciendo una campana en change.org para que actualicen el ranking.
+Concluimos que si la ATP hubiese utilizado PageRank, \textbf{EFECTIVAMENTE} Vilas hubiese sido líder del ranking de la ATP en el año 1977, convirtiéndose en el primer argentino en lograr semejante hazaña. Ya estamos haciendo una campa\~na en change.org para que actualicen el ranking.
