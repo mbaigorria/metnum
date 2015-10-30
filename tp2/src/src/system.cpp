@@ -187,6 +187,8 @@ int main(int argc, char** argv) {
     }else{
         int teams = 0;
         int matches = 0;
+
+        getline(testFile, line);
     
 	    sscanf(line.c_str(),"%d %d", &teams, &matches);
         cout << "teams: " << teams << " matches: " << matches << endl;
