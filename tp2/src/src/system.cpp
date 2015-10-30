@@ -75,16 +75,31 @@ int main(int argc, char** argv) {
 	getline(inputFile, line);
 
 	sscanf(line.c_str(),"%d %lf %d %s %lf", &alg, &c, &inst, testFileName, &e);
-			
+  
 	ifstream testFile(testFileName);
-	getline(testFile, line);	  
   	
     if (inst == 0){
         int nodes = 0;
         int edges = 0;
-    
-	    sscanf(line.c_str(),"%d %d", &nodes, &edges);
+
+        getline(testFile, line);
+	    getline(testFile, line);
+	    getline(testFile, line); //3rd line: nodes and edges count
+        
+        char * cstrhead = new char [line.length()+1];
+        strcpy(cstrhead, line.c_str());
+
+        char * chr_numhead = strtok(cstrhead," \t");
+        strtok(NULL," \t");
+        chr_numhead = strtok(NULL," \t");
+        nodes = atoi(chr_numhead);
+        strtok(NULL," \t");
+        chr_numhead = strtok(NULL," \t");
+        edges = atoi(chr_numhead);
+ 
         cout << "nodes: " << nodes << " edges: " << edges << endl;
+        
+        getline(testFile, line); //4th line
 
       if (alg == 0){
             //Matrix<double> M(nodes, nodes); //with A
@@ -101,7 +116,7 @@ int main(int argc, char** argv) {
                 int node_from = 0;
                 int node_to = 0;
                 
-                getline(testFile, line);
+                getline(testFile, line); //5th line: graph data
                 
                 char * cstr = new char [line.length()+1];
                 strcpy(cstr, line.c_str());
@@ -126,7 +141,7 @@ int main(int argc, char** argv) {
             Matrix<double> res = enhancementPageRank(diccMatrix, c, e, nodesCount); 
 
             cout << "page rank result: \n" << endl;           
-            /*res.printMatrix();*/
+            //res.printMatrix();
 
             saveResultPageRank(outputFile, res);
         }else{
@@ -145,7 +160,7 @@ int main(int argc, char** argv) {
                 int node_from = 0;
                 int node_to = 0;
                 
-	            getline(testFile, line);
+	            getline(testFile, line); //5th line: graph data
 	            
 	            char * cstr = new char [line.length()+1];
                 strcpy(cstr, line.c_str());
