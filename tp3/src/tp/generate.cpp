@@ -6,6 +6,7 @@
 using namespace std;
 
 void fprintframe(FILE* outputFile, int frame, int videoWidth, int videoHeight, vector<vector<int> >& video);
+void fprintlinearframe(FILE* outputFile, int startFrame, int currentFrame, int framesToGenerate, int videoWidth, int videoHeight, vector<vector<int> >& video);
 
 int main(int argc, char* argv[]) {
 
@@ -87,9 +88,36 @@ int main(int argc, char* argv[]) {
 			break;
 		case 1:
 			printf("interpolationMethod: Lineal\n");
+
+			// write header
+			fprintf(outputFile, "%d\n%d,%d\n%d\n", totalFrames, videoHeight, videoWidth, videoFrameRate);
+
+			for (int frame = 0; frame < videoFrames - 1; ++frame) {
+
+				// print current frame
+				fprintframe(outputFile, frame, videoWidth, videoHeight, video);
+
+				// generate frame, initial frame: frame 0 (current frame)
+				for (int j = 1; j <= framesToGenerate; ++j) {
+					fprintlinearframe(outputFile, frame, j, framesToGenerate, videoWidth, videoHeight, video);
+					fprintframe(outputFile, frame, videoWidth, videoHeight, video);
+				}
+
+			}
+
+			// print last frame
+			fprintframe(outputFile, videoFrames-1, videoWidth, videoHeight, video);
+
 			break;
 		case 2:
 			printf("interpolationMethod: Splines\n");
+
+
+
+
+
+
+			
 			break;
 		default:
 			printf("Error: Invalid interpolation method\n");
@@ -109,5 +137,22 @@ void fprintframe(FILE* outputFile, int frame, int videoWidth, int videoHeight, v
 			fprintf(outputFile, "%d,", video[frame][i*videoWidth + j]);
 		}
 		fprintf(outputFile, "%d\n", video[frame][i*videoWidth + videoWidth -1]);
+	}
+}
+
+void fprintlinearframe(FILE* outputFile, int startFrame, int currentFrame, int framesToGenerate, int videoWidth, int videoHeight, vector<vector<int> >& video) {
+	for (int i = 0; i < videoHeight; ++i) {
+		for (int j = 0; j < videoWidth -1; ++j) {
+			int y_0 = video[startFrame  ][i*videoWidth + j];
+			int y_1 = video[startFrame+1][i*videoWidth + j];
+			int m = (y_1 - y_0) / (framesToGenerate + 1 - 0);
+			int b = y_0 - m*0;
+			fprintf(outputFile, "%d,", m*currentFrame + b);
+		}
+		int y_0 = video[startFrame  ][i*videoWidth + videoWidth -1];
+		int y_1 = video[startFrame+1][i*videoWidth + videoWidth -1];
+		int m = (y_1 - y_0) / (framesToGenerate + 1 - 0);
+		int b = y_0 - m*0;
+		fprintf(outputFile, "%d,", m*currentFrame + b);
 	}
 }
