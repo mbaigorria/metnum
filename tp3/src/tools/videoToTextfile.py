@@ -4,8 +4,8 @@ import cv2
 #########################
 # Parametros de entrada.#
 #########################
-videoFilename = 'funnybaby.avi'
-textFilename = 'funnybaby.txt'
+videoFilename = '../data/funnybaby.avi'
+textFilename = '../data/funnybaby.txt'
 salto = 1 
 
 # Abrimos archivo de video. 
