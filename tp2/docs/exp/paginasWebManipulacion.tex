@@ -1,6 +1,8 @@
 \pagebreak
 \subsection{Manipulación}
 
+\textbf{TODO: EXPLICAR PORQUE EL RANKING SE APLASTA A MEDIDA QUE AUMENTO EL LINKEO Y NO AUMENTA MAS DE CIERTO PUNTO}
+
 A continuación vamos a experimentar que tan manipulable es el algoritmo PageRank a medida que va cambiando el factor de teletransportacion. La idea es la siguiente, un algoritmo con un factor de teletransportacion bajo pondera menos en la matriz de transición el componente de la estructura del grafo. Por lo tanto, un Search Engine que tenga este factor de teletransportacion bajo va a ser sumamente manipulable, dado que puedo crear muchisimos nodos e inflar el ranking de cualquier sitio. Cuanto mayor es este factor, conjeturamos que vamos a observar que inflar cualquier sitio sera mucho mas costoso en termino de cantidad de sitios únicos que debo crear. De hecho, Page \& Brin en su paper consideran esto y mencionan que en Google se ponderan muchos factores para evitar lo que hoy se conoce como SEO (Search Engine Optimization).
 
 Primero vamos a ver las posiblidadades de manipulación con c = 0.85. Para hacer esto se fijo el valor de c, se tomo una red de 30 nodos y 30 ejes, y a la primer pagina se le agrego una pagina que la apunte por cada iteracion, este proceso se repitio hasta agregar 80 enlaces a la primer pagina. El resultado es:
@@ -13,6 +15,8 @@ Primero vamos a ver las posiblidadades de manipulación con c = 0.85. Para hacer
 \end{figure}
 
 Como podemos apreciar, la pagina aumenta de posición en el ranking, pero como podemos apreciar, el beneficio marginal de agregar paginas disminuye con el tiempo.
+
+\textbf{TODO: EXPLICAR PORQUE SE FORMA PICO EN 0.6, UNA VEZ QUE ESTA ESO, CONCLUIR PORQUE GOOGLE USA UN VALOR DE 0.85. EN LO POSIBLE TAMBIEN EXPLICAR LA PARABOLA INVERTIDA}
 
 Para el ultimo caso (es decir, el caso con 80 enlaces extras apuntando a la primer pagina), decidimos ver como influyen los valores de $c$. Se tomo $c = 0$, se lo aumento en $0.1$, hasta llegar a $0.9$. El resultado fue el siguiente:
 
