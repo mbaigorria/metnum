@@ -46,9 +46,11 @@ int main(int argc, char* argv[]) {
 	// video data
 	vector<vector<int> > video(videoFrames, vector<int>(videoWidth*videoHeight));
 
-	for (int i = 0; i < videoFrames; ++i) {
-		for (int j = 0; j < videoWidth*videoHeight; ++j) {
-			fscanf(inputFile, "%d,", &video[i][j]);
+	for (int frame = 0; frame < videoFrames; ++frame) {
+		for (int i = 0; i < videoHeight; ++i) {
+			for (int j = 0; j < videoWidth; ++j) {
+				fscanf(inputFile, "%d,", &video[frame][i*videoWidth + j]);
+			}
 		}
 	}
 
@@ -107,7 +109,6 @@ int main(int argc, char* argv[]) {
 				// generate frame, initial frame: frame 0 (current frame)
 				for (int j = 1; j <= framesToGenerate; ++j) {
 					fprintlinearframe(outputFile, frame, j, framesToGenerate, videoWidth, videoHeight, video);
-					fprintframe(outputFile, frame, videoWidth, videoHeight, video);
 				}
 
 			}
@@ -122,7 +123,6 @@ int main(int argc, char* argv[]) {
 			// save values of the polinomial coefficients for each pixel (c_j)
 			vector<vector<int> > storage(videoWidth*videoHeight, vector<int>(videoFrames));
 			
-			videoFrames -= 20; // testing purposes
 			Matrix<double> A(videoFrames, videoFrames, 0);
 			naturalCubicSplineBuildA(framesToGenerate, videoFrames, A);
 			EquationSystemLU<double> e(A);
@@ -141,8 +141,7 @@ int main(int argc, char* argv[]) {
 				}
 
 			}
-
-			// generate frames
+			
 			// write header
 			fprintf(outputFile, "%d\n%d,%d\n%d\n", totalFrames, videoHeight, videoWidth, videoFrameRate);
 
@@ -181,12 +180,12 @@ void fprintframefromspline(FILE* outputFile, int frame, int currentNewFrame, int
 
 	int h = framesToGenerate + 1;
 
-	for (int pixel = 0; pixel < videoWidth*videoHeight - 1; ++pixel) {
+	for (int pixel = 0; pixel < videoWidth*videoHeight; ++pixel) {
 		int c_0 = storage[pixel][frame]; // !
 		int c_1 = storage[pixel][frame+1];
-		int a_0 = video[frame-1][pixel]; // !
-		int a_1 = video[frame]  [pixel];
-		int a_2 = video[frame+1][pixel];
+		// frame >= 1
+		int a_0 = video[frame]  [pixel]; // !
+		int a_1 = video[frame+1][pixel];
 		int b_0 = (1/h)*(a_1 - a_0) - (h/3)*(2*c_0 + c_1); // !
 		int d_0 = (c_1 - c_0) / (3*h); // !
 
@@ -194,10 +193,10 @@ void fprintframefromspline(FILE* outputFile, int frame, int currentNewFrame, int
 		int x_j = frame*h + currentNewFrame;
 		int res = a_0 + b_0*(x-x_j) + c_0*pow(x-x_j,2) + d_0*pow(x-x_j,3);
 
-		if (pixel == videoWidth*videoHeight-1) {
-			fprintf(outputFile, "%d,",  res);
+		if ((pixel+1) % videoWidth == 0) {
+			fprintf(outputFile, "%d\n",  res);
 		} else {
-			fprintf(outputFile, "%d\n", res);
+			fprintf(outputFile, "%d,", res);
 		}
 
 	}
@@ -248,7 +247,8 @@ void fprintframe(FILE* outputFile, int frame, int videoWidth, int videoHeight, v
 	}
 }
 
-void fprintlinearframe(FILE* outputFile, int startFrame, int currentFrame, int framesToGenerate, int videoWidth, int videoHeight, vector<vector<int> >& video) {
+void fprintlinearframe(FILE* outputFile, int startFrame, int currentFrame, int framesToGenerate,
+						int videoWidth, int videoHeight, vector<vector<int> >& video) {
 	for (int i = 0; i < videoHeight; ++i) {
 		for (int j = 0; j < videoWidth -1; ++j) {
 			int y_0 = video[startFrame  ][i*videoWidth + j];
