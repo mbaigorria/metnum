@@ -51,7 +51,7 @@ class RandomParametersGenerator(object):
             
         f.close()
         
-    def generateTestManip(self, name, n=30, m=30, extras=0, alg=0, c=0.85, inst=0, epsilon=0.0001, seed=45, subindex=1):
+    def generateTestManip(self, name, n=40, m=40, extras=0, alg=0, c=0.85, inst=0, epsilon=0.0001, seed=45, subindex=1):
         
         self.m = m
         self.n = n
@@ -68,7 +68,9 @@ class RandomParametersGenerator(object):
         f.close()
         
         f = open("manipulacion/" + name + "_" + str(subindex) + ".txt", 'w+')
-        f.write(str(self.n + extras)+ " " + str(self.m + extras) + "\n")
+        f.write("# \n# \n")
+        f.write("# Nodes: " + str(self.n + extras) + " Edges: " + str(self.m + extras) + "\n")
+        f.write("# \n")
         
         lst = []
         
@@ -105,7 +107,7 @@ class RandomParametersGenerator(object):
 rpg = RandomParametersGenerator()
 
 # Generar isoterma ideal
-rpg.generateTest(name='webInicial', n=5000, m=5000)
+#rpg.generateTest(name='webInicial', n=5000, m=5000)
 
 # Generar test de complejidad
 # valorN = settings.valorN
@@ -116,8 +118,7 @@ rpg.generateTest(name='webInicial', n=5000, m=5000)
     # valorM += settings.aumentoM
     
 for i in xrange(settings.extras):
-    # rpg.generateTestManip(name="manip", extras=i, subindex=i+1)
-    a = i
+    rpg.generateTestManip(name="manip", extras=i, subindex=i+1)
     
 ultIndex = i+1
 

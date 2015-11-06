@@ -8,10 +8,10 @@ aumentoN = 15
 aumentoM = 15
 
 # Parametros test manipulacion
-manipN = 30
-manipM = 30
-extras = 80
-muestrasC = 10
+manipN = 40
+manipM = 40
+extras = 250
+muestrasC = 30
 
 # Cantidad de muestras para suavizar ruido
 muestras = 5
