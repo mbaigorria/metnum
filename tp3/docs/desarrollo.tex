@@ -112,5 +112,33 @@ En particular, si $n$ = 2, obtenemos el polinomio de Lagrange cuadratico
 	P_n(x) = f(x_0)\dfrac{(x - x_1)(x - x_2)}{(x_0 - x_1)(x_0 - x_2)} + f(x_1)\dfrac{(x - x_0)(x - x_2)}{(x_1 - x_0)(x_1 - x_2)} + f(x_2)\dfrac{(x - x_0)(x - x_1)}{(x_2 - x_0)(x_2 - x_1)} 
 \end{equation}
 
+Intuitivamente si con un polinomio de grado uno obtuvimos una recta entre cada par de puntos, si utilizamos un polinomio de grado dos, obtendremos una curva que se adapte mejor al resultado. Pero a medida que aumentemos el grado del polinomio, el resultado podría oscilar erraticamente. Si en el caso de estudio no se dispone de la fuente de los datos, es decir, la función que los genera, no sabremos como acotar el error cometido en la aproximación, ergo, no sabremos cuan pequeño deberá ser el paso entre cada par de puntos para reducir la posibilidad de estas fluctuaciones. 
+Para este tipo de inconvenientes existe otro tipo de método que no necesariamente necesita conocer la función original para poder aproximar coerrectamente.
+
+\subsubsection{Spline Cúbico}
+
+La alternativa se basa en dividir el intervalo en subintervalos y construir en cada uno de ellos un polinomio. Generalmente se denomina a esta técnica interpolación por partes. La mas común y usada es la que utiliza polinomios de grado tres y se denomina spline cúbico. 
+Al ser un polinomio cúbico hay suficiente flexibilidad para asegurar que la interpolación es clase $C^{2}[a, b]$, es decir, que es continua y tiene primeras y segundas derivadas, aunque no por esto asume que vayan a coincidir con los de la función aproximada.
+
+Dada una funcón $f$ definida en $[a, b]$ y los puntos $a = x_0 < x_1 \dots x_n = b$ un spline cúbico $S$ para $f$ es una polinomio que satisface las siguientes condiciones:
+
+\begin{enumerate}
+\item $S(x)$ es un polinomio cúbico, denotado $S_j(x)$ en el intervalo $[x_j, x_{j+1}] \forall j = 0, 1, \dots, n-1$ \label{eq:s1}
+\item $S_j(x) = f(x_j)$ y $S_j(x_{j+1}) = f(x_{j+1})$ $\forall j = 0, 1, \dots, n-1$ con $S_j(x) = a_j + b_j(x - x_j) + c_j(x - x_j)^2 + d_j(x - x_j)^3$ \label{eq:s2}
+\item $S_{j+1}(x_{j+1}) = S_j(x_{j+1})$ $\forall j = 0, 1, \dots, n-2$ \label{eq:s3}
+\item $S_{j+1}^{'}(x_{j+1}) = S_j^{'}(x_{j+1})$ $\forall j = 0, 1, \dots, n-2$ \label{eq:s4}
+\item $S_{j+1}^{''}(x_{j+1}) = S_j^{''}(x_{j+1})$ $\forall j = 0, 1, \dots, n-2$ \label{eq:s5}
+\item Una de las siguientes condiciones necesita ser cumplida \label{eq:s6}
+\subitem 1) $S^{''}(x_0) = S^{''}(x_n) = 0$ (borde natural) 
+\subitem 2) $S^{'}(x_0) =  f^{'}(x_0) \wedge S^{'}(x_n) = f^{'}(x_n)$ (borde sujeto) 
+\end{enumerate}
+
+Como se menciona, se necesita cumplir con una de las dos condiciones de (\ref{eq:s6}), en particular 2) dará como resultado una aproximación más precisa de la función real dado que estamos utilizando más información de la misma, pero para ello necesitaremos conocer los valores de la derivada de la función en esos puntos y esto en general no suele suceder. Para este trabajo práctico utilizaremos 1) debido a que no conocemos los valores de la derivada, más aún, no disponemos de la función que aproximaremos.
+
+
+
+
+
+
 
 
