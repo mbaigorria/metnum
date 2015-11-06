@@ -42,7 +42,7 @@ Cuando la función sea conocida podremos, además, obtener la expresion del erro
 
 Es decir que agregando la expresion del error obtendremos exactamente los valores de la funcion para todo $x \in [a, b]$.
 
-Dado que en este trabajo practico desconocemos la fuente de los datos, será imposible obtener una expresion del error para la misma. Por lo tanto no enunciaremos la formulación de los errores asociados a ninguno de los métodos de interpolación que analizaremos. Sus definiciones pueden encontrarse en cualquier libro de análisis numérico. Particularmente recomendamos leer $<$cita a burden, pag:113 en adelante$>$
+Dado que en este trabajo práctico desconocemos la fuente de los datos, será imposible obtener una expresion del error para la misma. Por lo tanto no enunciaremos la formulación de los errores asociados a ninguno de los métodos de interpolación que analizaremos. Sus definiciones pueden encontrarse en cualquier libro de análisis numérico. Particularmente recomendamos leer $<$cita a burden, pag:113 en adelante$>$
 
 \subsection{Cálculo del polinomio interpolador}
 
@@ -134,6 +134,39 @@ Dada una función $f$ definida en $[a, b]$ y los puntos $a = x_0 < x_1 \dots < x
 \end{enumerate}
 
 Como se menciona, se necesita cumplir con una de las dos condiciones de (\ref{eq:s6}), en particular 2) dará como resultado una aproximación más precisa de la función real dado que estamos utilizando más información de la misma, pero para ello necesitaremos conocer los valores de la derivada de la función en esos puntos y esto en general no suele suceder. Para este trabajo práctico utilizaremos 1) debido a que no conocemos los valores de la derivada, más aún, no dispondremos de la función que aproximaremos.
+
+\textbf{incluir algun grafico con las 3 interpolaciones si es posible y ver como se comporta cada una. Mencionar que splines es mejor porque tiene más precisio en cada intervalo y mas condiciones entre cada par}
+
+\section{Slow Motion}
+
+\subsection{El objetivo inicial}
+
+Como mencionamos en la introducción el objetivo de este trabajo práctico es generar videos en cámara lenta basandonos en la idea de introducir cuadros intermedios generados con los métodos mencionados de interpolación. Veremos ahora como representar un video para poder lograrlo y luego aplicaremos cada método y observaremos que sucede en cada caso.
+
+\subsection{Manipilación de los cuadros: interpolando imágenes}
+Cada cuadro de un video se puede representar en matrices donde para cada posicion $i$, $j$ de un cuadro $k$ obtenemos 
+
+\vspace{4mm}
+
+$
+\hspace{1.3cm}
+     \begin{pmatrix}
+      f(1, 1, k) & f(1, 2, k) & \dots & f(1, n, k) \\
+	  f(2, 1, k) & f(2, 2, k) & \dots & f(2, n, k) \\
+	  \vdots & \vdots & \vdots & \vdots \\
+	  f(m, 1, k) & f(m, 2, k) & \dots & f(m, n, k) \\
+     \end{pmatrix}
+$
+
+\vspace{4mm}
+
+Lo que haremos una vez generados los cuadros será interpolar entre cada par de posiciones para un mismo cuadro. Es decir, dados $f(1, 1, k)$ y $f(1, 1, k+1)$ generaremos un polinomio interpolador para poder aproximar el valor intermedio al cuadro $k$ y $k+1$. (falta: hablar de cada método, mencionar el método de los vecinos y porque será utilizado, mencionar que es lo que realizaremos en los tests y como lo llevaremos a cabo. Hablar de como voy a cuantificar los resultados: el test principal será el del análisis del PSNR y el error cuadrático medio para los cuadros generados en cada método)
+
+\subsection{Nociónes básicas}
+
+El motivo de porque estos cuadros intermedios que generaremos estarán coordinados con el cuadro anterior y siguiente será nuestro motivo de análisis en el resto del trabajo, pero la idea intuitiva es  bastante simple de explicar... (voy a ver cuando termine lo anterior si esto puede ser necesario)
+
+
 
 
 
