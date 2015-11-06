@@ -120,7 +120,7 @@ Para este tipo de inconvenientes existe otro tipo de método que no necesariamen
 La alternativa se basa en dividir el intervalo en subintervalos y construir en cada uno de ellos un polinomio. Generalmente se denomina a esta técnica interpolación por partes. La mas común y usada es la que utiliza polinomios de grado tres y se denomina spline cúbico. 
 Al ser un polinomio cúbico hay suficiente flexibilidad para asegurar que la interpolación es clase $C^{2}[a, b]$, es decir, que es continua y tiene primeras y segundas derivadas, aunque no por esto asume que vayan a coincidir con los de la función aproximada.
 
-Dada una función $f$ definida en $[a, b]$ y los puntos $a = x_0 < x_1 \dots x_n = b$ un spline cúbico $S$ para $f$ es una polinomio que satisface las siguientes condiciones:
+Dada una función $f$ definida en $[a, b]$ y los puntos $a = x_0 < x_1 \dots < x_n = b$ un spline cúbico $S$ para $f$ es una polinomio que satisface las siguientes condiciones:
 
 \begin{enumerate}
 \item $S(x)$ es un polinomio cúbico, denotado $S_j(x)$ en el intervalo $[x_j, x_{j+1}] \forall j = 0, 1, \dots, n-1$ \label{eq:s1}
