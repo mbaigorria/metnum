@@ -1,0 +1,116 @@
+\section{Polinomios interpoladores}
+
+\subsection{Motivación del polinomio interpolador}
+
+Interpolar significa estimar el valor desconocido de una función en un punto,
+ponderando sus valores conocidos para puntos intermedios. Para lograrlo podemos construir un polinomio en base a estos valores conocidos. La presición dependerá del polinomio elegido y siempre se dispondrá de una formula para el error que permitirá ajustarla.
+Aplicativamente, esto tendrá sentido siempre y cuando no dispongamos de la función real o que computacionalmente no sea viable debido a la complejidad involucrada para data sets muy grandes. En general, los polinomios son menos costosos y muy flexibles computacionalmente.
+
+\subsection{Definición}
+
+Dada una función $f$ de la cual se conocen sus valores en un número finito de puntos $x_0$, $x_1$, ..., $x_m$, con $m \in \mathbb{N}$, se llama interpolación polinómica al proceso de hallar un polinomio $P_m(x)$ de grado menor o igual a $m$, cumpliendo $P_m(x_k)$ = $f(x_k)$,  $\forall$ $k$ = 0, 1, ..., $m$.
+Este polinomio se conoce como polinomio interpolador y tendrá la siguiente forma:
+
+\begin{equation}
+	 P_m(x) = a_mx^m + a_{m-1}x^{m-1} + \dots + a_1x + a_0
+\end{equation}
+
+Donde $a_m$, $a_{m-1}$, $\dots$, $a_1$, $a_1$ $\in \mathbb{R}$.
+Un motivo de su importancia es que aproximan uniformemente funciones continuas. 
+Con esto queremos decir que dada cualquier funcion definida y continua en un intervalo cerrado, existe un polinomio que aproxima tanto como sea deseado a esa función.
+
+\begin{theorem}
+	\item Weierstrass Aproximation Theorem
+	\item Supongamos que $f$ es definida y continua en $[a, b]$. Para cada $\epsilon > 0$, existe un polinomio $P(x)$ con la siguiente propiedad:	
+\end{theorem}
+\begin{equation}
+	 |f(x) - P(x)| < \epsilon, \forall x \in [a, b]
+\end{equation}
+
+La demostración de este teorema puede encontrarse en textos de análisis real o documentos universitarios.(crear una cita a http://www.math.harvard.edu/~waffle/wapproxt.pdf)
+Otra razon importante para considerar esta clase de polinomios es que sus derivadas e integrales indefinidas son fáciles de calcular y además tambien son polinomios. Por esta razon los polinomios interpoladores son utilizados para interpolar funciones continuas.
+
+Cuando la función sea conocida podremos, además, obtener la expresion del error de aproximación del polinomio. La misma nos servirá para ajustar el paso que deberemos tomar cuando deseamos acotar el error. 
+
+\begin{theorem}
+	\item Sean $x_0$, $x_1$, ..., $x_m$ en el intervalo $[a, b]$ y $f \in C^{m+1}[a, b]$. Entonces para cada x en $[a, b]$, un número $\xi(x)$ (que es generalmente desconocido) entre $x_0$, $x_1$, ..., $x_m$ y por lo tanto en $(a, b)$ existe con	
+\end{theorem}
+
+\begin{equation}
+	f(x) = P(x) + \dfrac{f^{n+1}(\xi(x))}{(n+1)!}(x - x_0)(x - x_1)\dots(x - x_m)
+\end{equation}
+
+Es decir que agregando la expresion del error obtendremos exactamente los valores de la funcion para todo $x \in [a, b]$.
+
+Dado que en este trabajo practico desconocemos la fuente de los datos, será imposible obtener una expresion del error para la misma. Por lo tanto no enunciaremos la formulación de los errores asociados a ninguno de los métodos de interpolación que analizaremos. Sus definiciones pueden encontrarse en cualquier libro de análisis numérico. Particularmente recomendamos leer $<$cita a burden, pag:113 en adelante$>$
+
+\subsection{Cálculo del polinomio interpolador}
+
+Existen varios métodos de interpolación polinomial. Para este trabajo práctico veremos tres de ellos: lineal y cuadrática y splines. Veremos como se construye cada uno y analizaremos su exactitud y complejidades involucradas.
+
+\subsubsection{Interpolación de Lagrange}
+
+En la interpolación linel se utiliza un segmento rectilineo que pasa por dos puntos que se conocen: $(x_0, y_0)$ y $(x_1, y_1)$. La pendiente de la recta que pasa por esos puntos será: 
+
+\begin{equation}
+	 m = \dfrac{y_1 - y_0}{x_1 - x_0}
+\end{equation}
+
+Luego en la ecuación de la recta $y = m(x - x_0) + y_0$ podemos sustituir $m$ y 
+obtener:
+
+\begin{equation} \label{eq:lineal}
+	 y = P(x) = y_0 + (y_1 - y_0)\dfrac{y_1 - y_0}{x_1 - x_0} 
+\end{equation} 
+
+Donde (\ref{eq:lineal}) es un polinomio de grado $\leq$ 1 y si evaluamos en $x_0$ y $x_1$ respectivamente obtenemos:
+
+\begin{equation}
+	 P(x_0) = y_0 + (y_1 - y_0)(0) = y_0 \wedge P(x_1) = y_0 + (y_1 - y_0)(1) = y_1 
+\end{equation}
+
+J.L Lagrange encontró que se puede encontrar este polinomio utilizando un método distinto, escribiendo $y$ de la siguiente forma
+
+\begin{equation} \label{eq:linealLagrange}
+	y = P_1(x) = y_0\dfrac{x - x_0}{x_1 - x_0} + y_1\dfrac{x - x_1}{x_0 - x_1} = \sum_{k=1}^{1} y_kL_{1,k}(x)
+\end{equation}
+
+Donde $L_{1,0}(x) = \dfrac{x - x_0}{x_1 - x_0}$ y $L_{1,1}(x) = \dfrac{x - x_1}{x_0 - x_1}$ son los polinomios de coeficientes de Lagrange para los puntos $x_0$ y $x_1$ respectivamente. Podemos notar que cada uno de los sumandos del lado izquierdo de la igualdad de (\ref{eq:linealLagrange}) es un término lineal, por lo tanto $P_1(x)$ es de grado $\leq$ 1. 
+Como 
+
+\begin{equation}
+	L_{1,0}(x_0) = 1 \wedge L_{1,0}(x_1) = 0 \wedge L_{1,1}(x_1) = 1 \wedge L_{1,1}(x_0) = 0
+\end{equation}
+
+entonces $P_1(x)$ pasa por todos los puntos dados:
+
+\begin{equation}
+	P_1(x) = y_0 + y_1(0) = y_0 \wedge P_1(x) = y_0(0) + y_1 = y_1 
+\end{equation}
+
+\begin{theorem}
+	\item Sean $x_0$, $x_1$, $\dots$, $x_n$. $n + 1$ puntos distintos y $f$ es la función cuyos valores son dados por estos puntos, entonces existe un único polinomio $P(x)$ de grado a lo sumo $n$ tal que 
+\end{theorem}
+\begin{equation}
+	f(x_k) = P(x_k) \forall k = 0, 1, \dots, n.
+\end{equation}
+
+Este polinomio es dado por la forma genérica de Lagrange
+
+\begin{equation}
+	P_n(x) = f(x_0)L_{n, 0}(x) + \dots + f(x_n)L_{n,n}(x) = \sum_{k=1}^{n} y_kL_{n,k}(x) 
+\end{equation}
+
+Donde $\forall$ $k$ = 0, 1, $\dots$, $n$
+
+\begin{equation}
+	L_{n,k}(x) = \dfrac{(x - x_0)(x - x_1)\dots(x - x_{k-1})(x - x_{k+1})\dots(x - x_n)}{(x_k - x_0)(x_k - x_1)\dots(x_k - x_{k-1})(x_k - x_{k+1})\dots(x_k - x_n)} = \prod_{i=0, i \neq k}^{n} \dfrac{x - x_i}{x_k - x_i}
+\end{equation}
+
+En particular, si $n$ = 2, obtenemos el polinomio de Lagrange cuadratico
+\begin{equation}
+	P_n(x) = f(x_0)\dfrac{(x - x_1)(x - x_2)}{(x_0 - x_1)(x_0 - x_2)} + f(x_1)\dfrac{(x - x_0)(x - x_2)}{(x_1 - x_0)(x_1 - x_2)} + f(x_2)\dfrac{(x - x_0)(x - x_1)}{(x_2 - x_0)(x_2 - x_1)} 
+\end{equation}
+
+
+
