@@ -137,14 +137,18 @@ Como se menciona, se necesita cumplir con una de las dos condiciones de (\ref{eq
 
 \textbf{incluir algun grafico con las 3 interpolaciones si es posible y ver como se comporta cada una. Mencionar que splines es mejor porque tiene más precisio en cada intervalo y mas condiciones entre cada par}
 
-\section{Slow Motion}
+\section{Slow Motion: Modelado}
 
 \subsection{El objetivo inicial}
 
 Como mencionamos en la introducción el objetivo de este trabajo práctico es generar videos en cámara lenta basandonos en la idea de introducir cuadros intermedios generados con los métodos mencionados de interpolación. Veremos ahora como representar un video para poder lograrlo y luego aplicaremos cada método y observaremos que sucede en cada caso.
 
 \subsection{Manipilación de los cuadros: interpolando imágenes}
-Cada cuadro de un video se puede representar en matrices donde para cada posicion $i$, $j$ de un cuadro $k$ obtenemos 
+
+Un video está compuesto por cuadros, que no son más que imágenes del video en una unidad de tiempo que será determinada por la cantidad de cuadros por segundo o fps a la que el video se reproduce.
+Por ejemplo si el video se reproduce a 30 fps y dura 5 segundos, tendremos 150 cuadros en total y dado que 1 sg = 1000 ms, cada imágen se verá en pantalla por aproximadamente 33,33 ms.
+
+Cada imágen se puede representar en matrices donde para cada posicion $i$, $j$ de un cuadro $k$ obtenemos 
 
 \vspace{4mm}
 
@@ -153,18 +157,30 @@ $
      \begin{pmatrix}
       f(1, 1, k) & f(1, 2, k) & \dots & f(1, n, k) \\
 	  f(2, 1, k) & f(2, 2, k) & \dots & f(2, n, k) \\
-	  \vdots & \vdots & \vdots & \vdots \\
+	  \vdots & \vdots & \ddots & \vdots \\
 	  f(m, 1, k) & f(m, 2, k) & \dots & f(m, n, k) \\
      \end{pmatrix}
 $
 
 \vspace{4mm}
 
-Lo que haremos una vez generados los cuadros será interpolar entre cada par de posiciones para un mismo cuadro. Es decir, dados $f(1, 1, k)$ y $f(1, 1, k+1)$ generaremos un polinomio interpolador para poder aproximar el valor intermedio al cuadro $k$ y $k+1$. (falta: hablar de cada método, mencionar el método de los vecinos y porque será utilizado, mencionar que es lo que realizaremos en los tests y como lo llevaremos a cabo. Hablar de como voy a cuantificar los resultados: el test principal será el del análisis del PSNR y el error cuadrático medio para los cuadros generados en cada método)
+Lo que haremos una vez obtenidos los cuadros que representan el video será interpolar entre cada par de posiciones para un mismo cuadro. Es decir para cada $f(i, j, k)$, $f(i, j, k+1)$ $\forall$ $k = 0, 1, \dots, n-1$ generaremos un polinomio interpolador para poder aproximar los valores intermedios a los cuadros $k$ y $k+1$.
 
-\subsection{Nociónes básicas}
+\subsection{Discretización}
 
-El motivo de porque estos cuadros intermedios que generaremos estarán coordinados con el cuadro anterior y siguiente será nuestro motivo de análisis en el resto del trabajo, pero la idea intuitiva es  bastante simple de explicar... (voy a ver cuando termine lo anterior si esto puede ser necesario)
+El tamaño del paso estará determinado por la cantidad de cuadros que queramos generar entre cada par de cuadros, es decir que podriamos generar más de un cuadro intermedio, ergo, el paso será más pequeño. Como condición general el paso será el mismo para todos los polinomios. 
+
+Dependiendo del método elegido, tomar más cuadros puede resultar beneficioso para la fluidez del resultado, pero esto en principio no será siempre así. Veremos que para los polinomios más lineales esto no genera ningún tipo de mejora. Además en general, cuanto más pequeño sea el paso involucrado, más cosotoso será obtener el video final. 
+
+\subsection{Nearest Neighbour}
+
+Introduciremos aquí un método que aunque podría considerarse poco efectivo, nos servirá para tener un margen más amplio de comparación. El mismo se basa en la idea de que tambien podemos interpolar copiando el cuadro del vecino más cercano y replicarlo directamente entre entre dos cuadros $k$ y $k+1$. Este método se denomina Nearest Neighbour. 
+
+Además no solo está limitado a la generación de un cuadro intermedio. Aquí tambien podremos utilizar el paso como parámetro. Dado que este método no utiliza un polinomio para aproximar valores, lo que haremos será partir a la mitad el intervalo (más, menos uno, esto será determinado en la experimentación) y replicar el cuadro izquierdo tantas veces como paso/2 y lo mismo con el cuadro derecho. 
+
+\subsection{}
+
+(falta: hablar de cada método, mencionar el método de los vecinos y porque será utilizado, mencionar que es lo que realizaremos en los tests y como lo llevaremos a cabo. Hablar de como voy a cuantificar los resultados: el test principal será el del análisis del PSNR y el error cuadrático medio para los cuadros generados en cada método)
 
 
 
