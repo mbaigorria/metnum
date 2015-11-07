@@ -145,10 +145,11 @@ Como mencionamos en la introducción el objetivo de este trabajo práctico es ge
 
 \subsection{Manipilación de los cuadros: interpolando imágenes}
 
-Un video está compuesto por cuadros, que no son más que imágenes del video en una unidad de tiempo que será determinada por la cantidad de cuadros por segundo o fps a la que el video se reproduce.
+Un video está compuesto por cuadros, que no son más que las imágenes de las que se compone el video   y que serán determinadas por la cantidad de cuadros por segundo o fps a la que el video se reproduce y la duración del mismo.
 Por ejemplo si el video se reproduce a 30 fps y dura 5 segundos, tendremos 150 cuadros en total y dado que 1 sg = 1000 ms, cada imágen se verá en pantalla por aproximadamente 33,33 ms.
 
-Cada imágen se puede representar en matrices donde para cada posicion $i$, $j$ de un cuadro $k$ obtenemos 
+Cada imágen está compuesta por pixeles que se pueden representar en matrices donde cada posicion $i$, $j$ de un cuadro $k$ representa un color en la escala de grises $[0..255]$ $\in$ $\mathbb{N}$. Los videos que utilizaremos en la experimentación serán en escala de grises por el único motivo de que disminuirá los tiempos de cómputo involucrados en comparación a si trabajaramos con toda la representación de colores rgb. Aunque esta misma idea puede generalizarse y adaptarse para todos los colores sin inconveniente alguno.
+La matriz que describe un cuadro puede escribirse de la siguiente manera
 
 \vspace{4mm}
 
@@ -164,23 +165,44 @@ $
 
 \vspace{4mm}
 
+Donde $f(i, j, k)$ $\in$ $[0..255]$
+
 Lo que haremos una vez obtenidos los cuadros que representan el video será interpolar entre cada par de posiciones para un mismo cuadro. Es decir para cada $f(i, j, k)$, $f(i, j, k+1)$ $\forall$ $k = 0, 1, \dots, n-1$ generaremos un polinomio interpolador para poder aproximar los valores intermedios a los cuadros $k$ y $k+1$.
 
 \subsection{Discretización}
 
-El tamaño del paso estará determinado por la cantidad de cuadros que queramos generar entre cada par de cuadros, es decir que podriamos generar más de un cuadro intermedio, ergo, el paso será más pequeño. Como condición general el paso será el mismo para todos los polinomios. 
+El tamaño del paso del polinomio estará determinado por la cantidad de cuadros que queramos generar entre cada par de cuadros, es decir que podriamos generar más de un cuadro intermedio, ergo, el paso será más pequeño. Como condición general el paso será el mismo para todos los polinomios. 
 
-Dependiendo del método elegido, tomar más cuadros puede resultar beneficioso para la fluidez del resultado, pero esto en principio no será siempre así. Veremos que para los polinomios más lineales esto no genera ningún tipo de mejora. Además en general, cuanto más pequeño sea el paso involucrado, más cosotoso será obtener el video final. 
+Dependiendo del método elegido, tomar más cuadros puede resultar beneficioso para la fluidez del resultado, pero esto en principio no será siempre así. Veremos que para los polinomios lineales esto no producirá ningún tipo de mejora y en cambio serán mejores los resultados obtenidos en interpolación cuadrática y spline cúbico. Además en general, cuanto más pequeño sea el paso involucrado, más costoso será obtener el resultado de la interpolación. Existirá como no podia ser de otra manera un trade-off entre complejidad, eficiencia, suavidad y nitidez del resultado final. 
 
 \subsection{Nearest Neighbour}
 
-Introduciremos aquí un método que aunque podría considerarse poco efectivo, nos servirá para tener un margen más amplio de comparación. El mismo se basa en la idea de que tambien podemos interpolar copiando el cuadro del vecino más cercano y replicarlo directamente entre entre dos cuadros $k$ y $k+1$. Este método se denomina Nearest Neighbour. 
+Introduciremos aquí un método que aunque podría considerarse poco efectivo, nos servirá para tener un margen más amplio de comparación. El mismo se basa en la idea de que tambien podemos interpolar copiando el cuadro más cercano entre dos cuadros $k$ y $k+1$. Este método se denomina Nearest Neighbour. 
 
 Además no solo está limitado a la generación de un cuadro intermedio. Aquí tambien podremos utilizar el paso como parámetro. Dado que este método no utiliza un polinomio para aproximar valores, lo que haremos será partir a la mitad el intervalo (más, menos uno, esto será determinado en la experimentación) y replicar el cuadro izquierdo tantas veces como paso/2 y lo mismo con el cuadro derecho. 
 
-\subsection{}
+\subsection{El modelo empírico}
 
-(falta: hablar de cada método, mencionar el método de los vecinos y porque será utilizado, mencionar que es lo que realizaremos en los tests y como lo llevaremos a cabo. Hablar de como voy a cuantificar los resultados: el test principal será el del análisis del PSNR y el error cuadrático medio para los cuadros generados en cada método)
+Para poder valorar el resultado de las experimentaciones correctamente no basta con un análisis subjetivo de comparación de los métodos entre si. Necesitamos poder comparar con un módelo empírico que nos de una idea más objetiva de como se comporta cada interpolación. Para esto mismo consideraremos un video del que obtendremos sus cuadros tomando saltos equidistantes, por ejemplo, eliminado los cuadros impares, sin eliminar el primero y el último ya que los bordes siempre estarán incluidos. Luego interpolaremos los cuadros faltantes con cada uno de los métodos y tomaremos las siguientes medidas:
+
+\begin{equation}
+	PSNR = 10 \times log_{10}(\dfrac{MAX_u^2}{ECM})
+\end{equation}
+
+Donde $MAX_u$ define el rango máximo de la imágen, es decir, 255 y $ECM$ el error cuadrático medio
+
+\begin{equation}
+	\dfrac{1}{N}\sum_{i,j}(u_{ij}^* - u_{ij})^2
+\end{equation}
+
+Donde $N$ es la cantidad de pixeles de la imágen, $u^*$ es la imágen ideal y $u$ es la imágen que construimos. Este error es bastante intuitivo y tiene mucha aplicación en estadistica. Nos da una idea del error cometido al aproximar todos los valores de la imágen ideal. 
+
+El $PSNR$ es algo menos intuitivo. Sus siglas provienen de Peak Signal-to-Noise Ratio que en español significa Relación Señal a Ruido de Pico. Suele usarse en el ámbito de la compresión de imágenes y es la medida cuantitativa de la calidad de la reconstrucción. Lo que define es la relación entre la máxima energía posible de una señal y el ruido que afecta a su representación fidedigna. 
+Tiene aplicación en esta experimentación dado que lo que haremos tambien será reconstruir parte del video.
+
+De esta manera podremos saber que método aproxima mejor al resultado ideal de manera objetiva. 
+
+(redondear un poco más todo esto...le falta)
 
 
 
