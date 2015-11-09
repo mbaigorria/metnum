@@ -1,12 +1,16 @@
-\section{Polinomios interpoladores}
+\section{Desarrollo}
 
-\subsection{Motivación del polinomio interpolador}
+\subsection{Interpolación}
 
-Interpolar significa estimar el valor desconocido de una función en un punto,
-ponderando sus valores conocidos para puntos intermedios. Para lograrlo podemos construir un polinomio en base a estos valores conocidos. La presición dependerá del polinomio elegido y siempre se dispondrá de una formula para el error que permitirá ajustarla.
-Aplicativamente, esto tendrá sentido siempre y cuando no dispongamos de la función real o que computacionalmente no sea viable debido a la complejidad involucrada para data sets muy grandes. En general, los polinomios son menos costosos y muy flexibles computacionalmente.
+Consiste en estimar valores desconocidos en base a otros ya conocidos dados por un \textit{data-set} predefinido, que suponemos sugiere el comportamiento de alguna función \textit{f} para la cual solo conocemos una cantidad determinada de resultados. Estos datos suelen organizarse en tablas de pares $(x_i,y_i)$, donde $y_i$ es el $f(x_i)$ y $x_i$ es algún valor conocido del dominio de \textit{f} sobre el cual deseamos trabajar; dicho esto el problema entonces se traduce en aproximar dicha función, procurando satisfacer la obvia restricción de \textit{matchear} con esos valores ya conocidos bajo sus respectivas pre-imagenes. Para ello existen diversos metodos algoritmicos que en base a nuestros datos intentan generar esa función aproximada, entre ellos por ejemplo, se encuentran los metodos de interpolación polinomial que como su nombre sugiere intentan lograrlo por medio de algún polinomio (al que llamamos polinomio interpolador). 
 
-\subsection{Definición}
+%\subsection{Polinomio interpolador}
+
+%Interpolar significa estimar el valor desconocido de una función en un punto,
+%ponderando sus valores conocidos para puntos intermedios. Para lograrlo podemos construir un polinomio en base a estos valores conocidos. La presición dependerá del polinomio elegido y siempre se dispondrá de una formula para el error que permitirá ajustarla.
+%Aplicativamente, esto tendrá sentido siempre y cuando no dispongamos de la función real o que computacionalmente no sea viable debido a la complejidad involucrada para data sets muy grandes. En general, los polinomios son menos costosos y muy flexibles computacionalmente.
+
+\subsection{Interpolación polinómica}
 
 Dada una función $f$ de la cual se conocen sus valores en un número finito de puntos $x_0$, $x_1$, ..., $x_m$, con $m \in \mathbb{N}$, se llama interpolación polinómica al proceso de hallar un polinomio $P_m(x)$ de grado menor o igual a $m$, cumpliendo $P_m(x_k)$ = $f(x_k)$,  $\forall$ $k$ = 0, 1, ..., $m$.
 Este polinomio se conoce como polinomio interpolador y tendrá la siguiente forma:
@@ -16,8 +20,12 @@ Este polinomio se conoce como polinomio interpolador y tendrá la siguiente form
 \end{equation}
 
 Donde $a_m$, $a_{m-1}$, $\dots$, $a_1$, $a_1$ $\in \mathbb{R}$.
-Un motivo de su importancia es que aproximan uniformemente funciones continuas. 
-Con esto queremos decir que dada cualquier funcion definida y continua en un intervalo cerrado, existe un polinomio que aproxima tanto como sea deseado a esa función.
+
+Este tipo de interpolación suele considerarse para aproximar funciones continuas, esto es asi porque los polinomios tiene buenas propiedades analiticas, entre las cuales podemos considerar las siguientes: son continuas, facilmente integrables e infinitamente derivables (pertenecen a la clase $C^{\infty}[a, b]$), y además sus derivadas y primitivas son a su vez polinomios. Otro propiedad importante de la cual se fundamenta este tipo de interpolación es la de que dada cualquier funcion definida y continua en un intervalo cerrado y acotado, existe un polinomio que aproxima tanto como se desee a esa función; formalmente esto es enunciado mediante el siguiente teorema.
+
+%Otra razon importante para considerar esta clase de polinomios es que sus derivadas e integrales indefinidas son fáciles de calcular y además tambien son polinomios. Por esta razon los polinomios interpoladores son utilizados para interpolar funciones continuas.
+%Un motivo de su importancia es que aproximan uniformemente funciones continuas. 
+%Con esto queremos decir que dada cualquier funcion definida y continua en un intervalo cerrado, existe un polinomio que aproxima tanto como sea deseado a esa función.
 
 \begin{theorem}
 	\item Weierstrass Aproximation Theorem
@@ -27,30 +35,30 @@ Con esto queremos decir que dada cualquier funcion definida y continua en un int
 	 |f(x) - P(x)| < \epsilon, \forall x \in [a, b]
 \end{equation}
 
-La demostración de este teorema puede encontrarse en textos de análisis real o documentos universitarios.(crear una cita a http://www.math.harvard.edu/~waffle/wapproxt.pdf)
-Otra razon importante para considerar esta clase de polinomios es que sus derivadas e integrales indefinidas son fáciles de calcular y además tambien son polinomios. Por esta razon los polinomios interpoladores son utilizados para interpolar funciones continuas.
+La demostración de este teorema puede encontrarse en textos de análisis real o documentos universitarios.(crear una cita a http://www.math.harvard.edu/~waffle/wapproxt.pdf).\vspace{2mm}
+\\
+ Dado el anterior teorema podemos considerar a nuestra función \textit{f} como algún polinomio interpolador mas otra función de corrección a la que denominaremos la expresión del error. Esta última función correjirá la inprecisión del polinomio con respecto a la función original para cada valor de su dominio. No obstante puede que encontrar dicha expresion no sea para nada trivial.
+ %Podremos entonces, además, obtener la expresion del error de aproximación del polinomio. La misma nos servirá para ajustar el paso que deberemos tomar cuando deseamos acotar el error. 
 
-Cuando la función sea conocida podremos, además, obtener la expresion del error de aproximación del polinomio. La misma nos servirá para ajustar el paso que deberemos tomar cuando deseamos acotar el error. 
+%\begin{theorem}
+%	\item Sean $x_0$, $x_1$, ..., $x_m$ en el intervalo $[a, b]$ y $f \in C^{m+1}[a, b]$, para todo x en $[a, b]$ existe un número $\xi(x)$ perteneciente a $[a, b]$ tal que:	
+%\end{theorem}
 
-\begin{theorem}
-	\item Sean $x_0$, $x_1$, ..., $x_m$ en el intervalo $[a, b]$ y $f \in C^{m+1}[a, b]$. Entonces para cada x en $[a, b]$, un número $\xi(x)$ (que es generalmente desconocido) entre $x_0$, $x_1$, ..., $x_m$ y por lo tanto en $(a, b)$ existe con	
-\end{theorem}
+%\begin{equation}
+%	f(x) = P(x) + \dfrac{f^{n+1}(\xi(x))}{(n+1)!}(x - x_0)(x - x_1)\dots(x - x_m)
+%\end{equation}
 
-\begin{equation}
-	f(x) = P(x) + \dfrac{f^{n+1}(\xi(x))}{(n+1)!}(x - x_0)(x - x_1)\dots(x - x_m)
-\end{equation}
+%Es decir que agregando la expresion del error obtendremos exactamente los valores de la funcion para todo $x \in [a, b]$.
 
-Es decir que agregando la expresion del error obtendremos exactamente los valores de la funcion para todo $x \in [a, b]$.
-
-Dado que en este trabajo práctico desconocemos la fuente de los datos, será imposible obtener una expresion del error para la misma. Por lo tanto no enunciaremos la formulación de los errores asociados a ninguno de los métodos de interpolación que analizaremos. Sus definiciones pueden encontrarse en cualquier libro de análisis numérico. Particularmente recomendamos leer $<$cita a burden, pag:113 en adelante$>$
+%Dado que en este trabajo práctico desconocemos la fuente de los datos, será imposible obtener una expresion del error para la misma. Por lo tanto no enunciaremos la formulación de los errores asociados a ninguno de los métodos de interpolación que analizaremos. Sus definiciones pueden encontrarse en cualquier libro de análisis numérico. Particularmente recomendamos leer $<$cita a burden, pag:113 en adelante$>$
 
 \subsection{Cálculo del polinomio interpolador}
 
-Existen varios métodos de interpolación polinomial. Para este trabajo práctico veremos tres de ellos: lineal y cuadrática y splines. Veremos como se construye cada uno y analizaremos su exactitud y complejidades involucradas.
+Existen varios métodos de interpolación polinomial que generan diferentes tipos de polinomios, para este trabajo práctico veremos en particular dos de ellos, Lineal y Splines. Veremos como se construye cada uno y analizaremos su exactitud y complejidades involucradas.
 
 \subsubsection{Interpolación de Lagrange}
 
-En la interpolación linel se utiliza un segmento rectilineo que pasa por dos puntos que se conocen: $(x_0, y_0)$ y $(x_1, y_1)$. La pendiente de la recta que pasa por esos puntos será: 
+%En la interpolación linel se utiliza un segmento rectilineo que pasa por dos puntos que se conocen: $(x_0, y_0)$ y $(x_1, y_1)$. La pendiente de la recta que pasa por esos puntos será: 
 
 \begin{equation}
 	 m = \dfrac{y_1 - y_0}{x_1 - x_0}
@@ -117,10 +125,14 @@ Para este tipo de inconvenientes existe otro tipo de método que no necesariamen
 
 \subsubsection{Spline Cúbico}
 
-La alternativa se basa en dividir el intervalo en subintervalos y construir en cada uno de ellos un polinomio. Generalmente se denomina a esta técnica interpolación por partes. La mas común y usada es la que utiliza polinomios de grado tres y se denomina spline cúbico. 
-Al ser un polinomio cúbico hay suficiente flexibilidad para asegurar que la interpolación es clase $C^{2}[a, b]$, es decir, que es continua y tiene primeras y segundas derivadas, aunque no por esto asume que vayan a coincidir con los de la función aproximada.
+Este metodo al igual que el anterior se basa en particionar nuestro intervalo de interes en subintervalos más pequeños con la intención de construir un polinimio particular para cada uno de estos. Se busca entonces que para cada subintevalo, su polinomio asociado aproximen a la función estudiada en el interior del mismo, y además coincida con los resultados ya conocidos en ambos extremos. 
 
-Dada una función $f$ definida en $[a, b]$ y los puntos $a = x_0 < x_1 \dots < x_n = b$ un spline cúbico $S$ para $f$ es una polinomio que satisface las siguientes condiciones:
+Nuestra partición a considerar será la inducida por $a = x_0 < x_1 \dots < x_n = b$, es decir, las pre-imagenes ordenadas de menor a mayor de los valores ya conocidos de \textit{f}; y nuestros polinomios serán polinomios cúbicos que cumplan ciertas propiedades, entre las cuales, que coincidan en los extremos con los polinomios de los intervalos vecinos, y además que en dichos punto también coincidan sus primeras y segundas derivadas; como resultado obtenemos sobre todo el intervalo original una función continua y de derivadas primera y segunda también continuas, es decir de clase $C^{2}[a, b]$. No obstante, no necesariamente ocurre que estas derivadas concuerden con las de la función a interpolar, ni siquiera que las aproximen.
+
+%La alternativa se basa en dividir el intervalo en subintervalos y construir en cada uno de ellos un polinomio. Generalmente se denomina a esta técnica interpolación por partes. La mas común y usada es la que utiliza polinomios de grado tres y se denomina spline cúbico. 
+%Al ser un polinomio cúbico hay suficiente flexibilidad para asegurar que la interpolación es clase $C^{2}[a, b]$, es decir, que es continua y tiene primeras y segundas derivadas, aunque no por esto asume que vayan a coincidir con los de la función aproximada.
+
+Expresando lo anterior de mas formalmente, dada una función $f$ definida en $[a, b]$ y los puntos $a = x_0 < x_1 \dots < x_n = b$ un spline cúbico $S$ para $f$ es un polinomio que satisface las siguientes condiciones:
 
 \begin{enumerate}
 \item $S(x)$ es un polinomio cúbico, denotado $S_j(x)$ en el intervalo $[x_j, x_{j+1}] \forall j = 0, 1, \dots, n-1$ \label{eq:s1}
@@ -133,7 +145,7 @@ Dada una función $f$ definida en $[a, b]$ y los puntos $a = x_0 < x_1 \dots < x
 \subitem 2) $S^{'}(x_0) =  f^{'}(x_0) \wedge S^{'}(x_n) = f^{'}(x_n)$ (borde sujeto) 
 \end{enumerate}
 
-Como se menciona, se necesita cumplir con una de las dos condiciones de (\ref{eq:s6}), en particular 2) dará como resultado una aproximación más precisa de la función real dado que estamos utilizando más información de la misma, pero para ello necesitaremos conocer los valores de la derivada de la función en esos puntos y esto en general no suele suceder. Para este trabajo práctico utilizaremos 1) debido a que no conocemos los valores de la derivada, más aún, no dispondremos de la función que aproximaremos.
+Observemos que se necesita cumplir con una de las dos condiciones de (\ref{eq:s6}), ahora bien en particular satisfacer 2) dará como resultado una aproximación más precisa de la función real, dado que estamos utilizando más información de la misma, pero para ello necesitaremos conocer los valores de la derivada de la función en esos puntos y esto en general no suele suceder. Para este trabajo práctico utilizaremos 1) debido a que no conocemos los valores de la derivada, y más aún, no disponemos de la función que aproximaremos.
 
 \textbf{incluir algun grafico con las 3 interpolaciones si es posible y ver como se comporta cada una. Mencionar que splines es mejor porque tiene más precisio en cada intervalo y mas condiciones entre cada par}
 
