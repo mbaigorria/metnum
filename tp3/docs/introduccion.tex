@@ -41,12 +41,12 @@ En particular, si agregamos varios cuadros intermedios y no modificamos los fps 
 
 \subsection{Motivación y objetivos}
 
-Una empresa de páginas web llamada youborn.com busca tener videos en cámara lenta. Pero teniendo en cuenta que las conexiones a internet no necesariamente son capaces de transportar la gran cantidad de datos que implica un video en slow motion, busca minimizar esta dependencia y solo enviar el video original y que el trabajo de conversion se realize de manera offline, de esta manera, optimizaremos los tiempos de transferencia. 
+A lo largo de la historia del cine... 
 
 Para lograrlo, como se mencionó anteriormente, recurriremos a interpolación.
 En particular, nos enfocaremos en el estudio de la interpolación polinómica. 
-La misma, como se verá en el desarrollo, se basa en aproximar una función, por un polinomio. Analizaremos tres métodos, los cuales serán: lineal, cuadrático y splines y compararemos cada uno de ellos entre si.
+La misma, como se verá en el desarrollo, se basa en aproximar una función, por un polinomio. Analizaremos tres métodos, los cuales serán:  Lineal, Splines y Nearest Neighbour y compararemos cada uno de ellos entre si.
 
 Luego abordaremos la generación de imágenes para obtener videos en slow motion.
-Plantearemos el procedimiento para llevarlo a cabo y observaremos como se comporta cada uno de los tres métodos. Veremos los comportamientos en términos de la calidad del resultado, analizando el trade-off entre complejidad, eficiencia, suavidad y nitidez. Concluiremos que bajo ciertas condiciones en los datos de entrada, es decir como sea el video que estamos procesando, utilizar splines será la mejor opción. 
+Plantearemos el procedimiento para llevarlo a cabo y observaremos como se comporta cada uno de los tres métodos. Veremos los comportamientos en términos de la calidad del resultado, analizando el trade-off entre complejidad, eficiencia, suavidad y nitidez. Concluiremos que bajo ciertas condiciones en los datos de entrada, es decir como sea el video que estamos procesando, utilizar splines será la mejor elección. 
 Además estudiaremos que sucede con la generación de artifacts, así denominadas, a las distorciones procedentes de aplicar estos algoritmos.
