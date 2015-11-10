@@ -182,7 +182,20 @@ $
 
 Donde $f(i, j, k)$ $\in$ $[0..255]$
 
-Lo que haremos una vez obtenidos los cuadros que representan el video será interpolar entre cada par de posiciones para un mismo cuadro. Es decir para cada $f(i, j, k)$, $f(i, j, k+1)$ $\forall$ $k = 0, 1, \dots, n-1$ generaremos un polinomio interpolador para poder aproximar los valores intermedios a los cuadros $k$ y $k+1$.
+Lo que haremos una vez obtenidos los cuadros que representan el video será interpolar entre cada par de posiciones pertenecientes a la misma fila y columna. Es decir para cada $f(i, j, k)$, $f(i, j, k+1)$ $\forall$ $k = 0, 1, \dots, n-1$ generaremos un polinomio interpolador para poder aproximar los valores intermedios a los cuadros $k$ y $k+1$. Dicho polinomio puede expresarse de la siguiente manera, idependientemente del método aplicado 
+
+ \begin{displaymath}
+   P^{i,j}(x) = \left\{
+     \begin{array}{lr}
+       P_{0,1}^{i,j}(x)  & : x_0 \leq x < x_1\\\\
+       P_{1,2}^{i,j}(x)  & : x_1 \leq x < x_2\\
+       \vdots\\
+       P_{0,1}^{i,j}(x)  & : x_{n-1} \leq x_k \leq x_n\\
+     \end{array}
+   \right.
+\end{displaymath} 
+
+Donde $P^{i,j}_{k,k+1}$ es el polinomio que interpola las posiciones $i, j$ para los cuadros $k$ y $k+1$.
 
 \subsection{Discretización}
 
