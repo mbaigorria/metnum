@@ -98,7 +98,7 @@ Donde (\ref{eq:lineal}) es un polinomio de grado 1 y si evaluamos en $x_i$ y $x_
 \end{equation}
 
 Luego dados $n$ puntos de la función podemos definir un polinomio como una función partida entre cada par de puntos para los cuales se obtendrá una recta que los interpole
-
+\vspace{4mm}
  \begin{displaymath}
    P(x) = \left\{
      \begin{array}{lr}
@@ -110,7 +110,7 @@ Luego dados $n$ puntos de la función podemos definir un polinomio como una func
    \right.
 \end{displaymath} 
 
-Un deatalle importante es que el polinomio definido de esta manera es continuo pero no es derivable en los extremos de los intervalos. Esto se traduce directamente en que la aproximación no es "suave". Esto se puede ver con facilidad en las Figuras 3 y 4 (\ref{eq:lineal_graph}).
+Un detalle importante a tener en cuenta es que el polinomio definido de esta manera es continuo pero no es derivable en los extremos de los intervalos. Esto se traduce directamente en que la aproximación no es "suave". Esto se puede ver con facilidad en las Figuras 3 y 4 (\ref{eq:lineal_graph}).
 
 \subsubsection{Spline Cúbico}
 
@@ -195,6 +195,7 @@ Esto nos sugiere un sistema lineal $n-1$ ecuaciones al que agregaremos otras dos
 Luego nuestro sistema lineal queda planteado por $n+1$ ecuaciones de $n+1$ incognitas, por lo que podremos plantearlo como una matriz cuadrada en donde sus columnas representarán los coeficientes de $c_0, \dots , c_n$ para cada ecuación. Mas explícitamente el sistema lineal queda definido por $Ax = b$, donde $A$, $x$ y $b$ serán de la siguiente forma.
 
 \vspace{4mm}
+\begin{center}
 $
 \hspace{1.4cm}
 A =
@@ -207,7 +208,8 @@ A =
 	  0  & \dots & \dots & 0 & 0 & 1 \\
      \end{pmatrix}
 $
-$
+\vspace{4mm}
+$   
 x =
      \begin{pmatrix}
       c_0 \\
@@ -219,9 +221,8 @@ x =
      \end{pmatrix}
 $
 \\
-\vspace{4mm}
 $
-\hspace{4cm}
+\hspace{1.4cm}
 b =
      \begin{pmatrix}
       0 \\
@@ -233,7 +234,9 @@ b =
 	  0 \\
      \end{pmatrix}
 $
-\\
+\end{center}
+\vspace{4mm}
+
 Una carácteristica importante a notar de la matriz $A$ es que se trata de una matriz estrictamente diagonal dominante, que por lo visto en la primera mitad del curso, tiene solución y es única. Esta carácteristica nos abre además una nueva posibilidad sobre este método, ya que si una matriz es estrictamente diagonal dominante, entonces ésta posee factorización LU. Dado esto, notemos que para generar la matriz $A$ hacemos uso únicamente de los $h_j$, por ende $A$ solo va a depender de la partición inicial de nuestro dominio de interes; luego tras calcular la factorización LU podremos reducir notablemente la complejidad en el caso en que queramos aplicar este alogritmo para interpolar una segunda función, siempre y cuando se considere una partición de la cual se deduzcan los mismos $h_j$.
 \vspace{4mm}
 %\textbf{Falta expresar la matriz, justificar que tiene solución única, y hablar de la complejidad (citando y justificando la mejora con factorización LU)}
@@ -294,7 +297,7 @@ Veamos que sucede con la función $sen(2\pi(x/5))$ al interpolar con este métod
     \caption{Nearest neighbour: Paso: 0.5}
   \end{minipage}
 \end{figure}
-
+\vspace{4mm}
 Como se puede apreciar, al igual que en el método lineal, al tomar un paso más pequeño el polinomio se vuelve más preciso. Cabe destacar que igualmente este método desaprovecha en gran medida la información disponible sobre la función. Una mejora posible es aplicar un promedio con los extremos del intervalo.
 
 En general, Spline cúbico será lo ideal para trabajar con funciones continuas debido a que no siempre contaremos con la cantidad suficiente de información sobre la función que estamos interpolando como para lograr que Lineal o Nearest neighbour aproximen correctamente. 
@@ -372,6 +375,7 @@ El $PSNR$ es algo menos intuitivo. Sus siglas provienen de Peak Signal-to-Noise 
 Tendrá aplicación en esta experimentación dado que lo que haremos tambien será reconstruir parte del video.
 
 De esta manera podremos saber que método aproxima mejor al resultado ideal de manera más objetiva. 
+
 
 
 
