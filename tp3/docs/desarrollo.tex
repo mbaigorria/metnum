@@ -155,7 +155,8 @@ Parece bastante claro que se ajusta mucho mejor a la función original que inter
 \subsection{Nearest Neighbour}
 
 Este método aunque podría considerarse poco efectivo, nos servirá para tener un margen más amplio de comparación. El mismo se basa en la idea de que tambien podemos interpolar copiando el valor más cercano al punto que estamos evaluando. 
-Por lo tanto, dados $x_i$ y $x_{i+1}$ y sus respectivas imágenes $f(x_i)$ y $f(x_{i+1})$ y un punto $x^*$ que deseamos interpolar, se define $P_{i, i+1}(x)$ como 
+Por lo tanto, dados $x_i$ y $x_{i+1}$ y sus respectivas imágenes $f(x_i)$ y $f(x_{i+1})$ y un punto $x^*$ que deseamos interpolar, se define $P_{i, i+1}(x)$ como
+ 
 \vspace{4mm}
 \begin{displaymath}
    P(x) = \left\{
@@ -167,6 +168,7 @@ Por lo tanto, dados $x_i$ y $x_{i+1}$ y sus respectivas imágenes $f(x_i)$ y $f(
 \end{displaymath} 
 
 Luego por cada par $x_i$ y $x_{i+1}$ obtendriamos un polinomio de estas caracteristicas quedando el polinomio interpolador de definido de la siguiente manera
+
 \vspace{4mm}
 \begin{displaymath}
    P(x) = \left\{
@@ -192,7 +194,7 @@ Veamos que sucede con la función $sen(2\pi(x/5))$ al interpolar con este métod
   \end{minipage}
 \end{figure}
 
-Como se puede apreciar, al igual que en el métdo lineal, al tomar un paso más pequeño el polinomio vuelve más preciso. Cabe destacar que igualmente este método desaprovecha en gran medida la información disponible sobre la función. Una mejora posible es aplicar un promedio entre con los extremos del intervalo.
+Como se puede apreciar, al igual que en el método lineal, al tomar un paso más pequeño el polinomio vuelve más preciso. Cabe destacar que igualmente este método desaprovecha en gran medida la información disponible sobre la función. Una mejora posible es aplicar un promedio entre con los extremos del intervalo.
 
 En general, trabajar con splines siempre será lo ideal debido a que no siempre contaremos con la cantidad suficiente de información sobre la función que estamos interpolando como para lograr que lineal aproxime correctamente. 
 
