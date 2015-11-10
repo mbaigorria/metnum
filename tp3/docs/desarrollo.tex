@@ -66,11 +66,11 @@ Este método consiste en aproximar una función $f$ tomando rectas entre cada pa
 \begin{figure}[h]
   \begin{minipage}[b]{.5\textwidth} 
     \includegraphics[width=\textwidth]{complementos/lineal_1.jpg}
-    \caption{Interpolación lineal: Paso: 1.0}
+    \caption{Lineal: Paso: 1.0}
   \end{minipage}
   \begin{minipage}[b]{.5\textwidth} 
     \includegraphics[width=\textwidth]{complementos/lineal_05.jpg}
-    \caption{Interpolación lineal: Paso: 0.5}
+    \caption{Lineal: Paso: 0.5}
   \end{minipage}
 \end{figure} \label{eq:lineal_graph}
 
@@ -105,7 +105,7 @@ Luego dados $n$ puntos de la función podemos definir un polinomio como una func
        y_0 + (y_1 - y_0)\dfrac{y_1 - y_0}{x_1 - x_0}  & : x_0 \leq x < x_1\\\\
        y_1 + (y_2 - y_1)\dfrac{y_2 - y_1}{x_2 - x_1}  & : x_1 \leq x < x_2\\
        \vdots\\
-       y_{n-1} + (y_n - y_{n-1})\dfrac{y_n - y_{n-1}}{x_n - x_{n-1}}  & : x_{n-1}	 \leq x_i \leq x_n\\
+       y_{n-1} + (y_n - y_{n-1})\dfrac{y_n - y_{n-1}}{x_n - x_{n-1}}  & : x_{n-1}	\leq x_i \leq x_n\\
      \end{array}
    \right.
 \end{displaymath} 
@@ -144,13 +144,57 @@ Veamos como se comporta la función $sen(2\pi(x/5))$ con spline natural
 \centering
   \begin{minipage}[b]{.9\textwidth}
     \includegraphics[width=\textwidth]{complementos/spline_1.jpg}
-    \caption{Interpolación splines cúbicos: Paso: 1.0}
+    \caption{Splines cúbicos: Paso: 1.0}
   \end{minipage}
 \end{figure}
 
 Parece bastante claro que se ajusta mucho mejor a la función original que interpolación lineal. Esto se debe a las condiciones pedidas sobre los extremos de los intervalos, logrando que las curvas sean suaves en comparación a los picos obtenidos con lineal. 
 
-En general, trabajar con splines siempre será lo ideal debido que no siempre contaremos con la cantidad suficiente de información sobre la función que estamos interpolando como para lograr que lineal aproxime correctamente. 
+\pagebreak
+
+\subsection{Nearest Neighbour}
+
+Este método aunque podría considerarse poco efectivo, nos servirá para tener un margen más amplio de comparación. El mismo se basa en la idea de que tambien podemos interpolar copiando el valor más cercano al punto que estamos evaluando. 
+Por lo tanto, dados $x_i$ y $x_{i+1}$ y sus respectivas imágenes $f(x_i)$ y $f(x_{i+1})$ y un punto $x^*$ que deseamos interpolar, se define $P_{i, i+1}(x)$ como 
+\vspace{4mm}
+\begin{displaymath}
+   P(x) = \left\{
+     \begin{array}{lr}
+       f(x_i)  & : |x_i - x^*| < |x_{i+1} - x^*|\\\\
+       f(x_{i+1})  & : |x_{i+1} - x^*| \leq |x_i - x^*|\\
+     \end{array}
+   \right.
+\end{displaymath} 
+
+Luego por cada par $x_i$ y $x_{i+1}$ obtendriamos un polinomio de estas caracteristicas quedando el polinomio interpolador de definido de la siguiente manera
+\vspace{4mm}
+\begin{displaymath}
+   P(x) = \left\{
+     \begin{array}{lr}
+       P_{0,1}(x)  & : x_0 \leq x < x_1\\\\
+       P_{1,2}(x)  & : x_1 \leq x < x_2\\
+       \vdots\\
+       P_{n-1,n}(x) & : x_{n-1} \leq x_i \leq x_n\\
+     \end{array}
+   \right.
+\end{displaymath} 
+\vspace{4mm}
+Veamos que sucede con la función $sen(2\pi(x/5))$ al interpolar con este método
+
+\begin{figure}[h]
+  \begin{minipage}[b]{.5\textwidth}
+    \includegraphics[width=\textwidth]{complementos/nearest_1.jpg}
+    \caption{Nearest neighbour: Paso: 1.0}
+  \end{minipage}
+  \begin{minipage}[b]{.5\textwidth}
+    \includegraphics[width=\textwidth]{complementos/nearest_05.jpg}
+    \caption{Nearest neighbour: Paso: 0.5}
+  \end{minipage}
+\end{figure}
+
+Como se puede apreciar, al igual que en el métdo lineal, al tomar un paso más pequeño el polinomio vuelve más preciso. Cabe destacar que igualmente este método desaprovecha en gran medida la información disponible sobre la función. Una mejora posible es aplicar un promedio entre con los extremos del intervalo.
+
+En general, trabajar con splines siempre será lo ideal debido a que no siempre contaremos con la cantidad suficiente de información sobre la función que estamos interpolando como para lograr que lineal aproxime correctamente. 
 
 \section{Slow Motion: Modelado}
 
@@ -183,8 +227,8 @@ $
 Donde $f(i, j, k)$ $\in$ $[0..255]$
 
 Lo que haremos una vez obtenidos los cuadros que representan el video será interpolar entre cada par de posiciones pertenecientes a la misma fila y columna. Es decir para cada $f(i, j, k)$, $f(i, j, k+1)$ $\forall$ $k = 0, 1, \dots, n-1$ generaremos un polinomio interpolador para poder aproximar los valores intermedios a los cuadros $k$ y $k+1$. Dicho polinomio puede expresarse de la siguiente manera, idependientemente del método aplicado 
-
- \begin{displaymath}
+\vspace{4mm}
+\begin{displaymath}
    P^{i,j}(x) = \left\{
      \begin{array}{lr}
        P_{0,1}^{i,j}(x)  & : x_0 \leq x < x_1\\\\
@@ -202,13 +246,7 @@ Donde $P^{i,j}_{k,k+1}$ es el polinomio que interpola las posiciones $i, j$ para
 El tamaño del paso del polinomio estará determinado por la cantidad de cuadros que queramos generar entre cada par de cuadros, es decir que podriamos generar más de un cuadro intermedio, ergo, el paso será más pequeño. Como condición general el paso será el mismo para todos los polinomios. 
 
 Dependiendo del método elegido, tomar más cuadros puede resultar beneficioso para la fluidez del resultado, pero esto en principio no será siempre así. Veremos que para los polinomios lineales esto no producirá ningún tipo de mejora y en cambio serán mejores los resultados obtenidos en interpolación cuadrática y spline cúbico. Además en general, cuanto más pequeño sea el paso involucrado, más costoso será obtener el resultado de la interpolación. Existirá como no podia ser de otra manera un trade-off entre complejidad, eficiencia, suavidad y nitidez del resultado final. 
-
-\subsection{Nearest Neighbour}
-
-Introduciremos aquí un método que aunque podría considerarse poco efectivo, nos servirá para tener un margen más amplio de comparación. El mismo se basa en la idea de que tambien podemos interpolar copiando el cuadro más cercano entre dos cuadros $k$ y $k+1$. Este método se denomina Nearest Neighbour. 
-
-Además no solo está limitado a la generación de un cuadro intermedio. Aquí tambien podremos utilizar el paso como parámetro. Dado que este método no utiliza un polinomio para aproximar valores, lo que haremos será partir a la mitad el intervalo (más, menos uno, esto será determinado en la experimentación) y replicar el cuadro izquierdo tantas veces como paso/2 y lo mismo con el cuadro derecho. 
-
+ 
 \subsection{El modelo empírico}
 
 Para poder valorar el resultado de las experimentaciones correctamente no basta con un análisis subjetivo de comparación de los métodos entre si. Necesitamos poder comparar con un módelo empírico que nos de una idea más objetiva de como se comporta cada interpolación. Para esto mismo consideraremos un video del que obtendremos sus cuadros tomando saltos equidistantes, por ejemplo, eliminado los cuadros impares, sin eliminar el primero y el último ya que los bordes siempre estarán incluidos. Luego interpolaremos los cuadros faltantes con cada uno de los métodos y tomaremos las siguientes medidas:
@@ -226,9 +264,10 @@ Donde $MAX_u$ define el rango máximo de la imágen, es decir, 255 y $ECM$ el er
 Donde $N$ es la cantidad de pixeles de la imágen, $u^*$ es la imágen ideal y $u$ es la imágen que construimos. Este error es bastante intuitivo y tiene mucha aplicación en estadistica. Nos da una idea del error cometido al aproximar todos los valores de la imágen ideal. 
 
 El $PSNR$ es algo menos intuitivo. Sus siglas provienen de Peak Signal-to-Noise Ratio que en español significa Relación Señal a Ruido de Pico. Suele usarse en el ámbito de la compresión de imágenes y es la medida cuantitativa de la calidad de la reconstrucción. Lo que define es la relación entre la máxima energía posible de una señal y el ruido que afecta a su representación fidedigna. 
-Tiene aplicación en esta experimentación dado que lo que haremos tambien será reconstruir parte del video.
 
-De esta manera podremos saber que método aproxima mejor al resultado ideal de manera objetiva. 
+Tendrá aplicación en esta experimentación dado que lo que haremos tambien será reconstruir parte del video.
+
+De esta manera podremos saber que método aproxima mejor al resultado ideal de manera más objetiva. 
 
 (redondear un poco más todo esto...le falta)
 
