@@ -208,7 +208,8 @@ Un video está compuesto por cuadros, que no son más que las imágenes de las q
 Por ejemplo si el video se reproduce a 30 fps y dura 5 segundos, tendremos 150 cuadros en total y dado que 1 sg = 1000 ms, cada imágen se verá en pantalla por aproximadamente 33,33 ms.
 
 Cada imágen está compuesta por pixeles que se pueden representar en matrices donde cada posicion $i$, $j$ de un cuadro $k$ representa un color en la escala de grises $[0..255]$ $\in$ $\mathbb{N}$. Los videos que utilizaremos en la experimentación serán en escala de grises por el único motivo de que disminuirá los tiempos de cómputo involucrados en comparación a si trabajaramos con toda la representación de colores rgb. Aunque esta misma idea puede generalizarse y adaptarse para todos los colores sin inconveniente alguno.
-La matriz que describe un cuadro puede escribirse de la siguiente manera
+
+La matriz que describe un cuadro de $n$ filas y $m$ columnas puede expresarse de la siguiente manera
 
 \vspace{4mm}
 
@@ -226,7 +227,7 @@ $
 
 Donde $f(i, j, k)$ $\in$ $[0..255]$
 
-Lo que haremos una vez obtenidos los cuadros que representan el video será interpolar entre cada par de posiciones pertenecientes a la misma fila y columna. Es decir para cada $f(i, j, k)$, $f(i, j, k+1)$ $\forall$ $k = 0, 1, \dots, n-1$ generaremos un polinomio interpolador para poder aproximar los valores intermedios a los cuadros $k$ y $k+1$. Dicho polinomio puede expresarse de la siguiente manera, idependientemente del método aplicado 
+Lo que haremos una vez obtenidos los cuadros que representan el video será interpolar entre cada par de posiciones pertenecientes a la misma fila y columna. Es decir para cada $f(i, j, k)$, $f(i, j, k+1)$ $\forall$ $k = 0, 1, \dots, r-1$ siendo $r$ la cantidad de cuadros del video, generaremos un polinomio interpolador para poder aproximar los valores intermedios a los cuadros $k$ y $k+1$. Dicho polinomio puede expresarse de la siguiente manera, idependientemente del método aplicado 
 \vspace{4mm}
 \begin{displaymath}
    P^{i,j}(x) = \left\{
@@ -234,12 +235,12 @@ Lo que haremos una vez obtenidos los cuadros que representan el video será inte
        P_{0,1}^{i,j}(x)  & : x_0 \leq x < x_1\\\\
        P_{1,2}^{i,j}(x)  & : x_1 \leq x < x_2\\
        \vdots\\
-       P_{n-1,m}^{i,j}(x)  & : x_{n-1} \leq x_k \leq x_n\\
+       P_{n-1,m}^{i,j}(x)  & : x_{r-1} \leq x \leq x_r\\
      \end{array}
    \right.
 \end{displaymath} 
 
-Donde $P^{i,j}_{k,k+1}$ es el polinomio que interpola las posiciones $i, j$ para los cuadros $k$ y $k+1$.
+Donde $P^{i,j}_{k,k+1}$ es el polinomio que interpola las posiciones $i, j$ para los cuadros $k$ y $k+1$, siendo $x_k$ el pixel del cuadro $k$ en esa posición.
 
 \subsection{Discretización}
 
