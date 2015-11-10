@@ -35,8 +35,8 @@ Este tipo de interpolación suele considerarse para aproximar funciones continua
 	 |f(x) - P(x)| < \epsilon, \forall x \in [a, b]
 \end{equation}
 
-La demostración de este teorema puede encontrarse en textos de análisis real o documentos universitarios.(crear una cita a http://www.math.harvard.edu/~waffle/wapproxt.pdf).\vspace{2mm}
-\\
+%La demostración de este teorema puede encontrarse en textos de análisis real o documentos universitarios.(crear una cita a http://www.math.harvard.edu/~waffle/wapproxt.pdf).
+\vspace{2mm}
  Dado el anterior teorema podemos considerar a nuestra función \textit{f} como algún polinomio interpolador más otra función de corrección a la que denominaremos la expresión del error. Esta última función correjirá la inprecisión del polinomio con respecto a la función original para cada valor de su dominio. No obstante puede que encontrar dicha expresion no sea para nada trivial.
 
  %Podremos entonces, además, obtener la expresion del error de aproximación del polinomio. La misma nos servirá para ajustar el paso que deberemos tomar cuando deseamos acotar el error. 
@@ -78,7 +78,7 @@ Como podemos apreciar, en la Figura 4 tomamos intervalos de la mitad del tamaño
 
 %En la interpolación linel se utiliza un segmento rectilineo que pasa por dos puntos que se conocen: $(x_0, y_0)$ y $(x_1, y_1)$. La pendiente de la recta que pasa por esos puntos será: 
 \vspace{4mm}
-Para cada par de puntos $(x_i, y_i)$ y $(x_{i+1}, y_{i+1})$, la recta que pasa por ellos es nada más y nada menos que la recta secante a la función en esos puntos. La pendiente de la misma se será:
+Para cada par de puntos $(x_i, y_i)$ y $(x_{i+1}, y_{i+1})$, la recta que pasa por ellos es nada más y nada menos que la recta secante a la función en esos puntos. La pendiente de la misma será:
 
 \begin{equation}
 	 m = \dfrac{y_{i+1} - y_i}{x_{i+1} - x_i}
@@ -110,22 +110,22 @@ Luego dados $n$ puntos de la función podemos definir un polinomio como una func
    \right.
 \end{displaymath} 
 
-Un deatalle importante es que el polinomio definido de esta manera es continuo pero no es deribable en los extremos de los intervalos. Esto se traduce directamente en que la aproximación no es "suave". Esto se puede ver con facilidad en las Figuras 3 y 4 (\ref{eq:lineal_graph}).
+Un deatalle importante es que el polinomio definido de esta manera es continuo pero no es derivable en los extremos de los intervalos. Esto se traduce directamente en que la aproximación no es "suave". Esto se puede ver con facilidad en las Figuras 3 y 4 (\ref{eq:lineal_graph}).
 
 \subsubsection{Spline Cúbico}
 
-Este método al igual que el anterior se basa en particionar nuestro intervalo de interes en subintervalos más pequeños con la intención de construir un polinimio particular para cada uno de estos. Se busca entonces que para cada subintevalo, su polinomio asociado aproxime a la función estudiada en el interior del mismo, y además coincida con los resultados ya conocidos en ambos extremos. 
+Este metodo al igual que el anterior se basa en particionar nuestro intervalo de interes en subintervalos más pequeños con la intención de construir un polinimio particular para cada uno de estos. Se busca entonces que para cada subintevalo, su polinomio asociado aproximen a la función estudiada en el interior del mismo, y además coincida con los resultados ya conocidos en ambos extremos. 
 
-Nuestra partición a considerar será la inducida por $a = x_0 < x_1 \dots < x_n = b$, es decir, las pre-imagenes ordenadas de menor a mayor de los valores ya conocidos de \textit{f}; y nuestros polinomios serán polinomios cúbicos que cumplan ciertas propiedades, entre las cuales, que los extremos coincidan con los polinomios de los intervalos vecinos, y además también coincidan sus primeras y segundas derivadas; como resultado obtenemos sobre todo el intervalo original una función continua y de derivadas primera y segunda también continuas, es decir de clase $C^{2}[a, b]$. No obstante, no necesariamente ocurre que estas derivadas concuerden con las de la función a interpolar, ni siquiera que las aproximen.
+Nuestra partición a considerar será la inducida por $a = x_0 < x_1 \dots < x_n = b$, es decir, las pre-imagenes ordenadas de menor a mayor de los valores ya conocidos de \textit{f}; y nuestros polinomios serán polinomios cúbicos que cumplan ciertas propiedades, entre las cuales, que coincidan en los extremos con los polinomios de los intervalos vecinos, y además que en dichos punto también coincidan sus primeras y segundas derivadas. Como resultado obtenemos sobre todo el intervalo original una función continua y de derivadas primera y segunda también continuas, es decir de clase $C^{2}[a, b]$. No obstante, no necesariamente ocurre que estas derivadas concuerden con las de la función a interpolar, ni siquiera que las aproximen.
 
 %La alternativa se basa en dividir el intervalo en subintervalos y construir en cada uno de ellos un polinomio. Generalmente se denomina a esta técnica interpolación por partes. La mas común y usada es la que utiliza polinomios de grado tres y se denomina spline cúbico. 
 %Al ser un polinomio cúbico hay suficiente flexibilidad para asegurar que la interpolación es clase $C^{2}[a, b]$, es decir, que es continua y tiene primeras y segundas derivadas, aunque no por esto asume que vayan a coincidir con los de la función aproximada.
 
-Expresando lo anterior de manera formal, tenemos que, dada una función $f$ definida en $[a, b]$ y los puntos $a = x_0 < x_1 \dots < x_n = b$ un spline cúbico $S$ para $f$ es un polinomio que satisface las siguientes condiciones:
+Expresando lo anterior más formalmente, dada una función $f$ definida en $[a, b]$ y los puntos $a = x_0 < x_1 \dots < x_n = b$, un spline cúbico $S$ para $f$ es un polinomio que satisface las siguientes condiciones:
 
 \begin{enumerate}
 \item $S(x)$ es un polinomio cúbico, denotado $S_j(x)$ en el intervalo $[x_j, x_{j+1}] \forall j = 0, 1, \dots, n-1$ \label{eq:s1}
-\item $S_j(x) = f(x_j)$ y $S_j(x_{j+1}) = f(x_{j+1})$ $\forall j = 0, 1, \dots, n-1$ con $S_j(x) = a_j + b_j(x - x_j) + c_j(x - x_j)^2 + d_j(x - x_j)^3$ \label{eq:s2}
+\item $S(x_j) = f(x_j)$ y $S_j(x_{j+1}) = f(x_{j+1})$ $\forall j = 0, 1, \dots, n-1$ \label{eq:s2}
 \item $S_{j+1}(x_{j+1}) = S_j(x_{j+1})$ $\forall j = 0, 1, \dots, n-2$ \label{eq:s3}
 \item $S_{j+1}^{'}(x_{j+1}) = S_j^{'}(x_{j+1})$ $\forall j = 0, 1, \dots, n-2$ \label{eq:s4}
 \item $S_{j+1}^{''}(x_{j+1}) = S_j^{''}(x_{j+1})$ $\forall j = 0, 1, \dots, n-2$ \label{eq:s5}
@@ -134,9 +134,111 @@ Expresando lo anterior de manera formal, tenemos que, dada una función $f$ defi
 \subitem 2) $S^{'}(x_0) =  f^{'}(x_0) \wedge S^{'}(x_n) = f^{'}(x_n)$ (borde sujeto) 
 \end{enumerate}
 
-Observemos que se necesita cumplir con una de las dos condiciones de (\ref{eq:s6}), ahora bien, en particular satisfacer 2) dará como resultado una aproximación más precisa de la función real, dado que estamos utilizando más información de la misma, pero para ello necesitaremos conocer los valores de la derivada de la función en esos puntos y esto en general no suele suceder. Este será el caso de este trabajo práctico, por lo cual utilizaremos 1), dado que solo debemos garantizar una propiedad sobre datos conocidos.
+Observemos que se necesita cumplir con una de las dos condiciones de (\ref{eq:s6}), ahora bien en particular satisfacer 2) dará como resultado una aproximación más precisa de la función real, dado que estamos utilizando más información de la misma, pero para ello necesitaremos conocer los valores de la derivada de la función en esos puntos y esto en general no suele suceder. Para este trabajo práctico utilizaremos 1) debido a que no conocemos los valores de la derivada, y más aún, no disponemos de la función que aproximaremos.
 
-Veamos como se comporta la función $sen(2\pi(x/5))$ con spline natural
+Dadas estas condiciones podremos plantear un sistema lineal de cuya solución se podrá deducir la función interpolante. Para empezar sabemos por (\ref{eq:s1}) que para cada intervalo $[x_j, x_{j+1}]$ tendremos un polinomio cúbico $S_j(x)$, por lo que podremos asociarles la siguiente forma general. 
+
+\begin{equation}
+	S_j(x) = a_j + b_j(x - x_j) + c_j(x - x_j)^2 + d_j(x - x_j)^3
+\end{equation}
+Para cada $j = 0, 1, \dots, n-1$, con $x_j$ el elemento $j-esimo$ de la partición del dominio, y con $a_j, b_j, c_j$ y $d_j$ constantes a determinar (particulares para cada $S_j(x)$).
+
+Observemos que al evaluar en $x_j$ en $S(x)$ se tiene que $S(x_j) = S_j(x_j) = a_j$, y por (\ref{eq:s2}) $S(x)$ debe satisfacer que $S(x_j)$ sea igual a $f(x_j)$, por lo que evidentemente se concluye que $a_j = f(x_j)$, el cual conocemos de antemano.
+
+A su vez por (\ref{eq:s3}) debemos pedirle a $S_j(x)$ que satisfaga que $S_j(x_{j+1}) = f(x_{j+1})$, es decir que en cada extremo en común $S_j(x_{j+1})$ debe ser igual a $S_{j+1}(x_{j+1})$, lo que no lleva a que:
+
+\begin{equation}
+	S_{j+1}(x_{j+1}) = a_{j+1} =  a_{j} + b_j(x_{j+1} - x_j) + c_{j}(x_{j+1} - x_j)^2 + d_{j}(x_{j+1} - x_j)^3 = S_j(x_{j+1})
+\end{equation} 
+ Para alivianar la notación notemos como a $(x_{j+1} - x_j)$ como $h_j = (x_{j+1} - x_j)$, reescribiendo la ecuación anterior como:
+
+\begin{equation}
+	S_{j+1}(x_{j+1}) = a_{j+1} =  a_{j} + b_jh_j + c_{j}h_j^2 + d_{j}h_j^3 = S_j(x_{j+1})
+\end{equation} 
+
+De manera análoga se tiene por (\ref{eq:s4}) que $S_{j+1}^{'}(x_{j+1}) = S_j^{'}(x_{j+1})$, en donde $S_j^{'}(x) =  b_j + 2c_{j}(x - x_j) + 3d_{j}(x - x_j)^2$, por lo que $S_{j+1}^{'}(x_{j+1}) =  b_{j+1}$, pero entonces esto significa que:
+ 
+\begin{equation}
+	S_{j+1}(x_{j+1}) = b_{j+1} = b_j + 2c_{j}h_j + 3d_{j}h_j^2 = S_j(x_{j+1})
+\end{equation}
+
+Repitiendo el procedimiento en base a (\ref{eq:s5}) busquemos despejar $c_j$. Dado que $S_j^{''}(x) =  2c_{j} + 6d_{j}(x - x_j)$, debemos pedir que $S_{j+1}{''}(x_{j+1}) = S_{j}{''}(x_{j+1})$, evaluando y dividiendo por 2 a ambos lados se tiene que:
+
+\begin{equation}
+	S_{j+1}^{''}(x_{j+1})/2 = c_{j+1} = c_{j} + 3d_{j}h_j = S_j(x_{j+1})/2
+\end{equation}
+
+Con lo cual podemos depejar $d_j$ en función de $c_j$ y $c_{j+1}$, definiendolo como $d_j = (c_{j+1} - c_j)/3h_j$. Luego reemplazandolo en (15) obtendremos que:
+
+\begin{equation}
+	a_{j+1} =  a_{j} + b_jh_j + c_{j}h_j^2 + \frac{h_j^2}{3}(c_{j+1} - c_j)
+\end{equation} 
+\begin{equation}
+	a_{j+1} =  a_{j} + b_jh_j + \frac{h_j^2}{3}(c_{j+1} + 2c_j)
+\end{equation}
+\begin{equation}
+	b_j = \frac{1}{h_j}(a_{j+1} - a_{j}) + \frac{h_j^2}{3}(c_{j+1} + 2c_j)    
+\end{equation}
+
+Luego con esto y en base a (16), podemos concluir para $j = 1, \dots, n-1$ la siguiente equivalencia:
+
+\begin{equation}
+	h_{j-1}c_{j-1} + 2(h_{j-1} + h_j)c_j + h_jc_{j+1} = \frac{3}{h_j}(a_{j+1} - a_j) - \frac{3}{h_{j-1}}(a_j - a_{j-1})	  
+\end{equation}
+ 
+Esto nos sugiere un sistema lineal $n-1$ ecuaciones al que agregaremos otras dos que resultan de aplicar la condición de (\ref{eq:s6}), en donde $S^{''}(x_0) = S^{''}(x_n) = 0$, con lo cual tenemos que $c_n = S^{''}(x_{n}) = 0$ y que:
+
+\begin{equation}
+	S^{''}(x_{0}) = c_{0} + 3d_{0}(x_0 - x_0) = c_{0} = 0
+\end{equation}
+
+Luego nuestro sistema lineal queda planteado por $n+1$ ecuaciones de $n+1$ incognitas, por lo que podremos plantearlo como una matriz cuadrada en donde sus columnas representarán los coeficientes de $c_0, \dots , c_n$ para cada ecuación. Mas explícitamente el sistema lineal queda definido por $Ax = b$, donde $A$, $x$ y $b$ serán de la siguiente forma.
+
+\vspace{4mm}
+$
+\hspace{1.4cm}
+A =
+     \begin{pmatrix}
+      1 & 0 & 0 & \dots & \dots & 0 \\
+	  h_0 & 2(h_0 + h_1) & h_1 & \ddots &  & \vdots \\
+	  0 & h_1 & 2(h_1 + h_2) & h_2 &  & \vdots \\
+	  \vdots & \ddots & \ddots & \ddots & \ddots & 0\\
+	  \vdots & & \ddots & h_{n-2} & 2(h_{n-2} + h_{n-1}) & h_{n-1} \\
+	  0  & \dots & \dots & 0 & 0 & 1 \\
+     \end{pmatrix}
+$
+$
+x =
+     \begin{pmatrix}
+      c_0 \\
+	  c_1 \\
+	  \vdots \\
+	  \vdots \\
+	  \vdots \\
+	  c_n \\
+     \end{pmatrix}
+$
+\\
+\vspace{4mm}
+$
+\hspace{4cm}
+b =
+     \begin{pmatrix}
+      0 \\
+	  \frac{3}{h_1}(a_2 - a_1) - \frac{h_0}{3}(a_1 - a_0) \\
+	  \vdots \\
+	  \vdots \\
+	  \vdots \\
+	  \frac{3}{h_{n-1}}(a_n - a_{n-1}) - \frac{h_{n-2}}{3}(a_{n-1} - a_{n-2}) \\
+	  0 \\
+     \end{pmatrix}
+$
+\\
+Una carácteristica importante a notar de la matriz $A$ es que se trata de una matriz estrictamente diagonal dominante, que por lo visto en la primera mitad del curso, tiene solución y es única. Esta carácteristica nos abre además una nueva posibilidad sobre este método, ya que si una matriz es estrictamente diagonal dominante, entonces ésta posee factorización LU. Dado esto, notemos que para generar la matriz $A$ hacemos uso únicamente de los $h_j$, por ende $A$ solo va a depender de la partición inicial de nuestro dominio de interes; luego tras calcular la factorización LU podremos reducir notablemente la complejidad en el caso en que queramos aplicar este alogritmo para interpolar una segunda función, siempre y cuando se considere una partición de la cual se deduzcan los mismos $h_j$.
+\vspace{4mm}
+%\textbf{Falta expresar la matriz, justificar que tiene solución única, y hablar de la complejidad (citando y justificando la mejora con factorización LU)}
+
+Veamos a modo de ejemplo como se comporta la función $sen(2\pi(x/5))$ con spline natural.
 
 \pagebreak
 
@@ -148,9 +250,8 @@ Veamos como se comporta la función $sen(2\pi(x/5))$ con spline natural
   \end{minipage}
 \end{figure}
 
-Parece bastante claro que se ajusta mucho mejor a la función original que interpolación lineal. Esto se debe a las condiciones pedidas sobre los extremos de los intervalos, logrando que las curvas sean suaves en comparación a los picos obtenidos con lineal. 
 
-\pagebreak
+Parece bastante claro que para este método la función interpolante se ajusta mucho mejor a la función original en comparación a la propuesta por la interpolación lineal. Esto se debe a las condiciones pedidas sobre los extremos de los intervalos, que dan como resultado una función con curvas mas suaves, que nos evitan problemas como los que ocurren por los picos obtenidos en la interpolación lineal. 
 
 \subsection{Nearest Neighbour}
 
@@ -272,7 +373,6 @@ Tendrá aplicación en esta experimentación dado que lo que haremos tambien ser
 
 De esta manera podremos saber que método aproxima mejor al resultado ideal de manera más objetiva. 
 
-(redondear un poco más todo esto...le falta)
 
 
 
