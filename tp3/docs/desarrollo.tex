@@ -2,7 +2,7 @@
 
 \subsection{Interpolación}
 
-Consiste en estimar valores desconocidos en base a otros ya conocidos dados por un \textit{data-set} predefinido, que suponemos sugiere el comportamiento de alguna función \textit{f} para la cual solo conocemos una cantidad determinada de resultados. Estos datos suelen organizarse en tablas de pares $(x_i,y_i)$, donde $y_i$ es el $f(x_i)$ y $x_i$ es algún valor conocido del dominio de \textit{f} sobre el cual deseamos trabajar; dicho esto el problema entonces se traduce en aproximar dicha función, procurando satisfacer la obvia restricción de \textit{matchear} con esos valores ya conocidos bajo sus respectivas pre-imagenes. Para ello existen diversos metodos algoritmicos que en base a nuestros datos intentan generar esa función aproximada, entre ellos por ejemplo, se encuentran los metodos de interpolación polinomial que como su nombre sugiere intentan lograrlo por medio de algún polinomio (al que llamamos polinomio interpolador). 
+Interpolar consiste en estimar valores desconocidos en base a otros ya conocidos dados por un \textit{data-set} predefinido, que suponemos sugiere el comportamiento de alguna función \textit{f} para la cual solo conocemos una cantidad determinada de resultados. Estos datos suelen organizarse en tablas de pares $(x_i,y_i)$, donde $y_i$ es el $f(x_i)$ y $x_i$ es algún valor conocido del dominio de \textit{f} sobre el cual deseamos trabajar; dicho esto el problema entonces se traduce en aproximar dicha función, procurando satisfacer la obvia restricción de \textit{matchear} con esos valores ya conocidos bajo sus respectivas pre-imagenes. Para ello existen diversos metodos algoritmicos que en base a nuestros datos intentan generar esa función aproximada, entre ellos por ejemplo, se encuentran los metodos de interpolación polinomial que como su nombre sugiere intentan lograrlo por medio de algún polinomio (al que llamamos polinomio interpolador). 
 
 %\subsection{Polinomio interpolador}
 
@@ -38,6 +38,7 @@ Este tipo de interpolación suele considerarse para aproximar funciones continua
 La demostración de este teorema puede encontrarse en textos de análisis real o documentos universitarios.(crear una cita a http://www.math.harvard.edu/~waffle/wapproxt.pdf).\vspace{2mm}
 \\
  Dado el anterior teorema podemos considerar a nuestra función \textit{f} como algún polinomio interpolador mas otra función de corrección a la que denominaremos la expresión del error. Esta última función correjirá la inprecisión del polinomio con respecto a la función original para cada valor de su dominio. No obstante puede que encontrar dicha expresion no sea para nada trivial.
+
  %Podremos entonces, además, obtener la expresion del error de aproximación del polinomio. La misma nos servirá para ajustar el paso que deberemos tomar cuando deseamos acotar el error. 
 
 %\begin{theorem}
@@ -52,87 +53,75 @@ La demostración de este teorema puede encontrarse en textos de análisis real o
 
 %Dado que en este trabajo práctico desconocemos la fuente de los datos, será imposible obtener una expresion del error para la misma. Por lo tanto no enunciaremos la formulación de los errores asociados a ninguno de los métodos de interpolación que analizaremos. Sus definiciones pueden encontrarse en cualquier libro de análisis numérico. Particularmente recomendamos leer $<$cita a burden, pag:113 en adelante$>$
 
+\pagebreak
+
 \subsection{Cálculo del polinomio interpolador}
 
-Existen varios métodos de interpolación polinomial que generan diferentes tipos de polinomios, para este trabajo práctico veremos en particular dos de ellos, Lineal y Splines. Veremos como se construye cada uno y analizaremos su exactitud y complejidades involucradas.
+Existen varios métodos de interpolación polinomial que generan diferentes tipos de polinomios, para este trabajo práctico veremos en particular dos de ellos, Lineal y Splines. Veremos como se construye cada uno y analizaremos su exactitud y propiedades particulares.
 
-\subsubsection{Interpolación de Lagrange}
+\subsubsection{Interpolación lineal}
+
+Este método consiste en aproximar una función $f$ tomando rectas entre cada par de puntos consecutivos. Parece razonable que la aproximación será mejor cuanto más valores conozcamos. Podemos observar este detalle en los siguientes gráficos de la función $sen(2\pi(x/5))$ 
+
+\begin{figure}[h]
+  \begin{minipage}[b]{.5\textwidth} 
+    \includegraphics[width=\textwidth]{complementos/lineal_1.jpg}
+    \caption{Interpolación lineal: Paso: 1.0}
+  \end{minipage}
+  \begin{minipage}[b]{.5\textwidth} 
+    \includegraphics[width=\textwidth]{complementos/lineal_05.jpg}
+    \caption{Interpolación lineal: Paso: 0.5}
+  \end{minipage}
+\end{figure} \label{eq:lineal_graph}
+
+Como podemos apreciar, en la Figura 4 tomamos intervalos de la mitad del tamaño que en la Figura 3, al conocer más valores, el polinomio interpolador tiene más información de la función, lo cual hace que las rectas estén más pegadas a la función real y por lo tanto aproxime mejor para valores intermedios en cada intervalo. 
 
 %En la interpolación linel se utiliza un segmento rectilineo que pasa por dos puntos que se conocen: $(x_0, y_0)$ y $(x_1, y_1)$. La pendiente de la recta que pasa por esos puntos será: 
+\vspace{4mm}
+Para cada par de puntos $(x_i, y_i)$ y $(x_{i+1}, y_{i+1})$, la recta que pasa por ellos es nada más y nada menos que la recta secante a la función en esos puntos. La pendiente de la misma se será:
 
 \begin{equation}
-	 m = \dfrac{y_1 - y_0}{x_1 - x_0}
+	 m = \dfrac{y_{i+1} - y_i}{x_{i+1} - x_i}
 \end{equation}
 
-Luego en la ecuación de la recta $y = m(x - x_0) + y_0$ podemos sustituir $m$ y 
+Luego en la ecuación de la recta $y = m(x - x_i) + y_i$ podemos sustituir $m$ y 
 obtener:
 
 \begin{equation} \label{eq:lineal}
-	 y = P(x) = y_0 + (y_1 - y_0)\dfrac{y_1 - y_0}{x_1 - x_0} 
+	 y = P(x) = y_i + (y_{i+1} - y_i)\dfrac{y_{i+1} - y_i}{x_{i+1} - x_i} 
 \end{equation} 
 
-Donde (\ref{eq:lineal}) es un polinomio de grado $\leq$ 1 y si evaluamos en $x_0$ y $x_1$ respectivamente obtenemos:
+Donde (\ref{eq:lineal}) es un polinomio de grado 1 y si evaluamos en $x_i$ y $x_{i+1}$ respectivamente obtenemos:
 
 \begin{equation}
-	 P(x_0) = y_0 + (y_1 - y_0)(0) = y_0 \wedge P(x_1) = y_0 + (y_1 - y_0)(1) = y_1 
+	 P(x_0) = y_i + (y_{i+1} - y_i)(0) = y_i \wedge P(x_{i+1}) = y_i + (y_{i+1} - y_i)(1) = y_{i+1} 
 \end{equation}
 
-J.L Lagrange encontró que se puede encontrar este polinomio utilizando un método distinto, escribiendo $y$ de la siguiente forma
+Luego dados $n$ puntos de la función podemos definir un polinomio como una función partida entre cada par de puntos para los cuales se obtendrá una recta que los interpole
 
-\begin{equation} \label{eq:linealLagrange}
-	y = P_1(x) = y_0\dfrac{x - x_0}{x_1 - x_0} + y_1\dfrac{x - x_1}{x_0 - x_1} = \sum_{k=1}^{1} y_kL_{1,k}(x)
-\end{equation}
+ \begin{displaymath}
+   P(x) = \left\{
+     \begin{array}{lr}
+       y_0 + (y_1 - y_0)\dfrac{y_1 - y_0}{x_1 - x_0}  & : x_0 \leq x < x_1\\\\
+       y_1 + (y_2 - y_1)\dfrac{y_2 - y_1}{x_2 - x_1}  & : x_1 \leq x < x_2\\
+       \vdots\\
+       y_{n-1} + (y_n - y_{n-1})\dfrac{y_n - y_{n-1}}{x_n - x_{n-1}}  & : x_{n-1}	 \leq x_i \leq x_n\\
+     \end{array}
+   \right.
+\end{displaymath} 
 
-Donde $L_{1,0}(x) = \dfrac{x - x_0}{x_1 - x_0}$ y $L_{1,1}(x) = \dfrac{x - x_1}{x_0 - x_1}$ son los polinomios de coeficientes de Lagrange para los puntos $x_0$ y $x_1$ respectivamente. Podemos notar que cada uno de los sumandos del lado izquierdo de la igualdad de (\ref{eq:linealLagrange}) es un término lineal, por lo tanto $P_1(x)$ es de grado $\leq$ 1. 
-Como 
-
-\begin{equation}
-	L_{1,0}(x_0) = 1 \wedge L_{1,0}(x_1) = 0 \wedge L_{1,1}(x_1) = 1 \wedge L_{1,1}(x_0) = 0
-\end{equation}
-
-entonces $P_1(x)$ pasa por todos los puntos dados:
-
-\begin{equation}
-	P_1(x) = y_0 + y_1(0) = y_0 \wedge P_1(x) = y_0(0) + y_1 = y_1 
-\end{equation}
-
-\begin{theorem}
-	\item Sean $x_0$, $x_1$, $\dots$, $x_n$. $n + 1$ puntos distintos y $f$ es la función cuyos valores son dados por estos puntos, entonces existe un único polinomio $P(x)$ de grado a lo sumo $n$ tal que 
-\end{theorem}
-\begin{equation}
-	f(x_k) = P(x_k) \forall k = 0, 1, \dots, n.
-\end{equation}
-
-Este polinomio es dado por la forma genérica de Lagrange
-
-\begin{equation}
-	P_n(x) = f(x_0)L_{n, 0}(x) + \dots + f(x_n)L_{n,n}(x) = \sum_{k=1}^{n} y_kL_{n,k}(x) 
-\end{equation}
-
-Donde $\forall$ $k$ = 0, 1, $\dots$, $n$
-
-\begin{equation}
-	L_{n,k}(x) = \dfrac{(x - x_0)(x - x_1)\dots(x - x_{k-1})(x - x_{k+1})\dots(x - x_n)}{(x_k - x_0)(x_k - x_1)\dots(x_k - x_{k-1})(x_k - x_{k+1})\dots(x_k - x_n)} = \prod_{i=0, i \neq k}^{n} \dfrac{x - x_i}{x_k - x_i}
-\end{equation}
-
-En particular, si $n$ = 2, obtenemos el polinomio de Lagrange cuadratico
-\begin{equation}
-	P_n(x) = f(x_0)\dfrac{(x - x_1)(x - x_2)}{(x_0 - x_1)(x_0 - x_2)} + f(x_1)\dfrac{(x - x_0)(x - x_2)}{(x_1 - x_0)(x_1 - x_2)} + f(x_2)\dfrac{(x - x_0)(x - x_1)}{(x_2 - x_0)(x_2 - x_1)} 
-\end{equation}
-
-Intuitivamente si con un polinomio de grado uno obtuvimos una recta entre cada par de puntos, si utilizamos un polinomio de grado dos, obtendremos una curva que se adapte mejor al resultado. Pero a medida que aumentemos el grado del polinomio, el resultado podría oscilar erraticamente. Si en el caso de estudio no se dispone de la fuente de los datos, es decir, la función que los genera, no sabremos como acotar el error cometido en la aproximación, ergo, no sabremos cuan pequeño deberá ser el paso entre cada par de puntos para reducir la posibilidad de estas fluctuaciones. 
-Para este tipo de inconvenientes existe otro tipo de método que no necesariamente necesita conocer la función original para poder aproximar coerrectamente.
+Un deatalle importante es que el polinomio definido de esta manera es continuo pero no es deribable en los extremos de los intervalos. Esto se traduce directamente en que la aproximación no es "suave". Esto se puede ver con facilidad en las Figuras 3 y 4 (\ref{eq:lineal_graph}).
 
 \subsubsection{Spline Cúbico}
 
-Este metodo al igual que el anterior se basa en particionar nuestro intervalo de interes en subintervalos más pequeños con la intención de construir un polinimio particular para cada uno de estos. Se busca entonces que para cada subintevalo, su polinomio asociado aproximen a la función estudiada en el interior del mismo, y además coincida con los resultados ya conocidos en ambos extremos. 
+Este método al igual que el anterior se basa en particionar nuestro intervalo de interes en subintervalos más pequeños con la intención de construir un polinimio particular para cada uno de estos. Se busca entonces que para cada subintevalo, su polinomio asociado aproxime a la función estudiada en el interior del mismo, y además coincida con los resultados ya conocidos en ambos extremos. 
 
-Nuestra partición a considerar será la inducida por $a = x_0 < x_1 \dots < x_n = b$, es decir, las pre-imagenes ordenadas de menor a mayor de los valores ya conocidos de \textit{f}; y nuestros polinomios serán polinomios cúbicos que cumplan ciertas propiedades, entre las cuales, que coincidan en los extremos con los polinomios de los intervalos vecinos, y además que en dichos punto también coincidan sus primeras y segundas derivadas; como resultado obtenemos sobre todo el intervalo original una función continua y de derivadas primera y segunda también continuas, es decir de clase $C^{2}[a, b]$. No obstante, no necesariamente ocurre que estas derivadas concuerden con las de la función a interpolar, ni siquiera que las aproximen.
+Nuestra partición a considerar será la inducida por $a = x_0 < x_1 \dots < x_n = b$, es decir, las pre-imagenes ordenadas de menor a mayor de los valores ya conocidos de \textit{f}; y nuestros polinomios serán polinomios cúbicos que cumplan ciertas propiedades, entre las cuales, que los extremos coincidan con los polinomios de los intervalos vecinos, y además también coincidan sus primeras y segundas derivadas; como resultado obtenemos sobre todo el intervalo original una función continua y de derivadas primera y segunda también continuas, es decir de clase $C^{2}[a, b]$. No obstante, no necesariamente ocurre que estas derivadas concuerden con las de la función a interpolar, ni siquiera que las aproximen.
 
 %La alternativa se basa en dividir el intervalo en subintervalos y construir en cada uno de ellos un polinomio. Generalmente se denomina a esta técnica interpolación por partes. La mas común y usada es la que utiliza polinomios de grado tres y se denomina spline cúbico. 
 %Al ser un polinomio cúbico hay suficiente flexibilidad para asegurar que la interpolación es clase $C^{2}[a, b]$, es decir, que es continua y tiene primeras y segundas derivadas, aunque no por esto asume que vayan a coincidir con los de la función aproximada.
 
-Expresando lo anterior de mas formalmente, dada una función $f$ definida en $[a, b]$ y los puntos $a = x_0 < x_1 \dots < x_n = b$ un spline cúbico $S$ para $f$ es un polinomio que satisface las siguientes condiciones:
+Expresando lo anterior de manera formal, tenemos que, dada una función $f$ definida en $[a, b]$ y los puntos $a = x_0 < x_1 \dots < x_n = b$ un spline cúbico $S$ para $f$ es un polinomio que satisface las siguientes condiciones:
 
 \begin{enumerate}
 \item $S(x)$ es un polinomio cúbico, denotado $S_j(x)$ en el intervalo $[x_j, x_{j+1}] \forall j = 0, 1, \dots, n-1$ \label{eq:s1}
@@ -145,9 +134,23 @@ Expresando lo anterior de mas formalmente, dada una función $f$ definida en $[a
 \subitem 2) $S^{'}(x_0) =  f^{'}(x_0) \wedge S^{'}(x_n) = f^{'}(x_n)$ (borde sujeto) 
 \end{enumerate}
 
-Observemos que se necesita cumplir con una de las dos condiciones de (\ref{eq:s6}), ahora bien en particular satisfacer 2) dará como resultado una aproximación más precisa de la función real, dado que estamos utilizando más información de la misma, pero para ello necesitaremos conocer los valores de la derivada de la función en esos puntos y esto en general no suele suceder. Para este trabajo práctico utilizaremos 1) debido a que no conocemos los valores de la derivada, y más aún, no disponemos de la función que aproximaremos.
+Observemos que se necesita cumplir con una de las dos condiciones de (\ref{eq:s6}), ahora bien, en particular satisfacer 2) dará como resultado una aproximación más precisa de la función real, dado que estamos utilizando más información de la misma, pero para ello necesitaremos conocer los valores de la derivada de la función en esos puntos y esto en general no suele suceder. Este será el caso de este trabajo práctico, por lo cual utilizaremos 1), dado que solo debemos garantizar una propiedad sobre datos conocidos.
 
-\textbf{incluir algun grafico con las 3 interpolaciones si es posible y ver como se comporta cada una. Mencionar que splines es mejor porque tiene más precisio en cada intervalo y mas condiciones entre cada par}
+Veamos como se comporta la función $sen(2\pi(x/5))$ con spline natural
+
+\pagebreak
+
+\begin{figure}[h]
+\centering
+  \begin{minipage}[b]{.9\textwidth}
+    \includegraphics[width=\textwidth]{complementos/spline_1.jpg}
+    \caption{Interpolación splines cúbicos: Paso: 1.0}
+  \end{minipage}
+\end{figure}
+
+Parece bastante claro que se ajusta mucho mejor a la función original que interpolación lineal. Esto se debe a las condiciones pedidas sobre los extremos de los intervalos, logrando que las curvas sean suaves en comparación a los picos obtenidos con lineal. 
+
+En general, trabajar con splines siempre será lo ideal debido que no siempre contaremos con la cantidad suficiente de información sobre la función que estamos interpolando como para lograr que lineal aproxime correctamente. 
 
 \section{Slow Motion: Modelado}
 
