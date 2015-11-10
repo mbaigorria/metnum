@@ -268,7 +268,7 @@ Por lo tanto, dados $x_i$ y $x_{i+1}$ y sus respectivas imágenes $f(x_i)$ y $f(
    \right.
 \end{displaymath} 
 
-Luego por cada par $x_i$ y $x_{i+1}$ obtendriamos un polinomio de estas caracteristicas quedando el polinomio interpolador de definido de la siguiente manera
+Luego por cada par $x_i$ y $x_{i+1}$ obtendriamos un polinomio de estas caracteristicas quedando el polinomio interpolador definido de la siguiente manera:
 
 \vspace{4mm}
 \begin{displaymath}
@@ -297,7 +297,7 @@ Veamos que sucede con la función $sen(2\pi(x/5))$ al interpolar con este métod
 
 Como se puede apreciar, al igual que en el método lineal, al tomar un paso más pequeño el polinomio se vuelve más preciso. Cabe destacar que igualmente este método desaprovecha en gran medida la información disponible sobre la función. Una mejora posible es aplicar un promedio con los extremos del intervalo.
 
-En general, trabajar con Spline siempre será lo ideal debido a que no siempre contaremos con la cantidad suficiente de información sobre la función que estamos interpolando como para lograr que Lineal o Nearest neighbour aproximen correctamente. 
+En general, Spline cúbico será lo ideal para trabajar con funciones continuas debido a que no siempre contaremos con la cantidad suficiente de información sobre la función que estamos interpolando como para lograr que Lineal o Nearest neighbour aproximen correctamente. 
 
 \section{Slow Motion: Modelado}
 
@@ -305,14 +305,14 @@ En general, trabajar con Spline siempre será lo ideal debido a que no siempre c
 
 Como mencionamos en la introducción el objetivo de este trabajo práctico es generar videos en cámara lenta basandonos en la idea de introducir cuadros intermedios generados con los métodos mencionados de interpolación. Veremos ahora como representar un video para poder lograrlo y luego aplicaremos cada método y observaremos que sucede en cada caso.
 
-\subsection{Manipilación de los cuadros: interpolando imágenes}
+\subsection{Manipulación de los cuadros: interpolando imágenes}
 
-Un video está compuesto por cuadros, que no son más que las imágenes de las que se compone el video   y que serán determinadas por la cantidad de cuadros por segundo o fps a la que el video se reproduce y la duración del mismo.
+Un video está compuesto por cierta cantidad de cuadros (imágenes de las que se compone el video) que será determinada por la cantidad de cuadros por segundo o fps a la que el video se reproduce, y la duración del mismo.
 Por ejemplo si el video se reproduce a 30 fps y dura 5 segundos, tendremos 150 cuadros en total y dado que 1 sg = 1000 ms, cada imágen se verá en pantalla por aproximadamente 33,33 ms.
 
-Cada imágen está compuesta por pixeles que se pueden representar en matrices donde cada posicion $i$, $j$ de un cuadro $k$ representa un color en la escala de grises $[0..255]$ $\in$ $\mathbb{N}$. Los videos que utilizaremos en la experimentación serán en escala de grises por el único motivo de que disminuirá los tiempos de cómputo involucrados en comparación a si trabajaramos con toda la representación de colores rgb. Aunque esta misma idea puede generalizarse y adaptarse para todos los colores sin inconveniente alguno.
+Cada imágen está compuesta por pixeles que se pueden representar en matrices donde cada posicion $i$, $j$ de un cuadro $k$ representa un color en la escala de grises $[0..255]$ $\in$ $\mathbb{N}_0$. Los videos que utilizaremos en la experimentación serán por simplicidad en escala de grises, la idea es que esto disminuirá los tiempos de cómputo involucrados en comparación al costo que generaría trabajar con toda la representación de colores rgb. Aunque esta misma idea puede generalizarse y adaptarse para todos los colores sin inconveniente alguno.
 
-La matriz que describe un cuadro de $n$ filas y $m$ columnas puede expresarse de la siguiente manera
+La matriz que describe el cuadro número $k$, de $n$ filas y $m$ columnas puede expresarse de la siguiente manera
 
 \vspace{4mm}
 
@@ -330,7 +330,7 @@ $
 
 Donde $f(i, j, k)$ $\in$ $[0..255]$
 
-Lo que haremos una vez obtenidos los cuadros que representan el video será interpolar entre cada par de posiciones pertenecientes a la misma fila y columna. Es decir para cada $f(i, j, k)$, $f(i, j, k+1)$ $\forall$ $k = 0, 1, \dots, r-1$ siendo $r$ la cantidad de cuadros del video, generaremos un polinomio interpolador para poder aproximar los valores intermedios a los cuadros $k$ y $k+1$. Dicho polinomio puede expresarse de la siguiente manera, idependientemente del método aplicado 
+Lo que haremos una vez obtenidos los cuadros que representan el video será interpolar entre cada par de posiciones pertenecientes a la misma fila y columna. Es decir para cada $f(i, j, k)$, $f(i, j, k+1)$ $\forall$ $k = 0, 1, \dots, r-1$ siendo $r$ la cantidad de cuadros del video, generaremos un polinomio interpolador para poder aproximar los valores intermedios a los cuadros $k$ y $k+1$. Dicho polinomio puede expresarse de la siguiente manera, idependientemente del método aplicado.
 \vspace{4mm}
 \begin{displaymath}
    P^{i,j}(x) = \left\{
@@ -349,7 +349,7 @@ Donde $P^{i,j}_{k,k+1}$ es el polinomio que interpola las posiciones $i, j$ para
 
 El tamaño del paso del polinomio estará determinado por la cantidad de cuadros que queramos generar entre cada par de cuadros, es decir que podriamos generar más de un cuadro intermedio, ergo, el paso será más pequeño. Como condición general el paso será el mismo para todos los polinomios. 
 
-Dependiendo del método elegido, tomar más cuadros puede resultar beneficioso para la fluidez del resultado, pero esto en principio no será siempre así. Veremos que para los polinomios lineales esto no producirá ningún tipo de mejora y en cambio serán mejores los resultados obtenidos en interpolación cuadrática y spline cúbico. Además en general, cuanto más pequeño sea el paso involucrado, más costoso será obtener el resultado de la interpolación. Existirá como no podia ser de otra manera un trade-off entre complejidad, eficiencia, suavidad y nitidez del resultado final. 
+Dependiendo del método elegido, tomar más cuadros puede resultar beneficioso para la fluidez del resultado, pero esto en principio no será siempre así. Veremos que para los polinomios lineales esto no producirá ningún tipo de mejora y en cambio serán mejores los resultados obtenidos en interpolación de spline cúbico. Además en general, cuanto más pequeño sea el paso involucrado, más costoso será obtener el resultado de la interpolación. Existirá como no podia ser de otra manera un trade-off entre complejidad, eficiencia, suavidad y nitidez del resultado final. 
  
 \subsection{El modelo empírico}
 
