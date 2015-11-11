@@ -193,10 +193,6 @@ void fprintframefromspline(FILE* outputFile, int frame, int currentNewFrame, int
 		int x_j = frame*h + currentNewFrame;
 		int res = a_0 + b_0*(x-x_j) + c_0*pow(x-x_j,2) + d_0*pow(x-x_j,3);
 
-		// if (res < 0) {
-		// 	printf("Diagnosis! c0: %f, c1: %f, a0: %d, a1: %d, b0: %f, d0: %f, x: %d, x_j: %d, res: %d\n", c_0, c_1, a_0, a_1, b_0, d_0, x, x_j, res);
-		// }
-
 		if (res < 0  ) res = 0;
 		if (res > 255) res = 255;
 
@@ -260,15 +256,15 @@ void fprintlinearframe(FILE* outputFile, int startFrame, int currentFrame, int f
 		for (int j = 0; j < videoWidth -1; ++j) {
 			int y_0 = video[startFrame  ][i*videoWidth + j];
 			int y_1 = video[startFrame+1][i*videoWidth + j];
-			int m = (y_1 - y_0) / (framesToGenerate + 1 - 0);
-			int b = y_0 - m*0;
-			fprintf(outputFile, "%d,", m*currentFrame + b);
+			double m = (y_1 - y_0) / (framesToGenerate + 1 - 0);
+			double b = y_0 - m*0;
+			fprintf(outputFile, "%d,", (int) (m*currentFrame + b));
 		}
 		int y_0 = video[startFrame  ][i*videoWidth + videoWidth -1];
 		int y_1 = video[startFrame+1][i*videoWidth + videoWidth -1];
-		int m = (y_1 - y_0) / (framesToGenerate + 1 - 0);
-		int b = y_0 - m*0;
-		fprintf(outputFile, "%d\n", m*currentFrame + b);
+		double m = (y_1 - y_0) / (framesToGenerate + 1 - 0);
+		double b = y_0 - m*0;
+		fprintf(outputFile, "%d\n", (int) (m*currentFrame + b));
 	}
 
 }
