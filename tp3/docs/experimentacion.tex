@@ -1,64 +1,68 @@
 \section{Experimentación}
 
-Para la experimentacion, consideramos pertinente dividir la misma en dos secciones principales, estas son:
+Para la experimentación, consideramos pertinente dividir la misma en dos secciones principales, estas son:
 
 \begin{itemize}
-	\item Analisis cuantitativo: Se analiza numericamente los resultados obtenidos mediante la interpolacion, utilizando diferentes medidas de error.
-	\item Analisis cualitativo: Se analizan visualmente los resultados, en busca del metodo mas fluido que cause la menor cantidad de anomalias visuales.
+	\item Análisis cuantitativo: Se analizan numericamente los resultados obtenidos mediante la interpolación, utilizando diferentes medidas de error.
+	\item Análisis cualitativo: Se analizan visualmente los resultados, en busca del método más fluido que cause la menor cantidad de anomalias visuales.
 \end{itemize}
 
-Debido a cuestiones de tiempo, al momento de la entrega de este trabajo aun no se encontraban disponibles los resultados de la experimentacion, con lo cual a continuacion nos limitamos a exponer la metodologia utilizada, los resultados estaran disponibles en la reentrega. Los videos empleados para estudiar los algoritmos se encuentran en la carpeta de $DropBox$ indicada en el mail de la entrega, cada vez que se hace una referencia a un video, el mismo se encuentra dentro de dicha carpeta.
+Debido a cuestiones de tiempo, al momento de la entrega de este trabajo aun no se encontraban disponibles los resultados de la experimentación, con lo cual a continuación nos limitamos a exponer la metodologia utilizada, los resultados estaran disponibles en la reentrega. Los videos empleados para estudiar los algoritmos se encuentran en la carpeta de $DropBox$ indicada en el mail de la entrega, cada vez que se hace una referencia a un video, el mismo se puede buscar dentro de dicha carpeta.
 
-\subsection{Analisis cuantativo}
+\subsection{Análisis cuantativo}
 
-Para el analisis cuantitativo se nos presento un desafio importante, al no tener una funcion conocida que interpolar, no era posible determinar con exactitud cual es el error numerico de los metodos implementados. Para subsanar este problema, podemos quitarle cuadros a un video, interpolarlos y comparar respecto a la informacion que ya poseemos, sin embargo, el video tiene que tener un $framerate$ alto ya que sino al quitar cuadros se perderia la ilusion de movimiento (necesitamos por lo menos 24 cuadros por segundo), con lo cual no tendriamos la informacion necesaria como para poder generar un video fluido.
+Para el análisis cuantitativo se nos presento un desafio importante: al no tener una funcion conocida que interpolar, no era posible determinar con exactitud cual es el error numérico de los métodos implementados. Para subsanar este problema, podemos quitarle cuadros a un video, interpolarlos y comparar respecto a la información que ya poseemos, sin embargo, el video tiene que tener un $framerate$ alto ya que sino al quitar cuadros se perderia la sensación de movimiento (necesitamos por lo menos 24 cuadros por segundo), con lo cual no tendriamos la informacion necesaria como para poder generar un video fluido.
 
-Teniendo en cuenta esta problematica, eligimos como fuente el video \texttt{cuantitativo/birds.avi}, el cual tiene un $framerate$ de \texttt{96 FPS}. A este video se le tomaron saltos de 1, 2 y 3 cuadros, se interpolaron los cuadros removidos y se los comparo con los cuadros reales, ademas se tomo el tiempo de ejecucion de cada uno de los metodos para poder comparar la calidad de los resultados con el tiempo de procesamiento.
+Teniendo en cuenta esta problematica, eligimos como fuente el video \texttt{cuantitativo/birds.avi}, el cual tiene un $framerate$ de \texttt{96 FPS}. A este video se le tomaron saltos de 1, 2 y 3 cuadros, se interpolaron los cuadros removidos y se los comparo con los cuadros reales, además se tomo el tiempo de ejecución de cada uno de los métodos para poder comparar la calidad de los resultados con el tiempo de procesamiento.
 
 \subsection{Analisis cualitativo}
 
-A la hora de interpolar un video, los movimientos de camara, las transiciones y la composicion de la imagen pueden afectar negativamente la calidad de los resultados. Es por esto que para hacer el analisis cualitativo, decidimos probar diferentes tecnicas de filmacion y edicion, para luego analizar como estas impactan en los videos generados por los diferentes algoritmos. Particularmente analizaremos las transiciones y movimientos de camera, teniendo en cuenta ademas la compsicion de la imagen cuando sea pertinente.
+A la hora de interpolar un video, los movimientos de cámara, las transiciones y la composición de la imagen pueden afectar negativamente la calidad de los resultados. Es por esto que para hacer el análisis cualitativo, decidimos probar diferentes técnicas de filmación y edición, para luego analizar como estas impactan en los videos generados por los diferentes algoritmos. Particularmente analizaremos las transiciones y movimientos de cámara, teniendo en cuenta además la composición de la imagen cuando sea pertinente.
 
 \subsubsection{Movimiento de camara: $Panning$}
 
-La tecnica de filmacion $panning$ consiste en fijar la camara en un eje, usualmente mediante un tripode, y desplazarla en el otro eje. Es una de las tecnicas mas empleadas en el cine y existen diferentes variaciones de la misma, en nuestro caso decidimos ir por la mas demandante para el algoritmos de interpolacion, el $Whip-Pan$. Este consiste en fijar la camara en un objeto en la imagen durante un tiempo, y luego transicionar mediante un $panneo$ brusco hacia otro, se la suele usar en peliculas de terror ya que la fijacion y el movimiento son efectivos para transmitir tension.
+La técnica de filmación $panning$ consiste en fijar la camara en un eje, usualmente mediante un tripode, y desplazarla en el otro eje. Es una de las técnicas más empleadas en el cine y existen diferentes variaciones de la misma, en nuestro caso decidimos ir por la más demandante para el algoritmos de interpolación, el $Whip-Pan$. Este consiste en fijar la cámara en un objeto en la imagen durante un tiempo, y luego transicionar mediante un $panneo$ brusco hacia otro, se la suele usar en peliculas de terror ya que la fijación y el movimiento son efectivos para transmitir tension.
 
-En el caso de la interpolacion, consideramos que el $panneo$ a alta velocidad puede traer problemas a la hora de producir un resultado suave sin anomalias visuales, es por esto que consideramos importante estudiarlo. Para estudiar esto utilizamos el video \texttt{movimientos/whip\_pan.mp4}.
+En el caso de la interpolación, consideramos que el $panneo$ a alta velocidad puede traer problemas a la hora de producir un resultado suave sin anomalias visuales, es por esto que consideramos importante estudiarlo. Para su estudio utilizamos el video \texttt{movimientos/whip\_pan.mp4}.
 
 \subsubsection{Movimientos de camara: $Dolly$ y $Trucking$}
 
-Esta tecnica consiste en desplazar la camara siguiendo el movimiento de un objeto en la imagen, si la camara lo sigue de perfil se suele utilizar un riel y se la llama $Dolly shot$, en el caso que la camara siga al objeto de frente se utiliza algun tipo de vehiculo y a la tecnica se la conoce como $Trucking$. En nuestras pruebas decidimos probar con ambas tecnicas, particularmente analizando como se comporta el algoritmo con las misma las transiciones entre ellas.
+Esta técnica consiste en desplazar la camara siguiendo el movimiento de un objeto en la imagen, si la cámara lo sigue de perfil se suele utilizar un riel y se la llama $Dolly shot$, en el caso que la cámara siga al objeto de frente se utiliza algún tipo de vehiculo y a la técnica se la conoce como $Trucking$. En nuestras pruebas decidimos probar con ambas técnicas, particularmente analizando como se comporta el algoritmo con las mismas transiciones entre ellas.
 
-Estas tecnicas son importantes para analizar, ya que usualmente la posicion de los objetos en foco se mantiene fija, mientras que el resto de la imagen se encuentra en movimiento. Esto nos permite analizar la fluidez del fondo respecto al objeto en foco. Para analizar este efecto se uso el video \texttt{movimientos/dolly\_trucking.mp4}.
+Estas técnicas poseen caracteristicas que son relevantes para los resultados, ya que usualmente la posición de los objetos en foco se mantiene fija, mientras que el resto de la imagen se encuentra en movimiento. Esto nos permite analizar la fluidez del fondo respecto al objeto en foco. 
+
+Para analizar este efecto se uso el video \texttt{movimientos/dolly\_trucking.mp4}.
 
 \subsubsection{Movimientos de camara: $Vertigo-shot$}
 
-El nombre de esta tecnica proviene de la pelicula $Vertigo$ de Alfred Hitchcock, el efecto consiste acercar el objeto en foco al frente de la imagen, mientras el fondo se aleja. Este efecto se utilizo para transmitir el terror a las alturas del persoanje principal en la pelicula de Hitchcock en donde se enfocan los pies del protagonista haciendo que la altura a la que el se encuentra parezca mucha mayor de la verdadera. Para lograr esto se suele emplear un riel, el cual aleja la camara al objeto, mientras se aumenta el $zoom$ de la camara.
+El nombre de esta técnica proviene de la pelicula $Vertigo$ de Alfred Hitchcock. El efecto consiste acercar el objeto en foco al frente de la imagen, mientras el fondo se aleja. Se utilizo para transmitir el terror a las alturas del persoanje principal en la pelicula de Hitchcock en donde se enfocan los pies del protagonista haciendo que la altura a la que él se encuentra parezca mucho mayor de la verdadera. Para lograr esto se suele emplear un riel, el cual aleja la cámara al objeto, mientras se aumenta el $zoom$.
 
-A diferencia de la tecnica anterior, aqui tenemos objetos que se acercan a la camara mientras otros se alejan, esto puede ser problematico para el algoritmo de interpolacion ya que puede haber un gran contraste entre el objeto en foco y el fondo de la imagen. Se empleo el video \texttt{movimientos/zoom\_w\_dolly.mp4}.
+A diferencia de la técnica anterior, aquí tenemos objetos que se acercan a la cámara mientras otros se alejan, esto puede ser problematico para el algoritmo de interpolación ya que puede haber un gran contraste entre el objeto en foco y el fondo de la imagen. 
+
+Para su análisis se empleó el video \texttt{movimientos/zoom\_w\_dolly.mp4}.
 
 \subsubsection{Movimientos de camara: $Steadicam$}
 
-Previo a la invencion de esta tecnica, si uno queria desplazar la camara para seguir un objeto podia utilizar un riel o emplear un camarografo que se mueva la par del objeto, esto tenia varios problemas, en el caso de utilizar un riel no habia mucha libertad de movimiento mientras que en el caso de emplear un camarografo el resultado final no era estable. En 1975 se invento el $steadicam$, el cual es un soporte con bateria que utilizan los camarografos que compensa el movimiento de los mismos y elimina los cables, finalmente proveyendo una imagen estable con total libertad de movimiento. Este efecto ha sido utilizado en multiples ocasiones, desde peliculas como $The Shining$ hasta $Goodfellas$, ya que la libertad de movimiento y estabilidad permite filmar escenas de larga duracion sin ningun tipo de corte, usualmente al objeto en foco se lo suele mantener en la misma posicion de la imagen a lo largo de toda la escena.
+Previo a la invención de esta técnica, si uno quería desplazar la cámara para seguir un objeto podía utilizar un riel o emplear un camarografo que se mueva a la par del objeto, esto tenía varios problemas; en el caso de utilizar un riel no había mucha libertad de movimiento mientras que en el caso de emplear un camarografo el resultado final no era estable. En 1975 se inventó el $steadicam$, el cual es un soporte con bateria que utilizan los camarografos que compensa el movimiento de los mismos y elimina los cables, finalmente proveyendo una imagen estable con total libertad de movimiento. Este efecto ha sido utilizado en multiples ocasiones, desde peliculas como $The Shining$ hasta $Goodfellas$, ya que la libertad de movimiento y estabilidad permite filmar escenas de larga duración sin ningún tipo de corte, usualmente al objeto en foco se lo suele mantener en la misma posición de la imagen a lo largo de toda la escena.
 
-Decidimos analizar este caso ya que la libertad de movimiento nos provee de un fondo que puede ser muy variado, esto junto con la ausencia de cortes y el hecho que el objeto en foco se mantiene relativamente estatico respecto al fondo, nos provee de un interesante caso de estudio. Esta tecnica se utilizo en el video \texttt{movimientos/steadicam.avi}.
+Decidimos analizar este caso ya que la libertad de movimiento nos provee de un fondo que puede ser muy variado, esto junto con la ausencia de cortes y el hecho que el objeto en foco se mantiene relativamente estático respecto al fondo, nos provee de un interesante caso de estudio. Esta técnica se utilizó en el video \texttt{movimientos/steadicam.avi}.
 
 \subsubsection{Transiciones: $Morph$}
 
-La tecnica de edicion $morph$ se utiliza para transicionar entre escenas, consiste en fijar la camara en un objeto el cual lentamente se convierte en otro objeto similar sin ningun tipo de corte. Este efecto es ampliamente utilizado, uno de los usos mas recordados del mismo fue en el video $Black or White$ de Michael Jackson, en donde hacia el final de mismo se lo emplea para transicionar entre diferentes personas.
+La técnica de edición $morph$ se utiliza para transicionar entre escenas, consiste en fijar la cámara en un objeto el cual lentamente se convierte en otro objeto similar sin ningún tipo de corte. Este efecto es ampliamente utilizado, uno de los usos más recordados del mismo fue en el video $Black or White$ de Michael Jackson, en donde hacia el final de mismo se lo emplea para transicionar entre diferentes personas.
 
-Este efecto plantea un problema interesante para los algoritmos de interpolacion, ya que los objetos entre los cuales transiciones si bien son similares, pueden tener un alto contraste entre ellos. Para evaluar los algoritmos se utilizo el archivo \texttt{transiciones/morph.avi}.
+Este efecto plantea un problema interesante para los algoritmos de interpolación, ya que los objetos entre los cuales las transiciones si bien son similares, pueden tener un alto contraste entre ellos. Para evaluar los algoritmos se utilizó el archivo \texttt{transiciones/morph.avi}.
 
 \subsubsection{Transiciones: $Wipe$}
 
-Esta es una de las tecnicas de transicion clasicas, se utiliza para transicionar de manera suave entre escenas, consiste en lentamente hacer aparecer la siguiente escena sin tener cortes. Para hacer esto se suelen emplear diferentes patrones, por ejmplo se puede barrer la escena anterior en el sentido de las agujas del reloj (un $Clock-Wipe$), o utilizando alguna figura geometrica. Esta transicion ha sido utilizada de manera extensiva en las peliculas de la saga $Star Wars$.
+Esta es una de las técnicas de transición clásicas, se utiliza para transicionar de manera suave entre escenas. El mismo consiste en lentamente hacer aparecer la siguiente escena sin tener cortes. Para hacer esto se suelen emplear diferentes patrones, por ejmplo se puede barrer la escena anterior en el sentido de las agujas del reloj (un $Clock-Wipe$), o utilizando alguna figura geométrica. Esta transición ha sido utilizada de manera extensiva en las peliculas de la saga $Star Wars$.
 
-Esta tecnica pone a prueba la capacidad de los algoritmo para generar cuadros mantienendo la suavidad original de la transicion, ya que puede haber un gran contraste entre escenas. El video estudiado fue \texttt{transiciones/wipe.mp4}.
+Esta técnica pone a prueba la capacidad de los algoritmo para generar cuadros mantienendo la suavidad original de la transición, ya que puede haber un gran contraste entre escenas. El video estudiado fue \texttt{transiciones/wipe.mp4}.
 
 \subsubsection{Transiciones: $Dissolve$}
 
-Al igual que $morph$ esta tecnica se utiliza para transicionar suavamente entre escenas, la diferencia principal es que no se toma en cuenta ningun objeto en particular y simplemente se combinan las imagenes de ambas escenas, hasta pasar completamente a la siguiente. Este caso puede ser problematica para los algoritmos, ya que la mezcla entre imagenes puede impactar negativamente el algoritmo interporlador. Se empleo el video \texttt{transiciones/dissolve.mp4}.
+Al igual que $morph$ esta técnica se utiliza para transicionar suavamente entre escenas, la diferencia principal es que no se toma en cuenta ningun objeto en particular y simplemente se combinan las imagenes de ambas escenas, hasta pasar completamente a la siguiente. Este caso puede ser problematico para los algoritmos, ya que la mezcla entre imagenes puede impactar negativamente el algoritmo interporlador. Se empleó para su análisis el video \texttt{transiciones/dissolve.mp4}.
 
 \subsubsection{Transiciones: $Cortes$}
 
-Este es el tipo de transicion mas simple que hay, consiste en simplemente pasar de una escena a otra sin ninguna particularidad. Considermos que es importante testear este tipo de transcion, por ser de las mas comunes que se encuentran en la practica, particularmente analizamos los $Contrast-cut$, los cuales se caracterizan por tener un gran contraste entre escenas ademas de ser bruscos. Para analizar los algoritmos utilizamos el video \texttt{video/contrast\_cut.avi}.
+Este es el tipo de transición más simple que hay, consiste en simplemente pasar de una escena a otra sin ninguna particularidad. Consideramos que es importante testear este tipo de transición, por ser de las más comunes que se encuentran en la práctica, particularmente analizamos los $Contrast-cut$, los cuales se caracterizan por tener un gran contraste entre escenas además de ser bruscos. Para analizar los algoritmos utilizamos el video \texttt{video/contrast\_cut.avi}.
