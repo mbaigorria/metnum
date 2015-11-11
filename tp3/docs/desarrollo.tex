@@ -39,7 +39,7 @@ Este tipo de interpolación suele considerarse para aproximar funciones continua
 \vspace{2mm}
  Dado el anterior teorema podemos considerar a nuestra función \textit{f} como algún polinomio interpolador más otra función de corrección a la que denominaremos la expresión del error. Esta última función correjirá la inprecisión del polinomio con respecto a la función original para cada valor de su dominio. No obstante puede que encontrar dicha expresion no sea para nada trivial.
 
- %Podremos entonces, además, obtener la expresion del error de aproximación del polinomio. La misma nos servirá para ajustar el paso que deberemos tomar cuando deseamos acotar el error. 
+%Podremos entonces, además, obtener la expresion del error de aproximación del polinomio. La misma nos servirá para ajustar el paso que deberemos tomar cuando deseamos acotar el error. 
 
 %\begin{theorem}
 %	\item Sean $x_0$, $x_1$, ..., $x_m$ en el intervalo $[a, b]$ y $f \in C^{m+1}[a, b]$, para todo x en $[a, b]$ existe un número $\xi(x)$ perteneciente a $[a, b]$ tal que:	
@@ -239,7 +239,6 @@ $
 
 Una carácteristica importante a notar de la matriz $A$ es que se trata de una matriz estrictamente diagonal dominante, que por lo visto en la primera mitad del curso, tiene solución y es única. Esta carácteristica nos abre además una nueva posibilidad sobre este método, ya que si una matriz es estrictamente diagonal dominante, entonces ésta posee factorización LU. Dado esto, notemos que para generar la matriz $A$ hacemos uso únicamente de los $h_j$, por ende $A$ solo va a depender de la partición inicial de nuestro dominio de interes; luego tras calcular la factorización LU podremos reducir notablemente la complejidad en el caso en que queramos aplicar este alogritmo para interpolar una segunda función, siempre y cuando se considere una partición de la cual se deduzcan los mismos $h_j$.
 \vspace{4mm}
-%\textbf{Falta expresar la matriz, justificar que tiene solución única, y hablar de la complejidad (citando y justificando la mejora con factorización LU)}
 
 Veamos a modo de ejemplo como se comporta la función $sen(2\pi(x/5))$ con spline natural.
 
@@ -252,7 +251,6 @@ Veamos a modo de ejemplo como se comporta la función $sen(2\pi(x/5))$ con splin
     \caption{Splines cúbicos: Paso: 1.0}
   \end{minipage}
 \end{figure}
-
 
 Parece bastante claro que para este método la función interpolante se ajusta mucho mejor a la función original en comparación a la propuesta por la interpolación lineal. Esto se debe a las condiciones pedidas sobre los extremos de los intervalos, que dan como resultado una función con curvas mas suaves, que nos evitan problemas como los que ocurren por los picos obtenidos en la interpolación lineal. 
 
