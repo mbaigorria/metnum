@@ -11,7 +11,7 @@ void fprintframe(FILE* outputFile, int frame, int videoWidth, int videoHeight, v
 void fprintlinearframe(FILE* outputFile, int startFrame, int currentFrame, int framesToGenerate,
 						int videoWidth, int videoHeight, vector<vector<int> >& video);
 void fprintframefromspline(FILE* outputFile, int frame, int currentNewFrame, int framesToGenerate,
-							int videoWidth, int videoHeight, vector<vector<int> > video, vector<vector<int> > storage);
+							int videoWidth, int videoHeight, vector<vector<int> > video, vector<vector<double> > storage);
 void naturalCubicSplineBuildA(int framesToGenerate, int videoFrames, Matrix<double>& A);
 void naturalCubicSplineBuildB(int pixel, int framesToGenerate, int videoFrames, Matrix<double>& b, vector<vector<int> >& video);
 
@@ -121,7 +121,7 @@ int main(int argc, char* argv[]) {
 			printf("interpolationMethod: Splines\n");
 
 			// save values of the polinomial coefficients for each pixel (c_j)
-			vector<vector<int> > storage(videoWidth*videoHeight, vector<int>(videoFrames));
+			vector<vector<double> > storage(videoWidth*videoHeight, vector<double>(videoFrames));
 			
 			Matrix<double> A(videoFrames, videoFrames, 0);
 			naturalCubicSplineBuildA(framesToGenerate, videoFrames, A);
@@ -176,22 +176,29 @@ int main(int argc, char* argv[]) {
 
 // new frames are counted from 1.
 void fprintframefromspline(FILE* outputFile, int frame, int currentNewFrame, int framesToGenerate,
-							int videoWidth, int videoHeight, vector<vector<int> > video, vector<vector<int> > storage) {
+							int videoWidth, int videoHeight, vector<vector<int> > video, vector<vector<double> > storage) {
 
 	int h = framesToGenerate + 1;
 
 	for (int pixel = 0; pixel < videoWidth*videoHeight; ++pixel) {
-		int c_0 = storage[pixel][frame]; // !
-		int c_1 = storage[pixel][frame+1];
+		double c_0 = storage[pixel][frame]; // !
+		double c_1 = storage[pixel][frame+1];
 		// frame >= 1
 		int a_0 = video[frame]  [pixel]; // !
 		int a_1 = video[frame+1][pixel];
-		int b_0 = (1/h)*(a_1 - a_0) - (h/3)*(2*c_0 + c_1); // !
-		int d_0 = (c_1 - c_0) / (3*h); // !
+		double b_0 = (1/h)*(a_1 - a_0) - (h/3)*(2*c_0 + c_1); // !
+		double d_0 = (c_1 - c_0) / (3*h); // !
 
 		int x   = frame*h;
 		int x_j = frame*h + currentNewFrame;
 		int res = a_0 + b_0*(x-x_j) + c_0*pow(x-x_j,2) + d_0*pow(x-x_j,3);
+
+		// if (res < 0) {
+		// 	printf("Diagnosis! c0: %f, c1: %f, a0: %d, a1: %d, b0: %f, d0: %f, x: %d, x_j: %d, res: %d\n", c_0, c_1, a_0, a_1, b_0, d_0, x, x_j, res);
+		// }
+
+		if (res < 0  ) res = 0;
+		if (res > 255) res = 255;
 
 		if ((pixel+1) % videoWidth == 0) {
 			fprintf(outputFile, "%d\n",  res);
