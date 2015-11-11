@@ -13,7 +13,7 @@ Debido a cuestiones de tiempo, al momento de la entrega de este trabajo aun no s
 
 Para el análisis cuantitativo se nos presentó un desafío importante: al no tener una función conocida que interpolar, no era posible determinar con exactitud cual es el error numérico de los métodos implementados. Para subsanar este problema, podemos quitarle cuadros a un video, interpolarlos y comparar respecto a la información que ya poseemos, sin embargo, el video tiene que tener un $framerate$ alto ya que sino al quitar cuadros se perderia la sensación de movimiento (necesitamos por lo menos 24 cuadros por segundo), con lo cual no tendriamos la informacion necesaria como para poder generar un video fluido.
 
-Teniendo en cuenta esta problematica, eligimos como fuente el video \texttt{cuantitativo/birds.avi}, el cual tiene un $framerate$ de \texttt{96 FPS}. A este video se le tomaron saltos de 1, 2 y 3 cuadros, se interpolaron los cuadros removidos y se los comparo con los cuadros reales, además se tomo el tiempo de ejecución de cada uno de los métodos para poder comparar la calidad de los resultados con el tiempo de procesamiento.
+Teniendo en cuenta esta problematica, eligimos como fuente el video \texttt{cuantitativo/birds.avi}, el cual tiene un $framerate$ de \texttt{96 FPS}. A este video se le tomaron saltos de 1, 2 y 3 cuadros, se interpolaron los cuadros removidos y se los comparó con los cuadros reales, además se tomó el tiempo de ejecución de cada uno de los métodos para poder comparar la calidad de los resultados con el tiempo de procesamiento.
 
 \subsection{Analisis cualitativo}
 
