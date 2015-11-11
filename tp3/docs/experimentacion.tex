@@ -19,23 +19,23 @@ Teniendo en cuenta esta problematica, eligimos como fuente el video \texttt{cuan
 
 A la hora de interpolar un video, los movimientos de camara, las transiciones y la composicion de la imagen pueden afectar negativamente la calidad de los resultados. Es por esto que para hacer el analisis cualitativo, decidimos probar diferentes tecnicas de filmacion y edicion, para luego analizar como estas impactan en los videos generados por los diferentes algoritmos. Particularmente analizaremos las transiciones y movimientos de camera, teniendo en cuenta ademas la compsicion de la imagen cuando sea pertinente.
 
-\subsubection{Movimiento de camara: $Panning$}
+\subsubsection{Movimiento de camara: $Panning$}
 
 La tecnica de filmacion $panning$ consiste en fijar la camara en un eje, usualmente mediante un tripode, y desplazarla en el otro eje. Es una de las tecnicas mas empleadas en el cine y existen diferentes variaciones de la misma, en nuestro caso decidimos ir por la mas demandante para el algoritmos de interpolacion, el $Whip-Pan$. Este consiste en fijar la camara en un objeto en la imagen durante un tiempo, y luego transicionar mediante un $panneo$ brusco hacia otro, se la suele usar en peliculas de terror ya que la fijacion y el movimiento son efectivos para transmitir tension.
 
-En el caso de la interpolacion, consideramos que el $panneo$ a alta velocidad puede traer problemas a la hora de producir un resultado suave sin anomalias visuales, es por esto que consideramos importante estudiarlo. Para estudiar esto utilizamos el video \texttt{movimientos/whip_pan.mp4}.
+En el caso de la interpolacion, consideramos que el $panneo$ a alta velocidad puede traer problemas a la hora de producir un resultado suave sin anomalias visuales, es por esto que consideramos importante estudiarlo. Para estudiar esto utilizamos el video \texttt{movimientos/whip\_pan.mp4}.
 
 \subsubsection{Movimientos de camara: $Dolly$ y $Trucking$}
 
 Esta tecnica consiste en desplazar la camara siguiendo el movimiento de un objeto en la imagen, si la camara lo sigue de perfil se suele utilizar un riel y se la llama $Dolly shot$, en el caso que la camara siga al objeto de frente se utiliza algun tipo de vehiculo y a la tecnica se la conoce como $Trucking$. En nuestras pruebas decidimos probar con ambas tecnicas, particularmente analizando como se comporta el algoritmo con las misma las transiciones entre ellas.
 
-Estas tecnicas son importantes para analizar, ya que usualmente la posicion de los objetos en foco se mantiene fija, mientras que el resto de la imagen se encuentra en movimiento. Esto nos permite analizar la fluidez del fondo respecto al objeto en foco. Para analizar este efecto se uso el video \texttt{movimientos/dolly_trucking.mp4}.
+Estas tecnicas son importantes para analizar, ya que usualmente la posicion de los objetos en foco se mantiene fija, mientras que el resto de la imagen se encuentra en movimiento. Esto nos permite analizar la fluidez del fondo respecto al objeto en foco. Para analizar este efecto se uso el video \texttt{movimientos/dolly\_trucking.mp4}.
 
 \subsubsection{Movimientos de camara: $Vertigo-shot$}
 
 El nombre de esta tecnica proviene de la pelicula $Vertigo$ de Alfred Hitchcock, el efecto consiste acercar el objeto en foco al frente de la imagen, mientras el fondo se aleja. Este efecto se utilizo para transmitir el terror a las alturas del persoanje principal en la pelicula de Hitchcock en donde se enfocan los pies del protagonista haciendo que la altura a la que el se encuentra parezca mucha mayor de la verdadera. Para lograr esto se suele emplear un riel, el cual aleja la camara al objeto, mientras se aumenta el $zoom$ de la camara.
 
-A diferencia de la tecnica anterior, aqui tenemos objetos que se acercan a la camara mientras otros se alejan, esto puede ser problematico para el algoritmo de interpolacion ya que puede haber un gran contraste entre el objeto en foco y el fondo de la imagen. Se empleo el video \texttt{movimientos/zoom_w_dolly.mp4}.
+A diferencia de la tecnica anterior, aqui tenemos objetos que se acercan a la camara mientras otros se alejan, esto puede ser problematico para el algoritmo de interpolacion ya que puede haber un gran contraste entre el objeto en foco y el fondo de la imagen. Se empleo el video \texttt{movimientos/zoom\_w\_dolly.mp4}.
 
 \subsubsection{Movimientos de camara: $Steadicam$}
 
@@ -49,7 +49,7 @@ La tecnica de edicion $morph$ se utiliza para transicionar entre escenas, consis
 
 Este efecto plantea un problema interesante para los algoritmos de interpolacion, ya que los objetos entre los cuales transiciones si bien son similares, pueden tener un alto contraste entre ellos. Para evaluar los algoritmos se utilizo el archivo \texttt{transiciones/morph.avi}.
 
-\subsbsection{Transiciones: $Wipe$}
+\subsubsection{Transiciones: $Wipe$}
 
 Esta es una de las tecnicas de transicion clasicas, se utiliza para transicionar de manera suave entre escenas, consiste en lentamente hacer aparecer la siguiente escena sin tener cortes. Para hacer esto se suelen emplear diferentes patrones, por ejmplo se puede barrer la escena anterior en el sentido de las agujas del reloj (un $Clock-Wipe$), o utilizando alguna figura geometrica. Esta transicion ha sido utilizada de manera extensiva en las peliculas de la saga $Star Wars$.
 
@@ -61,4 +61,4 @@ Al igual que $morph$ esta tecnica se utiliza para transicionar suavamente entre 
 
 \subsubsection{Transiciones: $Cortes$}
 
-Este es el tipo de transicion mas simple que hay, consiste en simplemente pasar de una escena a otra sin ninguna particularidad. Considermos que es importante testear este tipo de transcion, por ser de las mas comunes que se encuentran en la practica, particularmente analizamos los $Contrast-cut$, los cuales se caracterizan por tener un gran contraste entre escenas ademas de ser bruscos. Para analizar los algoritmos utilizamos el video \texttt{video/contrast_cut.avi}.
+Este es el tipo de transicion mas simple que hay, consiste en simplemente pasar de una escena a otra sin ninguna particularidad. Considermos que es importante testear este tipo de transcion, por ser de las mas comunes que se encuentran en la practica, particularmente analizamos los $Contrast-cut$, los cuales se caracterizan por tener un gran contraste entre escenas ademas de ser bruscos. Para analizar los algoritmos utilizamos el video \texttt{video/contrast\_cut.avi}.
