@@ -261,6 +261,7 @@ void fprintlinearframe(FILE* outputFile, int startFrame, int currentFrame, int f
 		int y_1 = video[startFrame+1][i*videoWidth + videoWidth -1];
 		int m = (y_1 - y_0) / (framesToGenerate + 1 - 0);
 		int b = y_0 - m*0;
-		fprintf(outputFile, "%d,", m*currentFrame + b);
+		fprintf(outputFile, "%d\n", m*currentFrame + b);
 	}
+
 }
