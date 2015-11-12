@@ -189,9 +189,8 @@ void fprintframefromspline(FILE* outputFile, int frame, int currentNewFrame, int
 		double b_0 = (1/h)*(a_1 - a_0) - (h/3)*(2*c_0 + c_1); // !
 		double d_0 = (c_1 - c_0) / (3*h); // !
 
-		int x   = frame*h;
-		int x_j = frame*h + currentNewFrame;
-		int res = a_0 + b_0*(x-x_j) + c_0*pow(x-x_j,2) + d_0*pow(x-x_j,3);
+		int dX = -currentNewFrame;
+		int res = a_0 + b_0*dX + c_0*pow(dX,2) + d_0*pow(dX,3);
 
 		if (res < 0  ) res = 0;
 		if (res > 255) res = 255;
