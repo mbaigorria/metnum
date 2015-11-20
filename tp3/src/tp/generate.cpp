@@ -5,6 +5,8 @@
 
 #include "eqsys.h"
 
+// #define UNITARY_SPACING
+
 using namespace std;
 
 void fprintframe(FILE* outputFile, int frame, int videoWidth, int videoHeight, vector<vector<int> >& video);
@@ -24,7 +26,7 @@ int main(int argc, char* argv[]) {
 			   "1: lineal  \n"
 			   "2: splines \n"
 			   "3: other...\n"
-			   "e.g. %s input.txt output.txt 0 5\n", argv[0], argv[0]);
+			   "e.g. %s input.txt output.txt 0 5 && python textfileToVideo.py && vlc fb.avi\n", argv[0], argv[0]);
 		return 0;
 	}
 
@@ -43,7 +45,7 @@ int main(int argc, char* argv[]) {
 	printf("videoFrames: %d, videoHeight: %d, videoWidth: %d, videoFrameRate: %d\n",
 		videoFrames, videoHeight, videoWidth, videoFrameRate);
 
-	// video data
+	// video data (each inner vector has the pixels of a frame in order)
 	vector<vector<int> > video(videoFrames, vector<int>(videoWidth*videoHeight));
 
 	for (int frame = 0; frame < videoFrames; ++frame) {
@@ -125,6 +127,9 @@ int main(int argc, char* argv[]) {
 			
 			Matrix<double> A(videoFrames, videoFrames, 0);
 			naturalCubicSplineBuildA(framesToGenerate, videoFrames, A);
+
+			// LU Factorization on matrix A. It doesn't depend on the pixel being processed. Only b changes. Ax = b
+			// Reduces order from O(n^3) to O(n^2) per iteration.
 			EquationSystemLU<double> e(A);
 
 			Matrix<double> b(videoFrames);
@@ -178,7 +183,11 @@ int main(int argc, char* argv[]) {
 void fprintframefromspline(FILE* outputFile, int frame, int currentNewFrame, int framesToGenerate,
 							int videoWidth, int videoHeight, vector<vector<int> > video, vector<vector<double> > storage) {
 
-	int h = framesToGenerate + 1;
+	#ifdef UNITARY_SPACING
+		int h = framesToGenerate + 1;
+	#else
+		double h = 1.0 / (framesToGenerate + 1);
+	#endif
 
 	for (int pixel = 0; pixel < videoWidth*videoHeight; ++pixel) {
 		double c_0 = storage[pixel][frame]; // !
@@ -186,10 +195,11 @@ void fprintframefromspline(FILE* outputFile, int frame, int currentNewFrame, int
 		// frame >= 1
 		int a_0 = video[frame]  [pixel]; // !
 		int a_1 = video[frame+1][pixel];
-		double b_0 = (1/h)*(a_1 - a_0) - (h/3)*(2*c_0 + c_1); // !
+		double b_0 = (1.0/h)*(a_1 - a_0) - (h/3.0)*(2*c_0 + c_1); // !
 		double d_0 = (c_1 - c_0) / (3*h); // !
 
-		int dX = -currentNewFrame;
+		// int dX = -currentNewFrame;
+		double dX = -currentNewFrame / (framesToGenerate + 1);
 		int res = a_0 + b_0*dX + c_0*pow(dX,2) + d_0*pow(dX,3);
 
 		if (res < 0  ) res = 0;
@@ -206,19 +216,26 @@ void fprintframefromspline(FILE* outputFile, int frame, int currentNewFrame, int
 
 /* Possible improvements:
  * 1. Improve cache locality by saving one vector per pixel, right now a single pixel is in several vectors.
- * 2. LU Factorization on matrix A. It doesn't depend on the pixel being processed. Only b changes. Ax = b
  * 3. A is sparse! Better representations!
  * Reminder: A is strictly diagonally dominant, LU factorization without pivoting is valid.
  */
 void naturalCubicSplineBuildA(int framesToGenerate, int videoFrames, Matrix<double>& A) {
 	A(0,0) = 1;
 	A(videoFrames-1,videoFrames-1) = 1;
+	
 	/* h_i = x_{j+1} - x_{j}
 	 * h is CONSTANT! (pixels are equidistant)
 	 */
-	int h_0 = framesToGenerate + 1;
-	int h_1 = framesToGenerate + 1;
-	int h_2 = framesToGenerate + 1;
+	#ifdef UNITARY_SPACING
+		int h_0 = framesToGenerate + 1;
+		int h_1 = framesToGenerate + 1;
+		int h_2 = framesToGenerate + 1;
+	#else
+		double h_0 = 1.0 / (framesToGenerate + 1);
+		double h_1 = 1.0 / (framesToGenerate + 1);
+		double h_2 = 1.0 / (framesToGenerate + 1);
+	#endif
+
 	for (int i = 1; i < videoFrames - 1; ++i) {
 		// h_i = x_{j+1} - x_{j}
 		A(i, i-1) = h_0;
@@ -228,7 +245,13 @@ void naturalCubicSplineBuildA(int framesToGenerate, int videoFrames, Matrix<doub
 }
 
 void naturalCubicSplineBuildB(int pixel, int framesToGenerate, int videoFrames, Matrix<double>& b, vector<vector<int> >& video) {
-	int h = framesToGenerate + 1;
+
+	#ifdef UNITARY_SPACING
+		int h = framesToGenerate + 1;
+	#else
+		double h = 1.0 / (framesToGenerate + 1);
+	#endif
+
 	b(0) = 0;
 	b(videoFrames-1) = 0;
 	for (int i = 1; i < videoFrames -1; ++i) {
@@ -236,7 +259,7 @@ void naturalCubicSplineBuildB(int pixel, int framesToGenerate, int videoFrames, 
 		int a_0 = video[i-1][pixel];
 		int a_1 = video[i]  [pixel];
 		int a_2 = video[i+1][pixel];
-		b(i) = (3/h) * (a_2 - a_1) - (3/h) * (a_1 - a_0);
+		b(i) = (3.0/h) * (a_2 - a_1) - (3.0/h) * (a_1 - a_0);
 	}
 }
 
@@ -255,13 +278,13 @@ void fprintlinearframe(FILE* outputFile, int startFrame, int currentFrame, int f
 		for (int j = 0; j < videoWidth -1; ++j) {
 			int y_0 = video[startFrame  ][i*videoWidth + j];
 			int y_1 = video[startFrame+1][i*videoWidth + j];
-			double m = (y_1 - y_0) / (framesToGenerate + 1 - 0);
+			double m = (y_1 - y_0) / (framesToGenerate + 1.0 - 0);
 			double b = y_0 - m*0;
 			fprintf(outputFile, "%d,", (int) (m*currentFrame + b));
 		}
 		int y_0 = video[startFrame  ][i*videoWidth + videoWidth -1];
 		int y_1 = video[startFrame+1][i*videoWidth + videoWidth -1];
-		double m = (y_1 - y_0) / (framesToGenerate + 1 - 0);
+		double m = (y_1 - y_0) / (framesToGenerate + 1.0 - 0);
 		double b = y_0 - m*0;
 		fprintf(outputFile, "%d\n", (int) (m*currentFrame + b));
 	}
