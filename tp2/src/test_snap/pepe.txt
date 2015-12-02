@@ -1,0 +1,13 @@
+nodes: 685230 edges: 7600595
+Entra norma.
+Entra norma.
+Entra L1.
+Entra norma.
+Entra norma.
+Entra L1.
+Entra norma.
+Entra norma.
+Entra L1.
+delta is 0.000027
+page rank result: 
+
