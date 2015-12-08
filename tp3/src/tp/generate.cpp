@@ -9,11 +9,11 @@
 
 using namespace std;
 
-void fprintframe(FILE* outputFile, int frame, int videoWidth, int videoHeight, vector<vector<int> >& video);
+void fprintframe(FILE* outputFile, int frame, int videoWidth, int videoHeight, const vector<vector<int> >& video);
 void fprintlinearframe(FILE* outputFile, int startFrame, int currentFrame, int framesToGenerate,
-						int videoWidth, int videoHeight, vector<vector<int> >& video);
+						int videoWidth, int videoHeight, const vector<vector<int> >& video);
 void fprintframefromspline(FILE* outputFile, int frame, int currentNewFrame, int framesToGenerate,
-							int videoWidth, int videoHeight, vector<vector<int> > video, vector<vector<double> > storage);
+							int videoWidth, int videoHeight, const vector<vector<int> >& video, const vector<vector<double> >& storage);
 void naturalCubicSplineBuildA(int framesToGenerate, int videoFrames, Matrix<double>& A);
 void naturalCubicSplineBuildB(int pixel, int framesToGenerate, int videoFrames, Matrix<double>& b, vector<vector<int> >& video);
 
@@ -181,7 +181,7 @@ int main(int argc, char* argv[]) {
 
 // new frames are counted from 1.
 void fprintframefromspline(FILE* outputFile, int frame, int currentNewFrame, int framesToGenerate,
-							int videoWidth, int videoHeight, vector<vector<int> > video, vector<vector<double> > storage) {
+							int videoWidth, int videoHeight, const vector<vector<int> >& video, const vector<vector<double> >& storage) {
 
 	#ifdef UNITARY_SPACING
 		int h = framesToGenerate + 1;
@@ -198,8 +198,13 @@ void fprintframefromspline(FILE* outputFile, int frame, int currentNewFrame, int
 		double b_0 = (1.0/h)*(a_1 - a_0) - (h/3.0)*(2*c_0 + c_1); // !
 		double d_0 = (c_1 - c_0) / (3*h); // !
 
-		// int dX = -currentNewFrame;
-		double dX = -currentNewFrame / (framesToGenerate + 1);
+
+		#ifdef UNITARY_SPACING
+			int dX = -currentNewFrame;
+		#else
+			double dX = -currentNewFrame / (framesToGenerate + 1.0);
+		#endif
+
 		int res = a_0 + b_0*dX + c_0*pow(dX,2) + d_0*pow(dX,3);
 
 		if (res < 0  ) res = 0;
@@ -263,7 +268,7 @@ void naturalCubicSplineBuildB(int pixel, int framesToGenerate, int videoFrames, 
 	}
 }
 
-void fprintframe(FILE* outputFile, int frame, int videoWidth, int videoHeight, vector<vector<int> >& video) {
+void fprintframe(FILE* outputFile, int frame, int videoWidth, int videoHeight, const vector<vector<int> >& video) {
 	for (int i = 0; i < videoHeight; ++i) {
 		for (int j = 0; j < videoWidth -1; ++j) {
 			fprintf(outputFile, "%d,", video[frame][i*videoWidth + j]);
@@ -273,7 +278,7 @@ void fprintframe(FILE* outputFile, int frame, int videoWidth, int videoHeight, v
 }
 
 void fprintlinearframe(FILE* outputFile, int startFrame, int currentFrame, int framesToGenerate,
-						int videoWidth, int videoHeight, vector<vector<int> >& video) {
+						int videoWidth, int videoHeight, const vector<vector<int> >& video) {
 	for (int i = 0; i < videoHeight; ++i) {
 		for (int j = 0; j < videoWidth -1; ++j) {
 			int y_0 = video[startFrame  ][i*videoWidth + j];
